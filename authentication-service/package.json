@@ -14,7 +14,8 @@
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "mongodb": "^4.0.5",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "supertest": "^6.3.3"
   },
   "author": "",
   "license": "ISC"
