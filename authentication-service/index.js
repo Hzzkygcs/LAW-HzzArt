@@ -1,14 +1,11 @@
-const express = require("express");
-const {route: lastLoginValidationRoute} = require("./routes/last-login-validation");
-const {route: loginRoute} = require("./routes/login");
-const {route: registerRoute} = require("./routes/register");
+const {server} = require("./main");
 
-app = express();
-app.use('/auth/last-login-date-validation', lastLoginValidationRoute);
-app.use('/auth/login', loginRoute);
-app.use('/auth/register', registerRoute);
-
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught exception:', err);
+});
+process.on('unhandledRejection', (err) => {
+    console.error('Uncaught promise exception:', err);
+});
 
 
-const PORT = 8081;
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+server(false)

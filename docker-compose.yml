@@ -3,6 +3,7 @@ version: '3'
 x-environment: &env
   SERVICE_REGISTRY_TOKEN: "ABCDEFG"
   SERVICE_REGISTRY_PORT: 9000
+  AUTHENTICATION_SERVICE_PORT: 8081
 
 services:
   authentication-service:
@@ -10,12 +11,12 @@ services:
       context: ./authentication-service
       dockerfile: Dockerfile
     ports:
-      - "8001:8001"
+      - "8081:8081"
     depends_on:
       - mongodb
     environment:
       <<: *env
-      DATABASE_HOST: mongodb
+      DATABASE_HOST_URL: "mongodb://mongodb/auth-service"
 
 #  video-processing-service:
 #    build:
