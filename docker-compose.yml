@@ -1,0 +1,43 @@
+version: '3'
+
+x-environment: &env
+  SERVICE_REGISTRY_TOKEN: "ABCDEFG"
+  SERVICE_REGISTRY_PORT: 9000
+
+services:
+  authentication-service:
+    build:
+      context: ./authentication-service
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    depends_on:
+      - mongodb
+    environment:
+      <<: *env
+      DATABASE_HOST: mongodb
+
+#  video-processing-service:
+#    build:
+#      context: ./nodejs-app-2
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8002:8002"
+#    depends_on:
+#      - mongodb
+#    environment: *env
+
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  service-registry:
+    build:
+      context: ./service-registry
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    depends_on:
+      - mongodb
+    environment: *env
