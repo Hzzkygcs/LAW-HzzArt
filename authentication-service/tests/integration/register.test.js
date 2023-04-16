@@ -2,6 +2,7 @@ const request = require('supertest');
 const {REGISTER_ENDPOINT, USERNAME_VALID_ENDPOINT} = require("../../routes/endpoints");
 const {User} = require("../../model/user");
 const main = require("../../main");
+const {dummyRegistrationBody} = require("../data/registration");
 let server;
 
 
@@ -33,9 +34,3 @@ describe('/auth/register', function () {
     });
 });
 
-function dummyRegistrationBody() {
-    return {
-        'username': 'a',
-        'password': 'fake_password',
-    };
-}

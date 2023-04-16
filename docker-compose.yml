@@ -16,7 +16,7 @@ services:
       - mongodb
     environment:
       <<: *env
-      DATABASE_HOST_URL: "mongodb://mongodb/auth-service"
+      DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/auth-service"
 
 #  video-processing-service:
 #    build:
@@ -32,6 +32,13 @@ services:
     image: mongo
     ports:
       - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: K9A1qfhb1pWZV186eJasTE9kgrHLMTRzaaHnSjQ8RzVNvlashE
+      MONGO_INITDB_ROOT_DATABASE: ${MONGO_ROOT_DB:-mongodb}
+      MONGO_INITDB_DATABASE: auth-service
+    volumes:
+      - ./mongo-init:/docker-entrypoint-initdb.d/
 
   service-registry:
     build:

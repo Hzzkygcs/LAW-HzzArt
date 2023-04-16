@@ -42,11 +42,6 @@ module.exports.UserMethods = {
         const currentDate = new Date().toISOString();
         this.lastPasswordUpdateDate = await hashValue(currentDate);
     },
-    validatePassword: async function (otherPassword){
-        const passwordIsValid = await bcrypt.compare(otherPassword, this.password);
-        if (!passwordIsValid)
-            throw new InvalidPasswordException();
-    },
     validateLastPasswordUpdateDate: async function (lastPasswordUpdateDateStr){
         const lastPassUpdateDatesAreEqual = await bcrypt.compare(lastPasswordUpdateDateStr, this.password);
         if (!lastPassUpdateDatesAreEqual)
@@ -56,7 +51,11 @@ module.exports.UserMethods = {
 
 userDbSchema.methods.setPassword = module.exports.UserMethods.setPassword;
 userDbSchema.methods.setLastPasswordUpdateDateToNow = module.exports.UserMethods.setLastPasswordUpdateDateToNow;
-userDbSchema.methods.validatePassword = module.exports.UserMethods.validatePassword;
+userDbSchema.methods.validatePasswordAsync = async function (otherPassword){
+    const passwordIsValid = await bcrypt.compare(otherPassword, this.password);
+    if (!passwordIsValid)
+        throw new InvalidPasswordException();
+};
 userDbSchema.methods.validateLastPasswordUpdateDate = module.exports.UserMethods.validateLastPasswordUpdateDate;
 
 
