@@ -12,20 +12,14 @@ route.post("/", async (req, res) => {
         throw new UsernameAlreadyExists()
     }
 
-    /**
-     * @type {UserMethods}
-     */
     let user = new User({
         username: req.body.username
     });
     await user.setPassword(req.body.password);
     await user.setLastPasswordUpdateDateToNow();
 
-    user = (await user.save()).toObject();
-    delete user['password'];
-    delete user['_id'];
-    delete user['__v'];
-    res.send(user);
+    user = await user.save();
+    res.send(user.getObjectRepresentation());
 })
 
 

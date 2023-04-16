@@ -57,18 +57,30 @@ userDbSchema.methods.validatePasswordAsync = async function (otherPassword){
         throw new InvalidPasswordException();
 };
 userDbSchema.methods.validateLastPasswordUpdateDate = module.exports.UserMethods.validateLastPasswordUpdateDate;
-
+userDbSchema.methods.getObjectRepresentation = function (){
+    const ret = this.toObject();
+    delete ret['password'];
+    delete ret['_id'];
+    delete ret['__v'];
+    return ret;
+};
 
 
 module.exports.User = mongoose.model('User', userDbSchema);
 
-
+const passwordRequirements = Joi.string().required();
 const userJoiSchema = {
     username: {
         username: Joi.string().required().min(1).max(40),
     },
     password: {
-        password: Joi.string().required(),
+        password: passwordRequirements,
+    },
+    old_password: {
+        old_password: passwordRequirements,
+    },
+    new_password: {
+        new_password: passwordRequirements,
     },
     lastLoginDate: {
         password: Joi.date().required(),

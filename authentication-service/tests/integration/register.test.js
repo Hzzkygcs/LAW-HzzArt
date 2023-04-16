@@ -24,12 +24,9 @@ describe('/auth/register', function () {
         });
         it('should create the user correctly', async function () {
             await request(server).post(REGISTER_ENDPOINT).send(dummyRegistrationBody());
-            const res = await request(server).post(USERNAME_VALID_ENDPOINT).send({
-                'username': 'a'
-            });
-            expect(JSON.parse(res.text)).toStrictEqual({
-                'answer': true
-            });
+            let res = await request(server).get(`${USERNAME_VALID_ENDPOINT}/a`).send();
+            res = JSON.parse(res.text);
+            expect(res.username).toBe('a');
         });
     });
 });

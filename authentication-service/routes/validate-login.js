@@ -15,10 +15,7 @@ route.post("/", async (req, res) => {
     let user = users[0];
     await user.validatePasswordAsync(req.body.password);
 
-    user = user.toObject();
-    delete user['password'];
-    delete user['_id'];
-    delete user['__v'];
+    user = user.getObjectRepresentation();
     res.send(user);
 })
 

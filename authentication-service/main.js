@@ -1,13 +1,12 @@
 require("express-async-errors");
 const express = require("express");
-const {route: lastLoginValidationRoute} = require("./routes/last-login");
 const {route: loginRoute} = require("./routes/validate-login");
 const {route: registerRoute} = require("./routes/register");
 const {exceptionHandlerMiddleware} = require("./modules/global-route-exceptions-handler/middlewares/exceptionHandlerMiddleware");
 const mongoose = require("mongoose");
 const {jsonInvalidSyntaxHandlerMiddleware} = require("./modules/jsonInvalidSyntaxHandlerMiddleware");
 const {USERNAME_VALID_ENDPOINT, REGISTER_ENDPOINT, VALIDATE_LOGIN_ENDPOINT} = require("./routes/endpoints");
-const {route: usernameValidRoute} = require("./routes/username-valid");
+const {route: usernameValidRoute} = require("./routes/get-user");
 
 
 
@@ -19,7 +18,6 @@ module.exports.server = async function (test=true) {
     app.use(express.json());
     app.use(jsonInvalidSyntaxHandlerMiddleware);
 
-    app.use('/auth/last-login-date-validation', lastLoginValidationRoute);
     app.use(USERNAME_VALID_ENDPOINT, usernameValidRoute);
     app.use(REGISTER_ENDPOINT, registerRoute);
     app.use(VALIDATE_LOGIN_ENDPOINT, loginRoute);
