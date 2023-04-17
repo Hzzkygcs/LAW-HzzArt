@@ -4,6 +4,7 @@ x-environment: &env
   SERVICE_REGISTRY_TOKEN: "ABCDEFG"
   SERVICE_REGISTRY_PORT: 9000
   AUTHENTICATION_SERVICE_PORT: 8081
+  ADMIN_SERVICE_PORT: 8082
 
 services:
   authentication-service:
@@ -27,6 +28,19 @@ services:
 #    depends_on:
 #      - mongodb
 #    environment: *env
+
+  admin-management:
+    build:
+      context: ./admin-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mongodb
+    environment:
+      <<: *env
+      DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/auth-service"
+
 
   mongodb:
     image: mongo

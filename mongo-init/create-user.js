@@ -13,7 +13,7 @@ function createMainUser(){
 }
 
 function getMainUserRoles(){
-    const initialDatabases = ["auth-service"];
+    const initialDatabases = ["auth-service", "admin-service"];
     const numberOfTestWorker = 0;
     const ret = [];
     
