@@ -1,10 +1,10 @@
 const express = require("express");
-const {Account, getUserJoiValidation} = require("../model/admin");
+const {Account, getAccountJoiValidation} = require("../model/account");
 
 const route = express.Router();
 
 route.get("/:username", async (req, res) => {
-    const validate = getUserJoiValidation(["username"]);
+    const validate = getAccountJoiValidation(["username"]);
     validate({
         username: req.params.username
     });
