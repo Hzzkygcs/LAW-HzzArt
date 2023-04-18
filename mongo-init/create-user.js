@@ -1,4 +1,5 @@
 console.log("CREATING USER");
+db.getDB("admin-service")
 
 function createMainUser(){
     const roles = getMainUserRoles();

@@ -4,11 +4,13 @@ const mongoose = require("mongoose");
 const {exceptionHandlerMiddleware} = require("./modules/global-route-exceptions-handler/middlewares/exceptionHandlerMiddleware");
 const {jsonInvalidSyntaxHandlerMiddleware} = require("./modules/jsonInvalidSyntaxHandlerMiddleware");
 const {CHECK_ACCOUNT_ENDPOINT,
-    PERMISSION_CONTROL_ENDPOINT} = require("./routes/endpoints");
+    CHECK_COLECTIONS_ENDPOINT,
+    PERMISSION_CONTROL_ENDPOINT,
+    REPORT_COLLECTIONS_ENDPOINT,} = require("./routes/endpoints");
 const {route: checkAccountRoute} = require("./routes/check-account");
 const {route: permissionControlRoute} = require("./routes/permission-control");
-// const {route: checkCollectionsRoute} = require("./routes/check-collections");
-// const {route: reportedCollectionsRoute} = require("./routes/reported-collections");
+const {route: checkCollectionsRoute} = require("./routes/check-collections");
+const {route: reportCollectionsRoute} = require("./routes/report-collection");
 // const {route: acceptReportedCollectionRoute} = require("./routes/accept-reported-collection");
 // const {route: rejectReportedCollectionRoute} = require("./routes/reject-reported-collection");
 
@@ -21,8 +23,8 @@ module.exports.server = async function (test=true) {
 
     app.use(CHECK_ACCOUNT_ENDPOINT, checkAccountRoute);
     app.use(PERMISSION_CONTROL_ENDPOINT, permissionControlRoute);
-    // app.use(CHECK_COLECTIONS_ENDPOINT, checkCollectionsRoute);
-    // app.use(REPORTED_COLLECTIONS_ENDPOINT, reportedCollectionsRoute);
+    app.use(CHECK_COLECTIONS_ENDPOINT, checkCollectionsRoute);
+    app.use(REPORT_COLLECTIONS_ENDPOINT, reportCollectionsRoute);
     // app.use(ACCEPT_REPORTED_COLLECTION_ENDPOINT, acceptReportedCollectionRoute);
     // app.use(REJECT_REPORTED_COLLECTION_ENDPOINT, rejectReportedCollectionRoute);
 
@@ -43,14 +45,10 @@ let testMongo = null;
 
 async function connectToMongodb(test){
     let mongooseUrl = process.env.DATABASE_HOST_URL;
-    if (test && testMongo==null){
-        const {MongoMemoryServer} = require("mongodb-memory-server");
-        testMongo = await MongoMemoryServer.create();
+    if (mongooseUrl == null){
+        console.log("DATABASE_HOST_URL IS NOT SET");
+        mongooseUrl = "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/admin-service";
     }
-    if (test){
-        mongooseUrl = testMongo.getUri();
-    }
-    if (mongooseUrl == null){throw new Error("DATABASE_HOST_URL IS NOT SET");}
 
     try{
         await mongoose.connect(mongooseUrl);
