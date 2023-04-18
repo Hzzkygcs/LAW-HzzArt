@@ -4,23 +4,40 @@ const path = require("path");
 const {InvalidImageException} = require("../modules/exceptions/InvalidImageException");
 const {promises: fs} = require("fs");
 const {FadeImageTransitionStrategy} = require("./strategies/transition/image-blend");
+const {combineImagesToVideo} = require("./combineImagesToVideo");
+
+/**
+ * @param submittedFiles
+ * @param tokenAsPath
+ * @param {number} fps
+ * @returns {Promise<void>}
+ */
+module.exports.submitVideo = async function (submittedFiles, tokenAsPath, fps) {
+    const durationInSecond = await generateFolderOfImageFrames(submittedFiles, tokenAsPath, fps);
+    console.log(`Video duration: ${durationInSecond}`);
+    await combineImagesToVideo(tokenAsPath, durationInSecond, tokenAsPath, "video.mp4", fps);
+    await cleanUpUploadsFiles(submittedFiles);
+    await cleanUpImagesInAFolder(tokenAsPath);
+};
 
 
-module.exports.submitVideo = async function (submittedFiles, tokenAsPath) {
+async function generateFolderOfImageFrames(submittedFiles, tokenAsPath, fps) {
     const images = await getImagesWithNormalizedSize(submittedFiles);
-    const imageFrameGenerator = new FadeImageTransitionStrategy(images, 5);
+    const imageFrameGenerator = new FadeImageTransitionStrategy(images, fps);
+    imageFrameGenerator.planForWholeSlideshow(4, 3);
+    const numberOfFrames = imageFrameGenerator.getEstimateNumberOfFrame();
+
     imageFrameGenerator.setProgressReportEventHandler(
-        (frameId, jimp) => {
-            console.log(`Created frameId: ${frameId}`);
-            jimp.write(path.join(tokenAsPath, `${frameId}.jpg`));
+        async (frameId, jimp) => {
+            console.log(`Created frameId: ${frameId}, percentage: ${frameId*100 / numberOfFrames}`);
+            await jimp.writeAsync(path.join(tokenAsPath, `${frameId}.png`), );
         }
     );
-    await imageFrameGenerator.performUntilFinished(3, 2);
+    await imageFrameGenerator.carryOutThePlans(false);
+    return imageFrameGenerator.getEstimateTotalDuration();
+}
 
-    await cleanUpFiles(submittedFiles);
 
-
-};
 
 async function getImagesWithNormalizedSize(filePaths) {
     const jimpPhotos = await imagePathsToJimp(filePaths);
@@ -57,7 +74,7 @@ async function imagePathsToJimp(imagePaths) {
 }
 
 
-async function cleanUpFiles(paths) {
+async function cleanUpUploadsFiles(paths) {
     const promises=[];
     for (const path1 of paths) {
         promises.push(
@@ -65,4 +82,12 @@ async function cleanUpFiles(paths) {
         );
     }
     return Promise.all(promises);
+}
+
+async function cleanUpImagesInAFolder(targetDirectory) {
+    let fileNames = await fs.readdir(targetDirectory);
+    fileNames = fileNames.filter(fn => fn.endsWith('.png'));
+    for (const fileName of fileNames) {
+        await fs.unlink(path.join(targetDirectory, fileName));
+    }
 }

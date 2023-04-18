@@ -16,7 +16,7 @@ class ImageTransitionStrategy{
         // Abstract
     }
 
-    performUntilFinished(slideDuration, transitionDuration){
+    planForWholeSlideshow(slideDuration, transitionDuration){
         // Abstract
     }
 
@@ -34,7 +34,10 @@ class FadeImageTransitionStrategy extends ImageTransitionStrategy{
     sourceImages;
     fps;
     resultingImages = [];
-    progressReportEventHandler = (ind, jimp) => {};
+    plans = [];
+    estimateNumberOfFrame=0;
+
+    progressReportEventHandler = async (ind, jimp) => {};
 
     constructor(sourceImages, fps) {
         super();
@@ -45,16 +48,24 @@ class FadeImageTransitionStrategy extends ImageTransitionStrategy{
     getResultingImages(){
         return this.sourceImages;
     }
-    currentSlideDuration(seconds){
+
+    planCurrentSlideDuration(seconds){
+        this.estimateNumberOfFrame += this.fps * seconds;
+        this.plans.push(async () => await this.currentSlideDuration(seconds));
+    }
+
+    async currentSlideDuration(seconds) {
         const totalFrame = this._getTotalFrame(seconds);
         const currImage = this._getCurrentImage();
 
         for (let frame = 0; frame < totalFrame; frame++) {
             const currFrame = currImage.clone();
-            this.progressReportEventHandler(this._getCurrentFrameId(), currFrame);
+            await this.progressReportEventHandler(this._getCurrentFrameId(), currFrame);
             this.resultingImages.push(currFrame);
         }
     }
+
+
     _getTotalFrame(seconds){
         return this.fps * seconds
     }
@@ -72,6 +83,11 @@ class FadeImageTransitionStrategy extends ImageTransitionStrategy{
         this.currentImageIndex++;
     }
 
+    planToMoveToNextSlide(seconds){
+        this.estimateNumberOfFrame += this.fps * seconds;
+        this.plans.push(async () => await this.moveToNextSlide(seconds));
+    }
+
     async moveToNextSlide(transitionDurationInSecond){
         const totalFrame = this._getTotalFrame(transitionDurationInSecond);
         const currentImage = this._getCurrentImage();
@@ -81,18 +97,28 @@ class FadeImageTransitionStrategy extends ImageTransitionStrategy{
             const resultingImage = await blendImages(
                 currentImage, nextImage, frame/totalFrame
             );
-            this.progressReportEventHandler(this._getCurrentFrameId(), resultingImage);
+            await this.progressReportEventHandler(this._getCurrentFrameId(), resultingImage);
             this.resultingImages.push(resultingImage);
         }
         this._moveToNextImage();
     }
 
-    async  performUntilFinished(slideDuration, transitionDuration){
-        this.currentSlideDuration(slideDuration);
+    async carryOutThePlans(clear=false){
+        for (const plan of this.plans) {
+            await plan();
+        }
+        if (!clear)
+            return;
+        this.plans = [];
+        this.estimateNumberOfFrame = 0;
+    }
 
-        for (let i = 0; i < this.size(); i++) {
-            await this.moveToNextSlide(transitionDuration);
-            this.currentSlideDuration(slideDuration);
+    planForWholeSlideshow(slideDuration, transitionDuration, plan=true){
+        this.planCurrentSlideDuration(slideDuration);
+
+        for (let i = 0; i < this.size()-1; i++) {
+            this.planToMoveToNextSlide(transitionDuration);
+            this.planCurrentSlideDuration(slideDuration);
         }
     }
 
@@ -103,6 +129,14 @@ class FadeImageTransitionStrategy extends ImageTransitionStrategy{
     setProgressReportEventHandler(func){
         this.progressReportEventHandler = func;
     }
+
+    getEstimateNumberOfFrame(){
+        return this.estimateNumberOfFrame;
+    }
+
+    getEstimateTotalDuration(){
+        return this.estimateNumberOfFrame / this.fps;
+    }
 }
 module.exports.FadeImageTransitionStrategy = FadeImageTransitionStrategy;
 
@@ -110,15 +144,11 @@ module.exports.FadeImageTransitionStrategy = FadeImageTransitionStrategy;
 
 
 async function blendImages(image1, image2, opacityProgress) {
-    const blendedImage = new Jimp(image1.getWidth(), image1.getHeight());
-
-    // Blend the two images using the specified opacities
-    blendedImage.composite(image1, 0, 0, {
-        opacity: opacityProgress
+    image1 = image1.clone();
+    image1.composite(image2, 0, 0, {
+        opacitySource: opacityProgress,
+        opacityDest: 1 - opacityProgress,
     });
-    blendedImage.composite(image2, 0, 0, {
-        opacity: 1 - opacityProgress
-    });
-    return blendedImage;
+    return image1;
 }
 

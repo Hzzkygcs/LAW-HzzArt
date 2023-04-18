@@ -14,7 +14,7 @@ const route = express.Router();
 route.post("/submit-video", upload.any(), async function (req, res) {
     const submittedFiles = preservedOrderImagePaths(req.files, "img")
     const token = await tmp.dir(defaultTmpOptions());  // token = path file
-    submitVideo(submittedFiles, token.path).then(r => {});
+    submitVideo(submittedFiles, token.path, parseInt(req.body.fps)).then(r => {});
 
     res.send(path.basename(token.path));
 });

@@ -9,12 +9,13 @@ process.on('unhandledRejection', (err) => {
 });
 
 const tmp = require('tmp');
-const {clearTempFolder} = require("./services/clear-temp-folder");
+const {clearFolder} = require("./services/clear-temp-folder");
 tmp.setGracefulCleanup();
 
 const app = express();
 config(app);
-clearTempFolder();
+clearFolder("temp");
+clearFolder("uploads");
 
 module.exports = app;
 
