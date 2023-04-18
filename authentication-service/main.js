@@ -12,7 +12,7 @@ const {route: usernameValidRoute} = require("./routes/get-user");
 
 
 module.exports.server = async function (test=true) {
-    app = express();
+    let app = express();
 
     await  connectToMongodb(test);
     app.use(express.json());
@@ -23,7 +23,6 @@ module.exports.server = async function (test=true) {
     app.use(VALIDATE_LOGIN_ENDPOINT, loginRoute);
 
     app.use(exceptionHandlerMiddleware);
-
 
 
     if (!test){

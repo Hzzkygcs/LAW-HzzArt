@@ -15,7 +15,7 @@ const {route: reportCollectionsRoute} = require("./routes/report-collection");
 // const {route: rejectReportedCollectionRoute} = require("./routes/reject-reported-collection");
 
 module.exports.server = async function (test=true) {
-    app = express();
+    let app = express();
 
     await  connectToMongodb(test);
     app.use(express.json());
@@ -51,6 +51,7 @@ async function connectToMongodb(test){
     }
 
     try{
+        console.log(`Connecting to mongodb ${mongooseUrl}`)
         await mongoose.connect(mongooseUrl);
         mongooseUrl = removeCredentialFromMongodbUrl(mongooseUrl);
         console.log(`Connected to mongodb ${mongooseUrl}`)

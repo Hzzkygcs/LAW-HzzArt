@@ -1,5 +1,19 @@
-console.log("CREATING USER");
-db.getDB("admin-service")
+console.log("======= CREATING USER =======");
+
+triggerDatabaseCreation(db);
+createDatabase("admin-service");
+
+function createDatabase(databaseName){
+    const localDb = db.getSiblingDB(databaseName);
+    triggerDatabaseCreation(localDb);
+    console.log(`A NEW DATABASE: ${databaseName} CREATED`)
+}
+
+function triggerDatabaseCreation(localDb){
+    localDb.createCollection("init");
+    console.log(`DATABASE: ${localDb} CREATION IS TRIGGERED`)
+}
+
 
 function createMainUser(){
     const roles = getMainUserRoles();
