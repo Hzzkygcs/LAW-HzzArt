@@ -1,4 +1,5 @@
 console.log("CREATING USER");
+db.getDB("admin-service")
 
 function createMainUser(){
     const roles = getMainUserRoles();
@@ -13,7 +14,7 @@ function createMainUser(){
 }
 
 function getMainUserRoles(){
-    const initialDatabases = ["auth-service"];
+    const initialDatabases = ["auth-service", "admin-service"];
     const numberOfTestWorker = 0;
     const ret = [];
     
