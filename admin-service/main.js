@@ -6,18 +6,22 @@ const {jsonInvalidSyntaxHandlerMiddleware} = require("./modules/jsonInvalidSynta
 const {CHECK_ACCOUNT_ENDPOINT,
     CHECK_COLECTIONS_ENDPOINT,
     PERMISSION_CONTROL_ENDPOINT,
-    REPORT_COLLECTIONS_ENDPOINT,} = require("./routes/endpoints");
+    REPORT_COLLECTIONS_ENDPOINT,
+    BAN_COLLECTION_ENDPOINT,
+    BAN_ACCOUNT_ENDPOINT} = require("./routes/endpoints");
 const {route: checkAccountRoute} = require("./routes/check-account");
 const {route: permissionControlRoute} = require("./routes/permission-control");
 const {route: checkCollectionsRoute} = require("./routes/check-collections");
 const {route: reportCollectionsRoute} = require("./routes/report-collection");
+const {route: banCollectionRoute} = require("./routes/ban-collection");
+const {route: banAccountRoute} = require("./routes/ban-account");
 // const {route: acceptReportedCollectionRoute} = require("./routes/accept-reported-collection");
 // const {route: rejectReportedCollectionRoute} = require("./routes/reject-reported-collection");
 
 module.exports.server = async function (test=true) {
-    app = express();
+    let app = express();
 
-    await  connectToMongodb(test);
+    await connectToMongodb(test);
     app.use(express.json());
     app.use(jsonInvalidSyntaxHandlerMiddleware);
 
@@ -25,6 +29,8 @@ module.exports.server = async function (test=true) {
     app.use(PERMISSION_CONTROL_ENDPOINT, permissionControlRoute);
     app.use(CHECK_COLECTIONS_ENDPOINT, checkCollectionsRoute);
     app.use(REPORT_COLLECTIONS_ENDPOINT, reportCollectionsRoute);
+    app.use(BAN_COLLECTION_ENDPOINT, banCollectionRoute);
+    app.use(BAN_ACCOUNT_ENDPOINT, banAccountRoute);
     // app.use(ACCEPT_REPORTED_COLLECTION_ENDPOINT, acceptReportedCollectionRoute);
     // app.use(REJECT_REPORTED_COLLECTION_ENDPOINT, rejectReportedCollectionRoute);
 
@@ -51,12 +57,14 @@ async function connectToMongodb(test){
     }
 
     try{
+        console.log(`Connecting to mongodb ${removeCredentialFromMongodbUrl(mongooseUrl)}`)
         await mongoose.connect(mongooseUrl);
         mongooseUrl = removeCredentialFromMongodbUrl(mongooseUrl);
         console.log(`Connected to mongodb ${mongooseUrl}`)
         module.exports.connection = mongooseUrl;
     }catch (e){
         console.log("FAILED TO CONNECT TO MONGODB");
+        console.log(e.message);
         throw e;
     }
 }

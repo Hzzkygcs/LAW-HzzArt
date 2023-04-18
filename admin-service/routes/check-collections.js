@@ -1,16 +1,20 @@
 const express = require("express");
-const {Account, getReportedCollectionJoiValidation} = require("../model/reported-collection");
-
+const {StatusCollection, getStatusCollectionJoiValidation} = require("../model/status-collection");
 const route = express.Router();
 
 route.get("/:collectionId", async (req, res) => {
-    const validate = getReportedCollectionJoiValidation(["collectionId"]);
+    const validate = getStatusCollectionJoiValidation(["collectionId"]);
     validate({
         collectionId: req.params.collectionId
     });
-    const reportedCollectionWithTheId = await ReportedCollection.findOne({collectionId: req.params.collectionId});
-
-    res.send(reportedCollectionWithTheId.getObjectRepresentation());
+    const statusCollection = await StatusCollection.findOne({collectionId: req.params.collectionId});
+    if (!statusCollection) {
+        console.log("Report not found");
+        res.status(404).send("Report not found");
+    }
+    else {
+        res.send(statusCollection.getObjectRepresentation());
+    }
 });
 
 module.exports.route = route;
