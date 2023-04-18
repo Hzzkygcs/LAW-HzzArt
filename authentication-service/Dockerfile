@@ -7,11 +7,16 @@ WORKDIR /app
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Install any needed packages specified in package.json
-RUN npm install
 
 # Copy the rest of the app's source code to the working directory
 COPY . .
+RUN rm -rf ./node_modules/bcrypt || true
+
+
+
+# Install any needed packages specified in package.json
+RUN npm install
+
 
 # Expose port 3000 to the outside world
 EXPOSE 3000
