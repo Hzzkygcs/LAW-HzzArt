@@ -17,6 +17,12 @@ const reportedCollectionDbSchema = new mongoose.Schema({
         maxlength: 40,
         required: true,
     },
+    owner: {
+        type: String,
+        minlength: 1,
+        maxlength: 40,
+        required: true,
+    },         
     reason: {
         type: String,
         minlength: 1,
@@ -31,7 +37,7 @@ const reportedCollectionDbSchema = new mongoose.Schema({
 
 module.exports.ReportedCollectionMethods = {
     setDateTime: async function () {
-        this.dateTime = await getTime();
+        this.dateTime = getTime();
     }
 }
 
@@ -52,6 +58,9 @@ const reportedCollectionJoiSchema = {
     },
     reportedBy: {
         reportedBy: Joi.string().min(1).max(40).required()
+    },
+    owner: {
+        owner: Joi.string().min(1).max(40).required()
     },
     reason: {
         reason: Joi.string().min(1).max(40).required()
