@@ -36,6 +36,12 @@ const accountJoiSchema = {
     username: {
         username: Joi.string().min(1).max(40).required()
     },
+    isBan: {
+        isBan: Joi.boolean()
+    },
+    isAdmin: {
+        isAdmin: Joi.boolean()
+    }
 }
 
 module.exports.getUserJoiValidation = function (requiredFields) {

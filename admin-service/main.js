@@ -3,8 +3,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 const {exceptionHandlerMiddleware} = require("./modules/global-route-exceptions-handler/middlewares/exceptionHandlerMiddleware");
 const {jsonInvalidSyntaxHandlerMiddleware} = require("./modules/jsonInvalidSyntaxHandlerMiddleware");
-const {CHECK_ACCOUNT_ENDPOINT} = require("./routes/endpoints");
+const {CHECK_ACCOUNT_ENDPOINT,
+    PERMISSION_CONTROL_ENDPOINT} = require("./routes/endpoints");
 const {route: checkAccountRoute} = require("./routes/check-account");
+const {route: permissionControlRoute} = require("./routes/permission-control");
 // const {route: checkCollectionsRoute} = require("./routes/check-collections");
 // const {route: reportedCollectionsRoute} = require("./routes/reported-collections");
 // const {route: acceptReportedCollectionRoute} = require("./routes/accept-reported-collection");
@@ -18,6 +20,7 @@ module.exports.server = async function (test=true) {
     app.use(jsonInvalidSyntaxHandlerMiddleware);
 
     app.use(CHECK_ACCOUNT_ENDPOINT, checkAccountRoute);
+    app.use(PERMISSION_CONTROL_ENDPOINT, permissionControlRoute);
     // app.use(CHECK_COLECTIONS_ENDPOINT, checkCollectionsRoute);
     // app.use(REPORTED_COLLECTIONS_ENDPOINT, reportedCollectionsRoute);
     // app.use(ACCEPT_REPORTED_COLLECTION_ENDPOINT, acceptReportedCollectionRoute);
