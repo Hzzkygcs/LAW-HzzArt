@@ -1,22 +1,27 @@
 console.log("======= CREATING USER =======");
 
-triggerDatabaseCreation(db);
-createDatabase("admin-service");
+triggerDatabaseCreation(db);  // for MONGO_INITDB_DATABASE
+
+const initServiceDb = createDatabase("auth-service");
+createMainUser(initServiceDb, "auth-service");
+const adminServiceDb = createDatabase("admin-service");
+createMainUser(adminServiceDb, "admin-service");
 
 function createDatabase(databaseName){
-    const localDb = db.getSiblingDB(databaseName);
-    triggerDatabaseCreation(localDb);
+    const currDb = db.getSiblingDB(databaseName);
+    triggerDatabaseCreation(currDb);
     console.log(`A NEW DATABASE: ${databaseName} CREATED`)
+    return currDb;
 }
 
-function triggerDatabaseCreation(localDb){
-    localDb.createCollection("init");
-    console.log(`DATABASE: ${localDb} CREATION IS TRIGGERED`)
+function triggerDatabaseCreation(currDb){
+    currDb.createCollection("init");
+    console.log(`DATABASE: ${currDb} CREATION IS TRIGGERED`)
 }
 
 
-function createMainUser(){
-    const roles = getMainUserRoles();
+function createMainUser(db, dbName){
+    const roles = getMainUserRoles([dbName]);
     console.log(roles);
     
     db.createUser({
@@ -24,11 +29,10 @@ function createMainUser(){
       pwd: '391A0777775C663B07E6B5B7E0886D56',
       roles: roles
     });
-    console.log("USER main-user CREATED");
+    console.log(`USER main-user CREATED for ${dbName}`);
 }
 
-function getMainUserRoles(){
-    const initialDatabases = ["auth-service", "admin-service"];
+function getMainUserRoles(initialDatabases){
     const numberOfTestWorker = 0;
     const ret = [];
     
@@ -49,4 +53,4 @@ function getMainUserRoles(){
 }
 
 
-createMainUser();
+

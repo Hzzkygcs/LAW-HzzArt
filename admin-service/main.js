@@ -17,7 +17,7 @@ const {route: reportCollectionsRoute} = require("./routes/report-collection");
 module.exports.server = async function (test=true) {
     let app = express();
 
-    await  connectToMongodb(test);
+    await connectToMongodb(test);
     app.use(express.json());
     app.use(jsonInvalidSyntaxHandlerMiddleware);
 
@@ -51,13 +51,14 @@ async function connectToMongodb(test){
     }
 
     try{
-        console.log(`Connecting to mongodb ${mongooseUrl}`)
+        console.log(`Connecting to mongodb ${removeCredentialFromMongodbUrl(mongooseUrl)}`)
         await mongoose.connect(mongooseUrl);
         mongooseUrl = removeCredentialFromMongodbUrl(mongooseUrl);
         console.log(`Connected to mongodb ${mongooseUrl}`)
         module.exports.connection = mongooseUrl;
     }catch (e){
         console.log("FAILED TO CONNECT TO MONGODB");
+        console.log(e.message);
         throw e;
     }
 }
