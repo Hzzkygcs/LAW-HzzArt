@@ -37,7 +37,7 @@ const reportedCollectionDbSchema = new mongoose.Schema({
 
 module.exports.ReportedCollectionMethods = {
     setDateTime: async function () {
-        this.dateTime = await getTime();
+        this.dateTime = getTime();
     }
 }
 

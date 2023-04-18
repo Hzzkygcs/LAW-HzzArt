@@ -53,7 +53,7 @@ async function connectToMongodb(test){
     let mongooseUrl = process.env.DATABASE_HOST_URL;
     if (mongooseUrl == null){
         console.log("DATABASE_HOST_URL IS NOT SET");
-        mongooseUrl = "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/admin-service";
+        mongooseUrl = "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@localhost:27017/admin-service";
     }
 
     try{

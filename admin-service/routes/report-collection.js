@@ -10,18 +10,17 @@ route.post("/", async (req, res) => {
     const validate = getReportedCollectionJoiValidation(["collectionId", "reportedBy", "owner", "reason"]);
     validate(req.body);
 
-    const reportWithTheIdandBy = await ReportedCollection.find({collectionId: req.body.collectionId, reportedBy: req.body.reportedBy}).count();
-    if (reportWithTheIdandBy > 0){
+    const reportWithTheIDandBy = await ReportedCollection.find({collectionId: req.body.collectionId, reportedBy: req.body.reportedBy}).count();
+    if (reportWithTheIDandBy > 0){
         throw new CollectionAlreadyReportedException()
     }
 
     const checkAccount = await Account.findOne({username: req.body.owner});
-    console.log(checkAccount);
     if (checkAccount === null){
         let user = new Account({
             username: req.body.owner,
         });
-        user = await user.save();
+        await user.save();
     }
 
     let reportedCollection = new ReportedCollection({
@@ -32,13 +31,15 @@ route.post("/", async (req, res) => {
     });
 
     await reportedCollection.setDateTime();
-    reportedCollection = await reportedCollection.save();   
+    await reportedCollection.save();
 
-    let statusCollection = new StatusCollection({
-        collectionId: req.body.collectionId,
-    });
-
-    statusCollection = await statusCollection.save();
+    let statusCollection = await StatusCollection.findOne({collectionId: req.body.collectionId});
+    if (statusCollection === null){
+        statusCollection = new StatusCollection({
+            collectionId: req.body.collectionId,
+        });
+        await statusCollection.save();
+    }
     res.send(reportedCollection.getObjectRepresentation());
 });
 
