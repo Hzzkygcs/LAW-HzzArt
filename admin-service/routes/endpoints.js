@@ -1,5 +1,5 @@
 module.exports.CHECK_ACCOUNT_ENDPOINT = '/admin/check-account';
-module.exports.CHECK_COLECTIONS_ENDPOINT = '/admin/check-collections';
+module.exports.CHECK_COLLECTIONS_ENDPOINT = '/admin/check-collections';
 
 module.exports.PERMISSION_CONTROL_ENDPOINT = '/admin/permission-control';
 module.exports.BAN_COLLECTION_ENDPOINT = '/admin/ban-collection';

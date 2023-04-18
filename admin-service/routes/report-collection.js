@@ -10,8 +10,8 @@ route.post("/", async (req, res) => {
     const validate = getReportedCollectionJoiValidation(["collectionId", "reportedBy", "owner", "reason"]);
     validate(req.body);
 
-    const reportWithTheIDandBy = await ReportedCollection.find({collectionId: req.body.collectionId, reportedBy: req.body.reportedBy}).count();
-    if (reportWithTheIDandBy > 0){
+    const reportWithTheIDBy = await ReportedCollection.find({collectionId: req.body.collectionId, reportedBy: req.body.reportedBy}).count();
+    if (reportWithTheIDBy > 0){
         throw new CollectionAlreadyReportedException()
     }
 

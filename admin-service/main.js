@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const {exceptionHandlerMiddleware} = require("./modules/global-route-exceptions-handler/middlewares/exceptionHandlerMiddleware");
 const {jsonInvalidSyntaxHandlerMiddleware} = require("./modules/jsonInvalidSyntaxHandlerMiddleware");
 const {CHECK_ACCOUNT_ENDPOINT,
-    CHECK_COLECTIONS_ENDPOINT,
+    CHECK_COLLECTIONS_ENDPOINT,
     PERMISSION_CONTROL_ENDPOINT,
     REPORT_COLLECTIONS_ENDPOINT,
     BAN_COLLECTION_ENDPOINT,
@@ -15,8 +15,6 @@ const {route: checkCollectionsRoute} = require("./routes/check-collections");
 const {route: reportCollectionsRoute} = require("./routes/report-collection");
 const {route: banCollectionRoute} = require("./routes/ban-collection");
 const {route: banAccountRoute} = require("./routes/ban-account");
-// const {route: acceptReportedCollectionRoute} = require("./routes/accept-reported-collection");
-// const {route: rejectReportedCollectionRoute} = require("./routes/reject-reported-collection");
 
 module.exports.server = async function (test=true) {
     let app = express();
@@ -27,12 +25,10 @@ module.exports.server = async function (test=true) {
 
     app.use(CHECK_ACCOUNT_ENDPOINT, checkAccountRoute);
     app.use(PERMISSION_CONTROL_ENDPOINT, permissionControlRoute);
-    app.use(CHECK_COLECTIONS_ENDPOINT, checkCollectionsRoute);
+    app.use(CHECK_COLLECTIONS_ENDPOINT, checkCollectionsRoute);
     app.use(REPORT_COLLECTIONS_ENDPOINT, reportCollectionsRoute);
     app.use(BAN_COLLECTION_ENDPOINT, banCollectionRoute);
     app.use(BAN_ACCOUNT_ENDPOINT, banAccountRoute);
-    // app.use(ACCEPT_REPORTED_COLLECTION_ENDPOINT, acceptReportedCollectionRoute);
-    // app.use(REJECT_REPORTED_COLLECTION_ENDPOINT, rejectReportedCollectionRoute);
 
     app.use(exceptionHandlerMiddleware);
 
@@ -46,8 +42,6 @@ module.exports.server = async function (test=true) {
     }
     return app.listen(() => console.log(`Listening on any port`));
 };
-
-let testMongo = null;
 
 async function connectToMongodb(test){
     let mongooseUrl = process.env.DATABASE_HOST_URL;
