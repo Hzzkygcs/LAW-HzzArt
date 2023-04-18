@@ -1,18 +1,27 @@
 const express = require("express");
 const {upload} = require("../config/files-uploading-multer");
 const path = require("path");
+const {defaultTmpOptions} = require("../config/tmp-options");
+const tmp = require("tmp-promise");
+const Jimp = require("jimp");
+const {ContainCombineStrategy} = require("../services/strategies/image-combiner/image-combiner");
+const {submitVideo} = require("../services/submit-video");
+const fs = require('fs').promises;
+
 const route = express.Router();
 
 
-route.post("/submit-video", upload.any(), function (req, res) {
-    const submittedFiles = getOrderedImagePaths(req.files, "img")
-    console.log(submittedFiles);
-    res.send({
-        answer: 'success'
-    });
+route.post("/submit-video", upload.any(), async function (req, res) {
+    const submittedFiles = preservedOrderImagePaths(req.files, "img")
+    const token = await tmp.dir(defaultTmpOptions());  // token = path file
+    submitVideo(submittedFiles, token.path).then(r => {});
+
+    res.send(path.basename(token.path));
 });
 
-function getOrderedImagePaths(reqFiles, fieldNamePrefix) {
+
+
+function preservedOrderImagePaths(reqFiles, fieldNamePrefix) {
     const ret = [];
 
     let i = 0;
@@ -27,11 +36,13 @@ function getOrderedImagePaths(reqFiles, fieldNamePrefix) {
     return ret;
 }
 
+
+
 function getImagePaths(reqFiles, fieldName) {
     const ret = [];
 
     for (const reqFile of reqFiles) {
-        if (reqFile.fieldname != fieldName)
+        if (reqFile.fieldname !== fieldName)
             continue;
         const {path} = reqFile;
         ret.push(path);
