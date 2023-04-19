@@ -7,17 +7,31 @@ const Jimp = require("jimp");
 const {ContainCombineStrategy} = require("../services/strategies/image-combiner/image-combiner");
 const {submitVideo} = require("../services/submit-video");
 const {getTokenName} = require("../services/get-token-name");
+const joi = require("joi");
+const {generateValidationFunction} = require("../modules/joi-validate/generate-valdiation-function");
 const fs = require('fs').promises;
 
 const route = express.Router();
 
 
+const validationSchema = {
+    fps: joi.number().required().integer().min(1).max(120),
+};
+const validate = generateValidationFunction(validationSchema);
+
+
 route.post("/submit-video", upload.any(), async function (req, res) {
+    const {fps} = validate({
+        fps: req.body.fps,
+    });
+
     const submittedFiles = preservedOrderImagePaths(req.files, "img")
     const token = await tmp.dir(defaultTmpOptions());  // token = path file
-    submitVideo(submittedFiles, token.path, parseInt(req.body.fps)).then(r => {});
+    submitVideo(submittedFiles, token.path, fps).then(r => {});
 
-    res.send(getTokenName(token.path));
+    res.send({
+        token: getTokenName(token.path)
+    });
 });
 
 
