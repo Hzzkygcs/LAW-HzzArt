@@ -6,6 +6,7 @@ const tmp = require("tmp-promise");
 const Jimp = require("jimp");
 const {ContainCombineStrategy} = require("../services/strategies/image-combiner/image-combiner");
 const {submitVideo} = require("../services/submit-video");
+const {getTokenName} = require("../services/get-token-name");
 const fs = require('fs').promises;
 
 const route = express.Router();
@@ -16,7 +17,7 @@ route.post("/submit-video", upload.any(), async function (req, res) {
     const token = await tmp.dir(defaultTmpOptions());  // token = path file
     submitVideo(submittedFiles, token.path, parseInt(req.body.fps)).then(r => {});
 
-    res.send(path.basename(token.path));
+    res.send(getTokenName(token.path));
 });
 
 

@@ -5,6 +5,8 @@ const {InvalidImageException} = require("../modules/exceptions/InvalidImageExcep
 const {promises: fs} = require("fs");
 const {FadeImageTransitionStrategy} = require("./strategies/transition/image-blend");
 const {combineImagesToVideo} = require("./images-to-video");
+const {videoProgressRepository, ProgressPhaseEnums} = require("../repository/video-processing-progress");
+const {getTokenName} = require("./get-token-name");
 
 /**
  * @param submittedFiles
@@ -13,10 +15,14 @@ const {combineImagesToVideo} = require("./images-to-video");
  * @returns {Promise<void>}
  */
 module.exports.submitVideo = async function (submittedFiles, tokenAsPath, fps) {
+    const tokenName = getTokenName(tokenAsPath);
+    videoProgressRepository.register(tokenName);
+
     const durationInSecond = await generateFolderOfImageFrames(submittedFiles, tokenAsPath, fps);
-    console.log(`Video duration: ${durationInSecond}`);
 
     await combineImagesToVideo(tokenAsPath, durationInSecond, tokenAsPath, "video.mp4", fps);
+    videoProgressRepository.setProgress(tokenName, 100, ProgressPhaseEnums.DONE);
+
     await cleanUpUploadsFiles(submittedFiles);
     await cleanUpImagesInAFolder(tokenAsPath);
 };
@@ -28,14 +34,25 @@ async function generateFolderOfImageFrames(submittedFiles, tokenAsPath, fps) {
     imageFrameGenerator.planForWholeSlideshow(4, 3);
     const numberOfFrames = imageFrameGenerator.getEstimateNumberOfFrame();
 
+    const tokenName = getTokenName(tokenAsPath);
+    videoProgressRepository.setTotalNumberOfFrames(tokenName, numberOfFrames);
+
     imageFrameGenerator.setProgressReportEventHandler(
-        async (frameId, jimp) => {
-            console.log(`Created frameId: ${frameId}, percentage: ${frameId*100 / numberOfFrames}`);
-            await jimp.writeAsync(path.join(tokenAsPath, `${frameId}.png`), );
-        }
-    );
+        getProgressEventHandler(numberOfFrames, tokenAsPath));
     await imageFrameGenerator.carryOutThePlans(false);
     return imageFrameGenerator.getEstimateTotalDuration();
+}
+
+function getProgressEventHandler(numberOfFrames, tokenAsPath) {
+    const tokenName = getTokenName(tokenAsPath);
+
+    return async (frameId, jimp) => {
+        const numberOfFramesDone = frameId+1;
+        const donePercentage = numberOfFramesDone*100 / numberOfFrames;
+        await jimp.writeAsync(path.join(tokenAsPath, `${frameId}.png`));
+
+        videoProgressRepository.setProgress(tokenName, donePercentage, ProgressPhaseEnums.GENERATING_VIDEO_FRAMES);
+    };
 }
 
 
