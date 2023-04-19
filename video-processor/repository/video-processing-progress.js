@@ -1,6 +1,7 @@
 const {logProgress} = require("../services/log-progress");
 const {token} = require("morgan");
 const {TokenNotFoundException} = require("../modules/exceptions/TokenNotFoundException");
+const {VideoNotFinishedYetException} = require("../modules/exceptions/VideoNotDoneYetException");
 
 const ProgressPhaseEnums = {
     NOT_STARTED: "not-started",
@@ -33,10 +34,21 @@ class VideoProcessingProgress{
      * @returns {Progress}
      */
     getProgress(tokenName){
+        this.validateTokenExists(tokenName);
+
+        return this.videoProgress[tokenName];
+    }
+
+    validateTokenExists(tokenName){
         const tokenNotFound = !(tokenName in this.videoProgress);
         if (tokenNotFound)
             throw new TokenNotFoundException(tokenName);
-        return this.videoProgress[tokenName];
+    }
+    validateFinished(tokenName){
+        this.validateTokenExists(tokenName);
+        const progress = this.getProgress(tokenName);
+        if (progress.phase !== ProgressPhaseEnums.DONE)
+            throw new VideoNotFinishedYetException(tokenName, progress);
     }
 }
 module.exports.videoProgressRepository = new VideoProcessingProgress();
