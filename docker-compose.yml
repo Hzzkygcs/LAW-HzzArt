@@ -21,15 +21,15 @@ services:
       <<: *env
       DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/auth-service"
 
-#  video-processing-service:
-#    build:
-#      context: ./nodejs-app-2
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8002:8002"
-#    depends_on:
-#      - mongodb
-#    environment: *env
+  video-processing-service:
+    build:
+      context: ./video-processor
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mongodb
+    environment: *env
 
   admin-management:
     build:
