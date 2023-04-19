@@ -1,4 +1,6 @@
 const {logProgress} = require("../services/log-progress");
+const {token} = require("morgan");
+const {TokenNotFoundException} = require("../modules/exceptions/TokenNotFoundException");
 
 const ProgressPhaseEnums = {
     NOT_STARTED: "not-started",
@@ -31,6 +33,9 @@ class VideoProcessingProgress{
      * @returns {Progress}
      */
     getProgress(tokenName){
+        const tokenNotFound = !(tokenName in this.videoProgress);
+        if (tokenNotFound)
+            throw new TokenNotFoundException(tokenName);
         return this.videoProgress[tokenName];
     }
 }

@@ -3,9 +3,8 @@ const {JoiValidationError} = require("./exceptions/JoiValidationError");
 const joi = require("joi");
 
 /**
- * @param {Joi.ObjectSchema} schema
- * @param {String | null} contextName
  * @return {(function(*): null)|*}
+ * @param schema
  */
 function generateValidationFunction(schema){
     if (schema.validate == null)

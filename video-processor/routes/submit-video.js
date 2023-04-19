@@ -66,4 +66,4 @@ function getImagePaths(reqFiles, fieldName) {
 }
 
 
-module.exports.submit_video_route = route;
+module.exports.submitVideoRoute = route;
