@@ -43,7 +43,9 @@ module.exports.videoProgressRepository = new VideoProcessingProgress();
 
 
 class Progress{
-    percentage = 0;
+    percentageTotal = 0;
+    percentagePhase = 0;
+
     phase = ProgressPhaseEnums.NOT_STARTED;
     tokenName=null;
     totalFrames=null;
@@ -57,19 +59,22 @@ class Progress{
         this.phase = phase ?? this.phase;
 
         if (this.phase === ProgressPhaseEnums.NOT_STARTED)
-            this.percentage = 0;
+            this.percentageTotal = 0;
         else if (this.phase === ProgressPhaseEnums.GENERATING_VIDEO_FRAMES)
-            this.percentage = percentage * 0.85;
+            this.percentageTotal = percentage * 0.85;
         else if (this.phase === ProgressPhaseEnums.COMBINING_FRAMES)
-            this.percentage = 85 + percentage * 0.1;
+            this.percentageTotal = 85 + percentage * 0.1;
         else if (this.phase === ProgressPhaseEnums.CUTTING_VIDEO)
-            this.percentage = 95 + percentage * 0.05;
+            this.percentageTotal = 95 + percentage * 0.05;
         else{
-            this.percentage = 100;
+            this.percentageTotal = 100;
             console.assert(phase === ProgressPhaseEnums.DONE);
         }
+        this.percentagePhase = percentage;
 
         logProgress(
-            this.tokenName, this.phase, percentage.toFixed(2), this.percentage.toFixed(2));
+            this.tokenName, this.phase,
+            percentage.toFixed(2),
+            this.percentageTotal.toFixed(2));
     }
 }
