@@ -5,7 +5,7 @@ const {AutomaticallyHandledException} = require("../global-route-exceptions-hand
 
 class TokenNotFoundException extends AutomaticallyHandledException{
     constructor(tokenName) {
-        super("Token not found", StatusCodes.BAD_REQUEST, {
+        super("Token not found", StatusCodes.NOT_FOUND, {
             token: tokenName
         });
         this.name = "TokenNotFoundException";
