@@ -1,5 +1,5 @@
 const fs = require('fs');
-const {get_ffmpeg, get_ffmpeg_with_input} = require("./get_ffmpeg");
+const {getFfmpeg, getFfmpegWithInput} = require("./get-ffmpeg");
 
 const MUSIC_DIR = "musics";
 let music = 0;
@@ -19,7 +19,7 @@ function generateVideoFromMultiplePhotos(imageDir, outputDir, output, maxDuratio
     const tempOutput = `${outputDir}/temp.mp4`;
     const outputFile = `${outputDir}/${output}`;
 
-    const command = get_ffmpeg()
+    const command = getFfmpeg()
         .on('start', function(commandLine) {
             console.log('Spawned ffmpeg with command: ' + commandLine);
         })
@@ -30,6 +30,9 @@ function generateVideoFromMultiplePhotos(imageDir, outputDir, output, maxDuratio
         .audioCodec('aac')
         .outputOptions([`-r ${fps}`, '-pix_fmt yuv420p', '-vf scale=1280:-2'])
         .output(tempOutput)
+        .on('progress', (progress) => {
+            console.log(`Processing: ${JSON.stringify(progress)}% done`);
+        })
         .on('error', (error) => {
             console.log("FFMPEG Error " + error);
             reject(error)
@@ -43,7 +46,7 @@ function generateVideoFromMultiplePhotos(imageDir, outputDir, output, maxDuratio
 
 function cutDurationOfVideo(tempOutput, maxDuration, outputFile, resolve, reject) {
     console.log("cutting duration");
-    get_ffmpeg_with_input(tempOutput)
+    getFfmpegWithInput(tempOutput)
         .on('start', function(commandLine) {
             console.log('Spawned 2nd step ffmpeg with command: ' + commandLine);
         })

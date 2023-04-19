@@ -4,7 +4,7 @@ const path = require("path");
 const {InvalidImageException} = require("../modules/exceptions/InvalidImageException");
 const {promises: fs} = require("fs");
 const {FadeImageTransitionStrategy} = require("./strategies/transition/image-blend");
-const {combineImagesToVideo} = require("./combineImagesToVideo");
+const {combineImagesToVideo} = require("./images-to-video");
 
 /**
  * @param submittedFiles
@@ -15,6 +15,7 @@ const {combineImagesToVideo} = require("./combineImagesToVideo");
 module.exports.submitVideo = async function (submittedFiles, tokenAsPath, fps) {
     const durationInSecond = await generateFolderOfImageFrames(submittedFiles, tokenAsPath, fps);
     console.log(`Video duration: ${durationInSecond}`);
+
     await combineImagesToVideo(tokenAsPath, durationInSecond, tokenAsPath, "video.mp4", fps);
     await cleanUpUploadsFiles(submittedFiles);
     await cleanUpImagesInAFolder(tokenAsPath);
