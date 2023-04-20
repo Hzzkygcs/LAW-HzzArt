@@ -8,6 +8,8 @@ x-environment: &env
   ADMIN_SERVICE_PORT: 8082
   VIDEO_PROCESSING_SERVICE_PORT: 8083
 
+  LOGIN_ORCHESTRATION_SERVICE_PORT: 8085
+
 services:
   authentication-service:
     build:
@@ -43,6 +45,17 @@ services:
       <<: *env
       DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/admin-service"
 
+  login-orchestration:
+    build:
+      context: ./login-orchestration
+      dockerfile: Dockerfile
+    ports:
+      - '8085:8085'
+    depends_on:
+      - authentication-service
+      - admin-management
+    environment:
+      <<: *env
 
   mongodb:
     image: mongo
