@@ -1,0 +1,23 @@
+{
+    "name": "collection-interactions-orchestration",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "node index.js"
+    },
+    "dependencies": {
+      "cookie-parser": "^1.4.5",
+      "dotenv": "^10.0.0",
+      "express": "^4.17.1",
+      "express-async-errors": "^3.1.1",
+      "express-session": "^1.17.2",
+      "http-status-codes": "^2.2.0",
+      "joi": "^17.9.1",
+      "mongodb": "^4.0.5",
+      "mongoose": "^7.0.3"
+    },
+    "author": "",
+    "license": "ISC"
+  }

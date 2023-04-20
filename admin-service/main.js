@@ -6,13 +6,13 @@ const {jsonInvalidSyntaxHandlerMiddleware} = require("./modules/jsonInvalidSynta
 const {CHECK_ACCOUNT_ENDPOINT,
     CHECK_COLLECTIONS_ENDPOINT,
     PERMISSION_CONTROL_ENDPOINT,
-    REPORT_COLLECTIONS_ENDPOINT,
+    REPORTED_COLLECTIONS_ENDPOINT,
     BAN_COLLECTION_ENDPOINT,
     BAN_ACCOUNT_ENDPOINT} = require("./routes/endpoints");
 const {route: checkAccountRoute} = require("./routes/check-account");
 const {route: permissionControlRoute} = require("./routes/permission-control");
 const {route: checkCollectionsRoute} = require("./routes/check-collections");
-const {route: reportCollectionsRoute} = require("./routes/report-collection");
+const {route: reportedCollectionsRoute} = require("./routes/reported-collection");
 const {route: banCollectionRoute} = require("./routes/ban-collection");
 const {route: banAccountRoute} = require("./routes/ban-account");
 
@@ -26,7 +26,7 @@ module.exports.server = async function (test=true) {
     app.use(CHECK_ACCOUNT_ENDPOINT, checkAccountRoute);
     app.use(PERMISSION_CONTROL_ENDPOINT, permissionControlRoute);
     app.use(CHECK_COLLECTIONS_ENDPOINT, checkCollectionsRoute);
-    app.use(REPORT_COLLECTIONS_ENDPOINT, reportCollectionsRoute);
+    app.use(REPORTED_COLLECTIONS_ENDPOINT, reportedCollectionsRoute);
     app.use(BAN_COLLECTION_ENDPOINT, banCollectionRoute);
     app.use(BAN_ACCOUNT_ENDPOINT, banAccountRoute);
 
