@@ -28,7 +28,7 @@ services:
       - mongodb
     environment:
       <<: *env
-      DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/auth-URLs"
+      DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/auth-service"
 
   admin-management:
     build:
@@ -40,7 +40,7 @@ services:
       - mongodb
     environment:
       <<: *env
-      DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/admin-URLs"
+      DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/admin-service"
 
   video-processing-service:
     build:
