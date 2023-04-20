@@ -1,5 +1,5 @@
-function getUsernameFromJWT(token) {
-    // get from palen
+async function getUsernameFromJWT(token) {
+    const baseUrl = process.env.LOGIN_ORCHESTRATION_URL;
     const username = 1;
     return username;
 }

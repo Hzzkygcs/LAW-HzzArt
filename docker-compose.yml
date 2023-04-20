@@ -9,6 +9,13 @@ x-environment: &env
   ADMIN_SERVICE_PORT: 8082
   VIDEO_PROCESSING_SERVICE_PORT: 8083
   COLLECTION_ORCHESTRATION_PORT: 8084
+  LOGIN_ORCHESTRATION_PORT: 8085
+  AUTHENTICATION_SERVICE_URL: "http://authentication-service:8081"
+  ADMIN_SERVICE_URL: "http://admin-management:8082"
+  VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
+  COLLECTION_ORCHESTRATION_URL: "http://collection-orchestration:8084"
+  LOGIN_ORCHESTRATION_URL: "http://login-orchestration:8085"
+
 
 services:
   authentication-service:
@@ -51,6 +58,12 @@ services:
         dockerfile: Dockerfile
     ports:
         - "8084:8084"
+    depends_on:
+      - admin-management
+#      - login-orchestration
+
+    environment:
+      <<: *env
 
   mongodb:
     image: mongo
