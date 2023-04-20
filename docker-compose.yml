@@ -71,10 +71,23 @@ services:
       context: ./login-orchestration
       dockerfile: Dockerfile
     ports:
-      - '8085:8085'
+      - "8085:8085"
     depends_on:
       - authentication-service
       - admin-management
+    environment:
+      <<: *env
+
+  collection-interactions-orchestration:
+    build:
+        context: ./collection-interactions-orchestration
+        dockerfile: Dockerfile
+    ports:
+        - "8084:8084"
+    depends_on:
+      - admin-management
+#      - login-orchestration
+
     environment:
       <<: *env
 

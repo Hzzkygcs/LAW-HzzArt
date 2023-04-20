@@ -20,7 +20,7 @@ module.exports.server = async function (test= true) {
 
 
     if (!test){
-        const PORT = process.env.AUTHENTICATION_SERVICE_PORT;
+        const PORT = process.env.LOGIN_ORCHESTRATION_PORT;
         if (PORT == null){
             throw new Error("env PORT IS NOT SET");
         }
