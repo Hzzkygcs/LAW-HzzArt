@@ -5,28 +5,27 @@ const {checkBanCollections} = require("../modules/util/admin-service/check-ban-c
 
 const route = express.Router();
 
-// end point untuk search suatu collections:
-//   - dapetin list popular collections (like-rating-service)
-//   - dapetin image url dan nama
-//     dari masing-masing collections tersebut (servicenya pram)
-//   - cek apakah collections2 tersebut ada
-//     yang udah diban atau belum (admin-management)
 route.get("/:search", async (req, res) => {
+    const combined = {};
     const search = req.params.search;
     const collections = getPopularCollections(search);
-    const imgName = getNameImgCollections(collections);
-    const checkBan = checkBanCollections(collections);
-    //get image url and name from each collections
-    //check if collections are banned or not
-    const result = collections.map((collection) => {
-        return {
-            collectionId: collection.collectionId,
-            imageUrl: collection.imageUrl,
-            name: collection.name,
-            isBanned: collection.isBanned,
-        };
+
+    const nameImgCollections = getNameImgCollections(collections);
+
+    const checkCollection = checkBanCollections(collections);
+
+    nameImgCollections.forEach((collection) => {
+        const matchingCollections = checkCollection.filter(
+          (check) => check.collectionId === collection.collectionId && check.isBan === false
+        );
+        if (matchingCollections.length > 0) {
+          combined[collection.collectionId] = {
+            collectionName: collection.collectionName,
+            imageUrls: collection.imageUrls,
+          };
+        }
     });
-    res.send(result);
+    res.json(combined);
 });
 
 module.exports.route = route;

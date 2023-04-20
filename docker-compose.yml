@@ -28,17 +28,7 @@ services:
       - mongodb
     environment:
       <<: *env
-      DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/auth-service"
-
-  video-processing-service:
-    build:
-      context: ./video-processor
-      dockerfile: Dockerfile
-    ports:
-      - "8083:8083"
-    depends_on:
-      - mongodb
-    environment: *env
+      DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/auth-URLs"
 
   admin-management:
     build:
@@ -50,7 +40,31 @@ services:
       - mongodb
     environment:
       <<: *env
-      DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/admin-service"
+      DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/admin-URLs"
+
+  video-processing-service:
+    build:
+      context: ./video-processor
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mongodb
+    environment: *env
+
+  collection-orchestration:
+    build:
+        context: ./collection-interactions-orchestration
+        dockerfile: Dockerfile
+    ports:
+        - "8084:8084"
+    depends_on:
+      - admin-management
+#      - login-orchestration
+#      - art-collections
+#      - like-rating-service
+    environment:
+      <<: *env
 
   login-orchestration:
     build:
@@ -61,19 +75,6 @@ services:
     depends_on:
       - authentication-service
       - admin-management
-    environment:
-      <<: *env
-
-  collection-orchestration:
-    build:
-        context: ./collection-orchestration
-        dockerfile: Dockerfile
-    ports:
-        - "8084:8084"
-    depends_on:
-      - admin-management
-#      - login-orchestration
-
     environment:
       <<: *env
 

@@ -8,8 +8,10 @@ const route = express.Router();
 route.post("/", async (req, res) => {
     const jwt = req.get(process.env.JWT_JWT_TOKEN_HEADER_NAME);
     const username = getUsernameFromJWT(jwt);
-    validateCollection(req.body.collectionId);
-    sendRatingService(username, req.body.collectionId, req.body.rating);
+
+    await validateCollection(req.body.collectionId);
+
+    await sendRatingService(username, req.body.collectionId, req.body.rating);
     res.send("SUCCESS");
 });
 

@@ -1,23 +1,17 @@
-import {request} from "express";
+const axios = require("axios");
+const {getAdminManagerUrl} = require("../../../URLs/get-admin-manager-url");
 
 function sendAdminManagementService(username, collectionId, reason) {
-    const url = process.env.ADMIN_MANAGEMENT_SERVICE_URL;
-    const options = {
-        method: "POST",
-        uri: url,
-        body: {
-            username: username,
-            collectionId: collectionId,
-            reason: reason
-        },
-        json: true
-    };
+    const url = getAdminManagerUrl("/admin/reported-collection");
 
-    request(options, (error, response, body) => {
-        if (error) {
-            console.log(error);
-        }
-        console.log(body);
+    axios.post(url, {
+        username: username,
+        collectionId: collectionId,
+        reason: reason
+    }).then((response) => {
+        console.log(response);
+    }).catch((error) => {
+        console.log(error);
     });
 }
 
