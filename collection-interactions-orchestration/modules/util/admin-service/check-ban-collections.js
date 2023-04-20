@@ -3,7 +3,7 @@ const {getAdminManagerUrl} = require('../../../URLs/get-admin-manager-url');
 
 async function checkBanCollections(collections) {
     const url = getAdminManagerUrl('/admin/check-collection');
-    axios.get(url, {
+    const response = await axios.get(url, {
         params: {
             collections: collections
         }
@@ -12,6 +12,7 @@ async function checkBanCollections(collections) {
     }).catch((error) => {
         console.log(error);
     });
+    return response;
 }
 
 module.exports.checkBanCollections = checkBanCollections;

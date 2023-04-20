@@ -1,6 +1,6 @@
 const express = require("express");
 const {getPopularCollections} = require("../modules/util/like-rating-collections/get-popular-collections");
-const {getNameImgCollections} = require("../modules/util/collections/getNameImgCollections");
+const {getNameImgCollections} = require("../modules/util/collections/get-name-img-collections");
 const {checkBanCollections} = require("../modules/util/admin-service/check-ban-collections");
 
 const route = express.Router();

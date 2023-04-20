@@ -3,8 +3,7 @@ const {getLikeRatingServiceUrl} = require("../../../URLs/get-like-rating-service
 
 async function sendRatingService (username, collectionId, rating) {
     const url = getLikeRatingServiceUrl("/rating-collection");
-
-    await axios.post(url, {
+    const response = await axios.post(url, {
         username: username,
         collectionId: collectionId,
         rating: rating
@@ -13,6 +12,7 @@ async function sendRatingService (username, collectionId, rating) {
     }).catch((error) => {
         console.log(error);
     });
+    return response;
 }
 
 module.exports.sendRatingService = sendRatingService;

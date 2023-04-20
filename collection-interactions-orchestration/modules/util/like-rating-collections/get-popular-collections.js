@@ -3,8 +3,7 @@ const {getArtCollectionsUrl} = require('../../../URLs/get-like-rating-service-ur
 
 async function getPopularCollections(search) {
   const url = getArtCollectionsUrl('/get-like-rating-collections');
-
-  axios.get(url, {
+  response = await axios.get(url, {
     params: {
         search: search
     }
@@ -13,6 +12,7 @@ async function getPopularCollections(search) {
     }).catch((error) => {
         console.log(error);
     });
+    return response;
 }
 
 module.exports.getPopularCollections = getPopularCollections;

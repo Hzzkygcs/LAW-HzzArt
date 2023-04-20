@@ -3,7 +3,7 @@ const {getArtCollectionsUrl} = require('../../../URLs/get-art-collections-url');
 
 async function getNameImgCollections(collections) {
     const url = getArtCollectionsUrl('/get-name-img-collections');
-    axios.get(url, {
+    const response = await axios.get(url, {
         params: {
             collections: collections
         }
@@ -12,6 +12,7 @@ async function getNameImgCollections(collections) {
     }).catch((error) => {
         console.log(error);
     });
+    return response;
 }
 
 module.exports.getNameImgCollections = getNameImgCollections;

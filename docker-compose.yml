@@ -8,13 +8,18 @@ x-environment: &env
   AUTHENTICATION_SERVICE_PORT: 8081
   ADMIN_SERVICE_PORT: 8082
   VIDEO_PROCESSING_SERVICE_PORT: 8083
-  COLLECTION_ORCHESTRATION_PORT: 8084
+  COLLECTION_INTERACTIONS_ORCHESTRATION_PORT: 8084
   LOGIN_ORCHESTRATION_PORT: 8085
+  # ART_COLLECTIONS_PORT: 8086
+  # LIKE_RATING_SERVICE_PORT: 8087
+  SERVICE_REGISTRY_URL: "http://service-registry:9000"
   AUTHENTICATION_SERVICE_URL: "http://authentication-service:8081"
   ADMIN_SERVICE_URL: "http://admin-management:8082"
   VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
   COLLECTION_ORCHESTRATION_URL: "http://collection-orchestration:8084"
   LOGIN_ORCHESTRATION_URL: "http://login-orchestration:8085"
+  # ART_COLLECTIONS_URL: "http://art-collections:8086"
+  # LIKE_RATING_SERVICE_URL: "http://like-rating-service:8087"
 
 
 services:
@@ -52,7 +57,7 @@ services:
       - mongodb
     environment: *env
 
-  collection-orchestration:
+  collection-interactions-orchestration:
     build:
         context: ./collection-interactions-orchestration
         dockerfile: Dockerfile
@@ -60,7 +65,7 @@ services:
         - "8084:8084"
     depends_on:
       - admin-management
-#      - login-orchestration
+      - login-orchestration
 #      - art-collections
 #      - like-rating-service
     environment:
@@ -75,19 +80,6 @@ services:
     depends_on:
       - authentication-service
       - admin-management
-    environment:
-      <<: *env
-
-  collection-interactions-orchestration:
-    build:
-        context: ./collection-interactions-orchestration
-        dockerfile: Dockerfile
-    ports:
-        - "8084:8084"
-    depends_on:
-      - admin-management
-#      - login-orchestration
-
     environment:
       <<: *env
 

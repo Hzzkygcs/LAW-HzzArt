@@ -6,10 +6,10 @@ const {REPORT_COLLECTIONS_ENDPOINT,
     RATING_COLLECTIONS_ENDPOINT,
     LIKE_COLLECTIONS_ENDPOINT,
     SEARCH_COLLECTIONS_ENDPOINT} = require("./routes/endpoints");
-const {reportCollectionsRoute} = require("./routes/report-collections");
-const {ratingCollectionsRoute} = require("./routes/rating-collections");
-const {likeCollectionsRoute} = require("./routes/like-collections");
-const {searchCollectionsRoute} = require("./routes/search-collections");
+const {route: reportCollectionsRoute} = require("./routes/report-collections");
+const {route: ratingCollectionsRoute} = require("./routes/rating-collections");
+const {route: likeCollectionsRoute} = require("./routes/like-collections");
+const {route: searchCollectionsRoute} = require("./routes/search-collections");
 
 
 module.exports.server = async function (test=true) {
@@ -26,7 +26,7 @@ module.exports.server = async function (test=true) {
     app.use(exceptionHandlerMiddleware);
 
     if (!test){
-        const PORT = process.env.COLLECTION_ORCHESTRATION_PORT;
+        const PORT = process.env.COLLECTION_INTERACTIONS_ORCHESTRATION_PORT;
         console.log(PORT);
         if (PORT == null){
             throw new Error("env PORT IS NOT SET");
