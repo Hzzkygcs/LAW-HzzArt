@@ -4,23 +4,58 @@ const path = require("path");
 const {InvalidImageException} = require("../modules/exceptions/InvalidImageException");
 const {promises: fs} = require("fs");
 const {FadeImageTransitionStrategy} = require("./strategies/transition/image-blend");
+const {combineImagesToVideo} = require("./images-to-video");
+const {videoProgressRepository, ProgressPhaseEnums} = require("../repository/video-processing-progress");
+const {getTokenName} = require("./get-token-name");
 
+/**
+ * @param submittedFiles
+ * @param tokenAsPath
+ * @param {number} fps
+ * @returns {Promise<void>}
+ */
+module.exports.submitVideo = async function (submittedFiles, tokenAsPath, fps) {
+    const tokenName = getTokenName(tokenAsPath);
+    videoProgressRepository.register(tokenName);
 
-module.exports.submitVideo = async function (submittedFiles, tokenAsPath) {
-    const images = await getImagesWithNormalizedSize(submittedFiles);
-    const imageFrameGenerator = new FadeImageTransitionStrategy(images, 5);
-    imageFrameGenerator.setProgressReportEventHandler(
-        (frameId, jimp) => {
-            console.log(`Created frameId: ${frameId}`);
-            jimp.write(path.join(tokenAsPath, `${frameId}.jpg`));
-        }
-    );
-    await imageFrameGenerator.performUntilFinished(3, 2);
+    const durationInSecond = await generateFolderOfImageFrames(submittedFiles, tokenAsPath, fps);
 
-    await cleanUpFiles(submittedFiles);
+    await combineImagesToVideo(tokenAsPath, durationInSecond, tokenAsPath, "video.mp4", fps);
+    videoProgressRepository.setProgress(tokenName, 100, ProgressPhaseEnums.DONE);
 
-
+    await cleanUpUploadsFiles(submittedFiles);
+    await cleanUpImagesInAFolder(tokenAsPath);
 };
+
+
+async function generateFolderOfImageFrames(submittedFiles, tokenAsPath, fps) {
+    const images = await getImagesWithNormalizedSize(submittedFiles);
+    const imageFrameGenerator = new FadeImageTransitionStrategy(images, fps);
+    imageFrameGenerator.planForWholeSlideshow(4, 3);
+    const numberOfFrames = imageFrameGenerator.getEstimateNumberOfFrame();
+
+    const tokenName = getTokenName(tokenAsPath);
+    videoProgressRepository.setTotalNumberOfFrames(tokenName, numberOfFrames);
+
+    imageFrameGenerator.setProgressReportEventHandler(
+        getProgressEventHandler(numberOfFrames, tokenAsPath));
+    await imageFrameGenerator.carryOutThePlans(false);
+    return imageFrameGenerator.getEstimateTotalDuration();
+}
+
+function getProgressEventHandler(numberOfFrames, tokenAsPath) {
+    const tokenName = getTokenName(tokenAsPath);
+
+    return async (frameId, jimp) => {
+        const numberOfFramesDone = frameId+1;
+        const donePercentage = numberOfFramesDone*100 / numberOfFrames;
+        await jimp.writeAsync(path.join(tokenAsPath, `${frameId}.png`));
+
+        videoProgressRepository.setProgress(tokenName, donePercentage, ProgressPhaseEnums.GENERATING_VIDEO_FRAMES);
+    };
+}
+
+
 
 async function getImagesWithNormalizedSize(filePaths) {
     const jimpPhotos = await imagePathsToJimp(filePaths);
@@ -57,7 +92,7 @@ async function imagePathsToJimp(imagePaths) {
 }
 
 
-async function cleanUpFiles(paths) {
+async function cleanUpUploadsFiles(paths) {
     const promises=[];
     for (const path1 of paths) {
         promises.push(
@@ -65,4 +100,12 @@ async function cleanUpFiles(paths) {
         );
     }
     return Promise.all(promises);
+}
+
+async function cleanUpImagesInAFolder(targetDirectory) {
+    let fileNames = await fs.readdir(targetDirectory);
+    fileNames = fileNames.filter(fn => fn.endsWith('.png'));
+    for (const fileName of fileNames) {
+        await fs.unlink(path.join(targetDirectory, fileName));
+    }
 }

@@ -4,6 +4,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
 const {define_routes} = require("../config/routes");
+const {exceptionHandlerMiddleware} = require("../modules/global-route-exceptions-handler/middlewares/exceptionHandlerMiddleware");
 
 
 module.exports.config = function (app) {
@@ -18,6 +19,7 @@ module.exports.config = function (app) {
 
     define_routes(app);
 
+    app.use(exceptionHandlerMiddleware);
     // error handler
     app.use(function(err, req, res, next) {
         // set locals, only providing error in development

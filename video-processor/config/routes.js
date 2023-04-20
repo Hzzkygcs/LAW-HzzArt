@@ -1,6 +1,10 @@
-const {submit_video_route} = require("../routes/submit-video");
+const {submitVideoRoute} = require("../routes/submit-video");
+const {checkStatusRoute} = require("../routes/check-status");
+const {downloadRoute} = require("../routes/download");
 
 
 module.exports.define_routes = function (app) {
-    app.use('/', submit_video_route);
+    app.use('/', submitVideoRoute);
+    app.use('/', checkStatusRoute);
+    app.use('/', downloadRoute);
 }

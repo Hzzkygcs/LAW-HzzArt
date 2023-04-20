@@ -2,8 +2,8 @@ const path = require("path");
 const fs = require('fs');
 
 
-module.exports.clearTempFolder = function () {
-    const tempFolderPath = path.join(process.cwd(), "temp");
+module.exports.clearFolder = function (folderName="temp") {
+    const tempFolderPath = path.join(process.cwd(), folderName);
 
     try{
         fs.rmSync(tempFolderPath, { recursive: true, force: true });
