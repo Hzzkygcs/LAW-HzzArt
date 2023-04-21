@@ -1,18 +1,14 @@
-const axios = require("axios");
 const {getLikeRatingServiceUrl} = require("../../../URLs/get-like-rating-service-url");
+const {makeRequest} = require("../../external-call/make-request");
 
 async function sendRatingService (username, collectionId, rating) {
     const url = getLikeRatingServiceUrl("/rating-collection");
-    const response = await axios.post(url, {
-        username: username,
-        collectionId: collectionId,
-        rating: rating
-    }).then((response) => {
-        console.log(response);
-    }).catch((error) => {
-        console.log(error);
-    });
-    return response;
+    let response = await makeRequest("post", url, {
+        "username": username,
+        "collectionId": collectionId,
+        "rating": rating
+    })
+    return response.data;
 }
 
 module.exports.sendRatingService = sendRatingService;

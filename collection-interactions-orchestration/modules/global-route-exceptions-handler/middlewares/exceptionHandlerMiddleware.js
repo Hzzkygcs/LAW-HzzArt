@@ -1,4 +1,5 @@
 const {AutomaticallyHandledException} = require("../exceptions/AutomaticallyHandledException");
+const {ERROR_CODE_RESPONSE_PROPERTY_NAME, MESSAGE_RESPONSE_PROPERTY_NAME, REASON_RESPONSE_PROPERTY_NAME} = require("../constants");
 
 
 /**
@@ -13,15 +14,16 @@ function exceptionHandlerMiddleware(error, _req, res, next) {
         return;
     }
 
-    let reason = {
-        error_code: error.name,
-        message: error.message
-    };
+    let reason = {};
+    reason[ERROR_CODE_RESPONSE_PROPERTY_NAME] = error.name;
+    reason[MESSAGE_RESPONSE_PROPERTY_NAME] = error.message;
+
     reason = Object.assign(reason, error.additionalBody);
 
     error.handled = true;
-    res.status(error.statusCode)
-       .send({reason: reason});
+    const ret = {};
+    ret[REASON_RESPONSE_PROPERTY_NAME] = reason;
+    res.status(error.statusCode).send(ret);
 
     next();
 }

@@ -6,12 +6,15 @@ const {sendAdminManagementService} = require("../modules/util/admin-service/send
 const route = express.Router();
 
 route.post("/", async (req, res) => {
-    // const jwt = req.get(process.env.JWT_TOKEN_HEADER_NAME);
-    // const username = getUsernameFromJWT(jwt);
-    const reportedBy = "abc";
-    // await validateCollection(req.body.collectionId);
+    const jwt = req.get(process.env.JWT_TOKEN_HEADER_NAME);
+    let response = await getUsernameFromJWT(jwt);
+    const reportedBy = response.username;
+    // get owner of collection from pram
+    // const ownerCollection = validateCollection(req.body.collectionId);
+    const ownerCollection = "test";
 
-    await sendAdminManagementService(reportedBy, req.body.collectionId, req.body.reason, res);
+    response = await sendAdminManagementService(req.body.collectionId, reportedBy, ownerCollection, req.body.reason);
+    res.send(response);
 });
 
 module.exports.route = route;
