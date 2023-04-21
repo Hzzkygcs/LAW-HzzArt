@@ -1,0 +1,84 @@
+Prototype:
+https://www.figma.com/team_invite/redeem/K6MnQoXNq1g79mnLfDwTXD
+
+
+
+
+yang masih perlu dikerjain:
+
+pram: 
+end point untuk search collection (search result dibatasin sampai maximal 10 collections)
+end point untuk create collection
+end point untuk edit nama collection
+end point untuk delete image pada suatu collection
+end point untuk add new image pada suatu collection
+end point untuk lihat detail suatu collection 
+end point untuk download image ke-x pada suatu collection
+
+
+
+fadhil (export collections orchestration):
+end point untuk initiate download suatu collections menjadi suatu video
+end point untuk mengecek download progress
+end point untuk download progress tersebut
+
+catatan: 
+  kemungkinan nanti ada banyak 
+  instance video-processing-service.
+  Jadi fadhil perlu nerapin database buat nyimpen 
+  URL instance video-proc-service pada suatu database.
+  
+  Misal: token video XYZ diproses oleh localhost:8083. 
+  token video ABC diproses oleh localhost:8084
+
+
+
+fadhil (like-rating-service):
+end point untuk lihat popular collections (sorted by likes, kemudian sorted by rating. Ada pagination)
+end point untuk like suatu collection
+end point untuk rate suatu collection
+end point untuk dapetin number of likes dan average rating dari suatu collection
+
+
+tara (collection interactions orchestration):
+end point untuk report suatu collection. 
+  steps:
+  - check apakah akun yang ngereport 
+    itu valid atau engga (Login Orchestration)
+  - check apakah collections yang direport itu 
+    valid atau engga 
+    (tembak ke lihat-detail punya pram, 
+     kalo pram ngasih error, berarti collectionsnya
+     ga valid. Kalau ga error, 
+     simpen ID collections dan owner collectionsnya)
+  - kalau aman, panggil admin-management service
+end point untuk rating collections.
+  steps:
+  - check apakah akun yang ngereport 
+    itu valid atau engga (Login Orchestration)
+  - check apakah collections yang dirating itu 
+    valid atau engga
+  - panggil like-rating-service punya fadhil
+end point untuk like collections.
+  - alurnya sama kayak rating-collections
+end point untuk search suatu collections:
+  - dapetin list popular collections (like-rating-service)
+  - dapetin image url dan nama 
+    dari masing-masing collections tersebut (servicenya pram)
+  - cek apakah collections2 tersebut ada 
+    yang udah diban atau belum (admin-management)
+
+  
+
+valen (login orchestration):
+endpoint untuk login 
+  steps:
+  - check apakah username & password valid 
+    (Authentication service)
+  - check apakah akun diban atau tidak 
+    (admin management service)
+endpoint untuk verifikasi JWT token:
+  steps:
+  - check JWT valid atau tidak (diri sendiri)
+  - check apakah akun diban atau tidak 
+    (admin management service)
