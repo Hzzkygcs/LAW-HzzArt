@@ -1,18 +1,20 @@
 const axios = require("axios");
 const {getAdminManagerUrl} = require("../../../URLs/get-admin-manager-url");
 
-async function sendAdminManagementService(username, collectionId, reason) {
+async function sendAdminManagementService(reportedBy, collectionId, reason,res) {
     const url = getAdminManagerUrl("/admin/reported-collection");
-    const response = await axios.post(url, {
-        username: username,
+    await axios.post(url, {
         collectionId: collectionId,
+        reportedBy: reportedBy,
+        owner:"b",
         reason: reason
     }).then((response) => {
-        console.log(response);
+        console.log(response.data);
+        res.send(response.data);
     }).catch((error) => {
         console.log(error);
+        res.send(error);
     });
-    return response;
 }
 
 module.exports.sendAdminManagementService = sendAdminManagementService;

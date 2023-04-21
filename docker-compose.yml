@@ -14,7 +14,7 @@ x-environment: &env
   # LIKE_RATING_SERVICE_PORT: 8087
   SERVICE_REGISTRY_URL: "http://service-registry:9000"
   AUTHENTICATION_SERVICE_URL: "http://authentication-service:8081"
-  ADMIN_SERVICE_URL: "http://admin-management:8082"
+  ADMIN_SERVICE_URL: "http://admin-service:8082"
   VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
   COLLECTION_ORCHESTRATION_URL: "http://collection-orchestration:8084"
   LOGIN_ORCHESTRATION_URL: "http://login-orchestration:8085"
@@ -35,7 +35,7 @@ services:
       <<: *env
       DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/auth-service"
 
-  admin-management:
+  admin-service:
     build:
       context: ./admin-service
       dockerfile: Dockerfile
@@ -64,7 +64,7 @@ services:
     ports:
         - "8084:8084"
     depends_on:
-      - admin-management
+      - admin-service
       - login-orchestration
 #      - art-collections
 #      - like-rating-service
@@ -79,7 +79,7 @@ services:
       - "8085:8085"
     depends_on:
       - authentication-service
-      - admin-management
+      - admin-service
     environment:
       <<: *env
 
