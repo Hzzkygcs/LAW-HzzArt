@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:18
 
 WORKDIR /app
 COPY package*.json ./
@@ -11,5 +11,4 @@ RUN apt -y install ffmpeg
 COPY . .
 
 ENV NODE_ENV production
-EXPOSE 3000
 CMD ["npm", "start"]

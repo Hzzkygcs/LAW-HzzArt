@@ -23,6 +23,18 @@ x-environment: &env
 
 
 services:
+
+  frontend-service:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    environment:
+      <<: *env
+
   authentication-service:
     build:
       context: ./authentication-service
@@ -105,3 +117,13 @@ services:
     depends_on:
       - mongodb
     environment: *env
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
+

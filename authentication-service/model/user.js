@@ -5,6 +5,7 @@ const {generateValidationFunction} = require("../modules/joi-validate/generate-v
 const {hashValue} = require("../modules/util/hash");
 const {InvalidPasswordException} = require("../modules/exceptions/InvalidPasswordException");
 const {UnequalLastPasswordUpdateDate} = require("../modules/exceptions/UnequalLastPasswordUpdateDate");
+const {UsernameNotFoundException} = require("../modules/exceptions/UsernameNotFoundException");
 
 
 
@@ -65,8 +66,14 @@ userDbSchema.methods.getObjectRepresentation = function (){
     return ret;
 };
 
-
-module.exports.User = mongoose.model('User', userDbSchema);
+const User = mongoose.model('User', userDbSchema);
+module.exports.User = User;
+module.exports.getOneUserOrThrow = async function (username) {
+    const userWithTheUsername = await User.find({username: username}).exec();
+    if (userWithTheUsername.length == 0)
+        throw new UsernameNotFoundException(username);
+    return userWithTheUsername[0];
+}
 
 const passwordRequirements = Joi.string().required();
 const userJoiSchema = {
