@@ -1,28 +1,22 @@
 const express = require("express");
-const axios = require("axios");
-const {getAuthenticationServiceUrl} = require("../URLs/get-authentication-service-url");
+const jwt = require("jsonwebtoken");
 
 const route = express.Router()
 
-route.post("/", async (request, result) => {
-    const username = request.body.username
-    const response = await axios({
-        url: getAuthenticationServiceUrl('/auth/username/' + username),
-        method: 'get',
-    }).catch(function (error) {
-        if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-        } else if (error.request) {
-            console.log(error.request);
-        } else {
-            console.log('Error', error.message);
-        }
-        console.log(error.config);
-    })
-    console.log(response);
-    console.log(response.body);
+route.post("/", async (req, res) => {
+    let token = req.body['x-jwt-token'];
+    if (!token) {
+        res.status(400).send("Bad syntax.")
+    }
+    let secretKey = process.env.JWT_SECRET_KEY;
+    let decoded_token;
+    try {
+        decoded_token = jwt.verify(token, secretKey);
+    } catch (error) {
+        console.log(error.message)
+        res.status(401).send('Failed to validate token: ' + error.message)
+    }
+    res.send(decoded_token);
 });
 
 module.exports.route = route;
