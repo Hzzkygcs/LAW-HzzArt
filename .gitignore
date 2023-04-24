@@ -5,4 +5,5 @@
 **/coverage/
 **/temp/
 **/profiling/
+**/venv/
 video-processor/uploads/

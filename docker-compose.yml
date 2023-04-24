@@ -65,3 +65,30 @@ services:
     depends_on:
       - mongodb
     environment: *env
+
+  art-collection-service:
+    build:
+      context: ./art-collection-service
+      dockerfile: Dockerfile
+    ports:
+      - "8086:8086"
+    depends_on:
+      - postgres
+    environment:
+      <<: *env
+      DATABASE_HOST_URL: "postgres://postgres:t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq@postgres:5432/ai-art-collections"
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq
+      POSTGRES_DB: ai-art-collections
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
