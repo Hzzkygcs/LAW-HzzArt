@@ -4,13 +4,8 @@ const {AutomaticallyHandledException} = require("../global-route-exceptions-hand
 
 
 class UsernameNotFoundException extends AutomaticallyHandledException{
-    constructor(username="", message="") {
-        if (message === ""){
-            message = `Username ${username} is not found`;
-        }
-        super(message, StatusCodes.NOT_FOUND, {
-            username: username
-        });
+    constructor(name="", message="") {
+        super(message, StatusCodes.NOTFOUND);
         this.name = "UsernameNotFoundException";
     }
 }

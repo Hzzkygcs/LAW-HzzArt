@@ -1,5 +1,6 @@
 const express = require("express");
-const {User, getUserJoiValidation} = require("../model/user");
+const {User, getUserJoiValidation, getOneUserOrThrow} = require("../model/user");
+const {UsernameNotFoundException} = require("../modules/exceptions/UsernameNotFoundException");
 
 const route = express.Router();
 
@@ -8,9 +9,9 @@ route.get("/:username", async (req, res) => {
     validate({
         username: req.params.username
     });
-    const userWithTheUsername = await User.findOne({username: req.params.username});
 
-    res.send(userWithTheUsername.getObjectRepresentation());
+    const user = await getOneUserOrThrow(req.params.username);
+    res.send(user.getObjectRepresentation());
 });
 
 route.patch("/:username", async (req, res) => {
@@ -19,7 +20,7 @@ route.patch("/:username", async (req, res) => {
         old_password: req.body.old_password,
         new_password: req.body.new_password
     });
-    let userWithTheUsername = await User.findOne({username: req.params.username});
+    let userWithTheUsername = await getOneUserOrThrow(req.params.username);
     await userWithTheUsername.validatePasswordAsync(req.body.old_password);
     await userWithTheUsername.setPassword(req.body.new_password);
     userWithTheUsername = await userWithTheUsername.save();

@@ -3,12 +3,37 @@ version: '3'
 x-environment: &env
   SERVICE_REGISTRY_TOKEN: "ABCDEFG"
   ADMIN_SERVICE_TOKEN: "a90xIy6XopQkp8WNuaOFqRrg2XB6BfAYNdPJqKuIRmM0q5jyJj"
+  JWT_TOKEN_HEADER_NAME: "x-jwt-token"
   SERVICE_REGISTRY_PORT: 9000
   AUTHENTICATION_SERVICE_PORT: 8081
   ADMIN_SERVICE_PORT: 8082
   VIDEO_PROCESSING_SERVICE_PORT: 8083
+  COLLECTION_INTERACTIONS_ORCHESTRATION_PORT: 8084
+  LOGIN_ORCHESTRATION_PORT: 8085
+  # ART_COLLECTIONS_PORT: 8086
+  # LIKE_RATING_SERVICE_PORT: 8087
+  SERVICE_REGISTRY_URL: "http://service-registry:9000"
+  AUTHENTICATION_SERVICE_URL: "http://authentication-service:8081"
+  ADMIN_SERVICE_URL: "http://admin-service:8082"
+  VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
+  COLLECTION_ORCHESTRATION_URL: "http://collection-orchestration:8084"
+  LOGIN_ORCHESTRATION_URL: "http://login-orchestration:8085"
+  # ART_COLLECTIONS_URL: "http://art-collections:8086"
+  # LIKE_RATING_SERVICE_URL: "http://like-rating-service:8087"
+
 
 services:
+#  frontend-service:
+#    build:
+#      context: ./frontend
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - mongodb
+#    environment:
+#      <<: *env
+
   authentication-service:
     build:
       context: ./authentication-service
@@ -21,17 +46,7 @@ services:
       <<: *env
       DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/auth-service"
 
-  video-processing-service:
-    build:
-      context: ./video-processor
-      dockerfile: Dockerfile
-    ports:
-      - "8083:8083"
-    depends_on:
-      - mongodb
-    environment: *env
-
-  admin-management:
+  admin-service:
     build:
       context: ./admin-service
       dockerfile: Dockerfile
@@ -43,6 +58,42 @@ services:
       <<: *env
       DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/admin-service"
 
+  video-processing-service:
+    build:
+      context: ./video-processor
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mongodb
+    environment: *env
+
+  collection-interactions-orchestration:
+    build:
+        context: ./collection-interactions-orchestration
+        dockerfile: Dockerfile
+    ports:
+        - "8084:8084"
+    depends_on:
+      - admin-service
+      - login-orchestration
+#      - art-collections
+#      - like-rating-service
+    environment:
+      <<: *env
+
+  login-orchestration:
+    build:
+      context: ./login-orchestration
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8085"
+    depends_on:
+      - authentication-service
+      - admin-service
+    environment:
+      <<: *env
+      JWT_SECRET_KEY: "jv3Vh7b0upzBgZ8ocoOASSTjk0ypkBxO6NHqA5RIHFWEN5U5Vd"
 
   mongodb:
     image: mongo
@@ -65,3 +116,13 @@ services:
     depends_on:
       - mongodb
     environment: *env
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
+
