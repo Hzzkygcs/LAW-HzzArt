@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+
+
+    <%- include("authentication/-dependencies.ejs", locals ); %>
+    <%- include("-global-dependencies.ejs", locals ); %>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<form action="<%= urls.authentication.login %>" method="post" class="w-full h-full">
+    <div class="flex justify-center items-center flex-col
+                h-screen w-full h-full">
+        <div class="grid grid-table">
+            <span>Email: </span>
+            <input name="email" class="text-input" type="email">
+
+            <span>Password: </span>
+            <input name="password" class="text-input" type="password">
+
+            <div class="flex items-center justify-end mt-4 mb-0" style="grid-column: 1/3;">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded-full">
+                    Register
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+</body>
+</html>
