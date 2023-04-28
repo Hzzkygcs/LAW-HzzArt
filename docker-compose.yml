@@ -25,16 +25,33 @@ x-environment: &env
 
 
 services:
-  frontend-service:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+#  frontend-service:
+#    build:
+#      context: ./frontend
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - mongodb
+#    environment:
+#      <<: *env
+
+  eureka-server:
+    image: springcloud/eureka
     ports:
-      - "8080:8080"
-    depends_on:
-      - mongodb
+      - "8761:8761"
     environment:
-      <<: *env
+      - JAVA_OPTS=-Xmx512m
+
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
 
   authentication-service:
     build:
@@ -118,13 +135,4 @@ services:
     depends_on:
       - mongodb
     environment: *env
-
-  nginx:
-    image: nginx:latest
-    ports:
-      - "80:80"
-    volumes:
-      - type: bind
-        source: ./nginx.conf
-        target: /etc/nginx/nginx.conf
 
