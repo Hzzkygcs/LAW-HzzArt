@@ -22,7 +22,8 @@
     "mongodb": "^4.0.5",
     "mongoose": "^7.0.3",
     "pug": "^3.0.2",
-    "stun": "^2.1.0"
+    "stun": "^2.1.0",
+    "ping": "^0.4.4"
   },
   "devDependencies": {
     "mongodb-memory-server": "^8.12.2",
