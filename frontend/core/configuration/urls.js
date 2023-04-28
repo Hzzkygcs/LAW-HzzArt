@@ -1,15 +1,23 @@
-const BACKEND_HOST = "http://localhost:80";
-const FRONTEND_HOST = "http://localhost:80";
+function loginOrchestration() {
+    return "http://localhost:8085";
+}
+
+function authenticationService() {
+    return "http://localhost:8081";
+}
+
+
 
 
 module.exports.urls = {
     authentication: {
-        css: `/authentication/css.css`,
-        login_page: `/authentication/login.html`,
-        register_page: `/authentication/register.html`,
+        js: () => `/authentication/js.js`,
+        css: () => `/authentication/css.css`,
+        login_page: () => `/authentication/login.html`,
+        register_page: () => `/authentication/register.html`,
 
-        login_post: `${BACKEND_HOST}/auth/login`,
-        register_post: `${BACKEND_HOST}/auth/register`,
+        login_post: () => `${loginOrchestration()}/login/new-login`,
+        register_post: () => `${authenticationService()}/auth/register`,
     }
 };
 
