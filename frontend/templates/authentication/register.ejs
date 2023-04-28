@@ -5,13 +5,13 @@
     <title>Register</title>
 
 
-    <%- include("authentication/-dependencies.ejs", locals ); %>
     <%- include("-global-dependencies.ejs", locals ); %>
+    <%- include("authentication/-dependencies.ejs", locals ); %>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 
-<form action="<%= urls.authentication.register_post %>" method="post" class="w-full h-full">
+<form action="<%= urls.authentication.register_post() %>" method="post" class="w-full h-full">
     <div class="flex justify-center items-center flex-col
                 h-screen w-full h-full">
         <div class="grid grid-table">
@@ -25,7 +25,7 @@
             <input name="confirm-password" class="text-input" type="password">
 
             <span class="dont-have-acc hyperlink" style="grid-column: 1/3;">
-                <a href="<%= urls.authentication.login_page %>">Click here</a> to login
+                <a href="<%= urls.authentication.login_page() %>">Click here</a> to login
             </span>
 
             <div class="flex items-center justify-end mt-4 mb-0" style="grid-column: 1/3;">
