@@ -4,9 +4,12 @@ const FRONTEND_HOST = "http://localhost:80";
 
 module.exports.urls = {
     authentication: {
-        css: `${FRONTEND_HOST}/authentication/css.css`,
-        login: `${BACKEND_HOST}/auth/login`,
-        register: `${BACKEND_HOST}/auth/register`,
+        css: `/authentication/css.css`,
+        login_page: `/authentication/login.html`,
+        register_page: `/authentication/register.html`,
+
+        login_post: `${BACKEND_HOST}/auth/login`,
+        register_post: `${BACKEND_HOST}/auth/register`,
     }
 };
 
