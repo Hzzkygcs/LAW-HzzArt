@@ -5,8 +5,17 @@ const stun = require('stun');
 
 module.exports.setupEureka = async function () {
     const res = await stun.request('stun.l.google.com:19302');
-    console.log('your ip', res.getXorAddress().address);
+    const ipAddr = res.getXorAddress().address;
+    console.log('your ip', ipAddr);
     console.log('your port', res.getXorAddress().port);
+    
+    var hosts = ['google.com', ipAddr, "authentication-service:8081", "localhost:8081"];
+    hosts.forEach(function(host){
+    ping.sys.probe(host, function(isAlive){
+        var msg = isAlive ? 'host ' + host + ' is alive' : 'host ' + host + ' is dead';
+        console.log(msg);
+    });
+});
 
 
 
