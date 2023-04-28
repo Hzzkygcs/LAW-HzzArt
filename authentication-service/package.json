@@ -11,6 +11,7 @@
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.5",
     "dotenv": "^10.0.0",
+    "eureka-js-client": "^4.5.0",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "express-session": "^1.17.2",
@@ -20,11 +21,12 @@
     "joi": "^17.9.1",
     "mongodb": "^4.0.5",
     "mongoose": "^7.0.3",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "stun": "^2.1.0"
   },
   "devDependencies": {
-    "supertest": "^6.3.3",
-    "mongodb-memory-server": "^8.12.2"
+    "mongodb-memory-server": "^8.12.2",
+    "supertest": "^6.3.3"
   },
   "author": "",
   "license": "ISC"

@@ -7,12 +7,15 @@ const mongoose = require("mongoose");
 const {jsonInvalidSyntaxHandlerMiddleware} = require("./modules/jsonInvalidSyntaxHandlerMiddleware");
 const {USERNAME_VALID_ENDPOINT, REGISTER_ENDPOINT, VALIDATE_LOGIN_ENDPOINT} = require("./routes/endpoints");
 const {route: usernameValidRoute} = require("./routes/get-user");
+const {setupEureka} = require("./config/eureka");
 
 
 
 
 module.exports.server = async function (test=true) {
     let app = express();
+
+    setupEureka();
 
     await  connectToMongodb(test);
     app.use(express.json());
