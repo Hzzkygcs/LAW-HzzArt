@@ -1,9 +1,9 @@
 function loginOrchestration() {
-    return "http://localhost:8085";
+    return "/login-orchestration";
 }
 
 function authenticationService() {
-    return "http://localhost:8081";
+    return "/authentication-service";
 }
 
 
