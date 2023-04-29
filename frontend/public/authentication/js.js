@@ -1,9 +1,17 @@
 $(document).ready(function() {
     const form = $("form#submit-form");
 
-    form.on("submit", function(event) {
+    form.on("submit", async function(event) {
         event.preventDefault();
-        alert("yow");
+        const data = getFormData($(this));
+        const res = await $.ajax({
+            type: "POST",
+            url: this.action,
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+        }).promise();
+        console.log(res);
+
         return false;
     });
 });

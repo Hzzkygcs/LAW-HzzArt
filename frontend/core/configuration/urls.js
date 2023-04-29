@@ -10,6 +10,10 @@ function authenticationService() {
 
 
 module.exports.urls = {
+    utils: {
+        getFormData: () => "/js-utils/getFormData.js"
+    },
+
     authentication: {
         js: () => `/authentication/js.js`,
         css: () => `/authentication/css.css`,
