@@ -1,9 +1,11 @@
 const {getAdminServiceUrl} = require("../URLs/get-admin-service-url");
 const axios = require("axios");
 const {NoExternalServiceResponse} = require("../modules/exceptions/NoExternalServiceResponse");
+const {ServiceResponseException} = require("../modules/exceptions/ServiceResponseException");
 async function isUserBanned(username) {
     console.log("Login Service: Checking if user is banned...");
     let response;
+    let currentService = 'Admin Management Service';
     try {
         response = await axios({
             url: getAdminServiceUrl('/admin/check-account/' + username),
@@ -11,14 +13,11 @@ async function isUserBanned(username) {
         })
     } catch (error) {
         if (error.response) {
-            throw error;
+            throw new ServiceResponseException(currentService, error.response.status, error.response.data);
         } else if (error.request) {
-            // status = 408;
-            // errorMessage = errorMessage + "No response from admin service.";
             throw new NoExternalServiceResponse('Admin Management');
         } else {
-            // status = 400;
-            // errorMessage = errorMessage + "Error: " + error.message;
+            console.log('Error:', error.message);
             throw error;
         }
     }

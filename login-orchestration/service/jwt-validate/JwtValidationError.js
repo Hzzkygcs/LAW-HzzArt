@@ -1,4 +1,4 @@
-const {AutomaticallyHandledException} = require("/modules/global-route-exceptions-handler/exceptions/AutomaticallyHandledException");
+const {AutomaticallyHandledException} = require("../../modules/global-route-exceptions-handler/exceptions/AutomaticallyHandledException");
 const {StatusCodes} = require("http-status-codes");
 
 class JwtValidationError extends AutomaticallyHandledException {
@@ -17,3 +17,4 @@ class JwtValidationError extends AutomaticallyHandledException {
         return new JwtValidationError(name, message);
     }
 }
+module.exports.JwtValidationError = JwtValidationError;

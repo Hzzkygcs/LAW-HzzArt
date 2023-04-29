@@ -1,4 +1,5 @@
 const {StatusCodes} = require("http-status-codes");
+const {BaseAutomaticallyHandledException} = require("./BaseAutomaticallyHandledException");
 
 
 class AutomaticallyHandledException extends Error{

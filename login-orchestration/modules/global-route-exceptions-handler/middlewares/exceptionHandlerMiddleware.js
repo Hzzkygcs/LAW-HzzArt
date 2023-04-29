@@ -1,14 +1,17 @@
 const {AutomaticallyHandledException} = require("../exceptions/AutomaticallyHandledException");
+const {ServiceResponseException} = require("../../exceptions/ServiceResponseException");
+const {BaseAutomaticallyHandledException} = require("../exceptions/BaseAutomaticallyHandledException");
+const {express} = require('express');
 
 
 /**
- * @param {AutomaticallyHandledException} error
+ * @param {AutomaticallyHandledException, ServiceResponseException} error
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {express.NextFunction} next
  */
-function exceptionHandlerMiddleware(error, _req, res, next) {
-    if (!(error instanceof AutomaticallyHandledException)){
+function exceptionHandlerMiddleware(error, req, res, next) {
+    if (!(error instanceof BaseAutomaticallyHandledException)){
         next(error);
         return;
     }
