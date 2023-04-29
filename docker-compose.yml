@@ -5,6 +5,8 @@ x-environment: &env
   ADMIN_SERVICE_TOKEN: "a90xIy6XopQkp8WNuaOFqRrg2XB6BfAYNdPJqKuIRmM0q5jyJj"
   JWT_TOKEN_HEADER_NAME: "x-jwt-token"
   SERVICE_REGISTRY_PORT: 9000
+
+  FRONTEND_SERVICE_PORT: 8080
   AUTHENTICATION_SERVICE_PORT: 8081
   ADMIN_SERVICE_PORT: 8082
   VIDEO_PROCESSING_SERVICE_PORT: 8083
@@ -12,7 +14,8 @@ x-environment: &env
   LOGIN_ORCHESTRATION_PORT: 8085
   # ART_COLLECTIONS_PORT: 8086
   # LIKE_RATING_SERVICE_PORT: 8087
-  SERVICE_REGISTRY_URL: "http://service-registry:9000"
+#  SERVICE_REGISTRY_URL: "http://service-registry:9000"
+  FRONTEND_SERVICE_URL: "http://frontend-service:8080"
   AUTHENTICATION_SERVICE_URL: "http://authentication-service:8081"
   ADMIN_SERVICE_URL: "http://admin-service:8082"
   VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
@@ -23,16 +26,37 @@ x-environment: &env
 
 
 services:
-#  frontend-service:
-#    build:
-#      context: ./frontend
-#      dockerfile: Dockerfile
+  frontend-service:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    environment:
+      <<: *env
+    volumes:
+      - "./frontend:/code-frontend-service"
+      - "/code-frontend-service/node_modules"
+
+
+#  eureka-server:
+#    image: springcloud/eureka
 #    ports:
-#      - "8080:8080"
-#    depends_on:
-#      - mongodb
+#      - "8761:8761"
 #    environment:
-#      <<: *env
+#      - JAVA_OPTS=-Xmx512m
+
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - type: bind
+        source: ./nginx/nginx.conf
+        target: /etc/nginx/nginx.conf
 
   authentication-service:
     build:
@@ -107,24 +131,15 @@ services:
     volumes:
       - ./mongo-init:/docker-entrypoint-initdb.d/
 
-  service-registry:
-    build:
-      context: ./service-registry
-      dockerfile: Dockerfile
-    ports:
-      - "9000:9000"
-    depends_on:
-      - mongodb
-    environment: *env
-
-  nginx:
-    image: nginx:latest
-    ports:
-      - "80:80"
-    volumes:
-      - type: bind
-        source: ./nginx.conf
-        target: /etc/nginx/nginx.conf
+#  service-registry:
+#    build:
+#      context: ./service-registry
+#      dockerfile: -Dockerfile
+#    ports:
+#      - "9000:9000"
+#    depends_on:
+#      - mongodb
+#    environment: *env
 
 
   art-collection-service:

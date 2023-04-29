@@ -1,16 +1,12 @@
-const axios = require("axios");
 const {getLoginOrchestrationUrl} = require("../../../URLs/get-login-orchestration-url");
+const {makeRequest} = require("../../external-call/make-request");
 
 async function getUsernameFromJWT(token) {
-    const url = getLoginOrchestrationUrl("/auth/validate-login");
-    const response = await axios.post(url, {
-        token: token
-    }).then((response) => {
-        console.log(response);
-    }).catch((error) => {
-        console.log(error);
+    const url = getLoginOrchestrationUrl("/login/validate-login");
+    let response = await makeRequest("post", url, {
+        "x-jwt-token": token
     });
-    return response.data.username;
+    return response.data;
 }
 
 module.exports.getUsernameFromJWT = getUsernameFromJWT;
