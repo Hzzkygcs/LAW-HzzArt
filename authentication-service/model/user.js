@@ -57,6 +57,7 @@ userDbSchema.methods.validatePasswordAsync = async function (otherPassword){
     if (!passwordIsValid)
         throw new InvalidPasswordException("Invalid password!");
 };
+
 userDbSchema.methods.validateLastPasswordUpdateDate = module.exports.UserMethods.validateLastPasswordUpdateDate;
 userDbSchema.methods.getObjectRepresentation = function (){
     const ret = this.toObject();
@@ -70,7 +71,7 @@ const User = mongoose.model('User', userDbSchema);
 module.exports.User = User;
 module.exports.getOneUserOrThrow = async function (username) {
     const userWithTheUsername = await User.find({username: username}).exec();
-    if (userWithTheUsername.length == 0)
+    if (userWithTheUsername.length === 0)
         throw new UsernameNotFoundException(username);
     return userWithTheUsername[0];
 }
@@ -78,7 +79,7 @@ module.exports.getOneUserOrThrow = async function (username) {
 const passwordRequirements = Joi.string().required();
 const userJoiSchema = {
     username: {
-        username: Joi.string().required().min(1).max(40),
+        username: Joi.string().required().alphanum().min(3).max(30),
     },
     password: {
         password: passwordRequirements,
