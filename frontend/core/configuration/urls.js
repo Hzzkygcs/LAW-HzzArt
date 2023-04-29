@@ -1,9 +1,9 @@
 function loginOrchestration() {
-    return "http://localhost:8085";
+    return "/login-orchestration";
 }
 
 function authenticationService() {
-    return "http://localhost:8081";
+    return "/authentication-service";
 }
 
 
@@ -22,6 +22,10 @@ module.exports.urls = {
 
         login_post: () => `${loginOrchestration()}/login/new-login`,
         register_post: () => `${authenticationService()}/auth/register`,
+    },
+
+    myCollections: {
+        myCollectionsPage: () => '/my-collections',
     }
 };
 

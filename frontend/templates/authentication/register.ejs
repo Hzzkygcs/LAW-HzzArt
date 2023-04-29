@@ -11,7 +11,11 @@
 </head>
 <body>
 
-<form action="<%= urls.authentication.register_post() %>" method="post" class="w-full h-full">
+<form id="submit-form"
+      class="register w-full h-full"
+      action="<%= urls.authentication.register_post() %>"
+      method="post"
+      data-redirect-to="<%= urls.authentication.login_page() %>">
     <div class="flex justify-center items-center flex-col
                 h-screen w-full h-full">
         <div class="grid grid-table">
@@ -23,6 +27,8 @@
 
             <span>Confirmation Password: </span>
             <input name="confirm-password" class="text-input" type="password">
+
+            <span class="error-msg text-rose-600" style="grid-column: 1/3; text-align: right; display: none;"></span>
 
             <span class="dont-have-acc hyperlink" style="grid-column: 1/3;">
                 <a href="<%= urls.authentication.login_page() %>">Click here</a> to login

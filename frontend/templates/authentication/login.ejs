@@ -6,16 +6,14 @@
 
     <%- include("-global-dependencies.ejs", locals) %>
     <%- include("authentication/-dependencies.ejs", locals) %>
-    <script>
-        <!--const loginUrl = "<%= urls.authentication.login_post() %>";-->
-    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 
 <form id="submit-form"
       action="<%= urls.authentication.login_post() %>"
-      method="post" class="w-full h-full">
+      method="post" class="w-full h-full"
+      data-redirect-to="<%= urls.myCollections.myCollectionsPage() %>">
     <div class="flex justify-center items-center flex-col
                 h-screen w-full h-full">
         <div class="grid grid-table">
@@ -24,6 +22,8 @@
 
             <span>Password: </span>
             <input name="password" class="text-input" type="password">
+
+            <span class="error-msg text-rose-600" style="grid-column: 1/3; text-align: right; display: none;"></span>
 
             <span class="dont-have-acc hyperlink" style="grid-column: 1/3;">
                 <a href="<%= urls.authentication.register_page() %>">Click here</a> to register

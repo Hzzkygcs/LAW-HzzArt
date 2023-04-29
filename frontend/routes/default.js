@@ -38,8 +38,8 @@ function validateFileIsAllowed(res, fileUrl) {
     if (!basename(fileUrl).startsWith("-")){
         return true
     }
-    res.status(403);
-    res.send("forbidden");
+    res.status(404);
+    res.send("frontend page not found");
     return false;
 }
 
@@ -47,8 +47,8 @@ function validateExtensionFile(res, extension) {
     if (extension === ".html"){
         return true;
     }
-    res.status(403);
-    res.send("forbidden");
+    res.status(404);
+    res.send("frontend page not found");
     return false;
 }
 
