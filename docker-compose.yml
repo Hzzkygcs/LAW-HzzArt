@@ -37,6 +37,7 @@ services:
       <<: *env
     volumes:
       - "./frontend:/code-frontend-service"
+      - "/code-frontend-service/node_modules"
 
 
 #  eureka-server:
