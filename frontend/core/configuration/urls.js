@@ -3,7 +3,7 @@ function loginOrchestration() {
 }
 
 function authenticationService() {
-    return "http://localhost:8081";
+    return "/authentication-service";
 }
 
 
@@ -21,7 +21,7 @@ module.exports.urls = {
         register_page: () => `/authentication/register.html`,
 
         login_post: () => `${loginOrchestration()}/login/new-login`,
-        register_post: () => `${loginOrchestration()}/auth/register`,
+        register_post: () => `${authenticationService()}/auth/register`,
     }
 };
 

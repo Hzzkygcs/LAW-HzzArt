@@ -15,12 +15,12 @@ async function request(method, url, data, {isJson=true, contentType=null}){
             data: isJson ? JSON.stringify(data) : data,
             contentType: contentType ?? (isJson ? 'application/json' : 'multipart/form-data'),
         }).done((data) => {
-            data.error = null;
+            data.validationFail = null;
             res(data);
         }).fail(function (e) {
             if (e.status >= 400 && e.responseJSON != null && 'reason' in e.responseJSON){
                 const ret = {};
-                ret.error = e.responseJSON.reason;
+                ret.validationFail = e.responseJSON.reason;
                 ret.statusCode = e.statusCode;
                 res(ret);
                 return;

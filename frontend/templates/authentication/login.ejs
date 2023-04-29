@@ -22,9 +22,8 @@
             <span>Password: </span>
             <input name="password" class="text-input" type="password">
 
-            <span class="text-rose-600" style="grid-column: 1/3; text-align: right;">
-                account not found
-            </span>
+            <span class="error-msg text-rose-600" style="grid-column: 1/3; text-align: right; display: none;"></span>
+
             <span class="dont-have-acc hyperlink" style="grid-column: 1/3;">
                 <a href="<%= urls.authentication.register_page() %>">Click here</a> to register
             </span>
