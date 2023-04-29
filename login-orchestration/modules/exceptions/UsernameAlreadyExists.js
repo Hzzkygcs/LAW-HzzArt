@@ -9,4 +9,4 @@ class UsernameAlreadyExists extends AutomaticallyHandledException{
         this.name = "UsernameAlreadyExists";
     }
 }
-module.exports.UsernameAlreadyExists = UsernameAlreadyExists;
+module.exports.UserIsBanned = UsernameAlreadyExists;

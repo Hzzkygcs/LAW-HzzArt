@@ -8,11 +8,11 @@ const route = express.Router();
 route.get("/:search", async (req, res) => {
     const combined = {};
     const search = req.params.search;
-    const collections = getPopularCollections(search);
+    let collections = await getPopularCollections(search);
 
-    const nameImgCollections = getNameImgCollections(collections);
+    let nameImgCollections = await getNameImgCollections(collections);
 
-    const checkCollection = checkBanCollections(collections);
+    let checkCollection = await checkBanCollections(collections);
 
     nameImgCollections.forEach((collection) => {
         const matchingCollections = checkCollection.filter(
