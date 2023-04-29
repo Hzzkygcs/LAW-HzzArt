@@ -2,7 +2,7 @@ const {StatusCodes} = require("http-status-codes");
 const {BaseAutomaticallyHandledException} = require("./BaseAutomaticallyHandledException");
 
 
-class AutomaticallyHandledException extends Error{
+class AutomaticallyHandledException extends BaseAutomaticallyHandledException{
     constructor(message, statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
                 additionalBody = {}) {
         super(message);
