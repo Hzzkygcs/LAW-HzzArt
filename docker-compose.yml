@@ -131,17 +131,6 @@ services:
     volumes:
       - ./mongo-init:/docker-entrypoint-initdb.d/
 
-#  service-registry:
-#    build:
-#      context: ./service-registry
-#      dockerfile: -Dockerfile
-#    ports:
-#      - "9000:9000"
-#    depends_on:
-#      - mongodb
-#    environment: *env
-
-
   art-collection-service:
     build:
       context: ./art-collection-service
@@ -150,6 +139,8 @@ services:
       - "8086:8086"
     depends_on:
       - postgres
+    volumes:
+      - "./art-collection-service/pip-cache:/pip-cache"
     environment:
       <<: *env
       DATABASE_HOST_URL: "postgres://postgres:t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq@postgres:5432/ai-art-collections"

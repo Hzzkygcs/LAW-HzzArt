@@ -55,7 +55,7 @@ userDbSchema.methods.setLastPasswordUpdateDateToNow = module.exports.UserMethods
 userDbSchema.methods.validatePasswordAsync = async function (otherPassword){
     const passwordIsValid = await bcrypt.compare(otherPassword, this.password);
     if (!passwordIsValid)
-        throw new InvalidPasswordException();
+        throw new InvalidPasswordException("Invalid password!");
 };
 userDbSchema.methods.validateLastPasswordUpdateDate = module.exports.UserMethods.validateLastPasswordUpdateDate;
 userDbSchema.methods.getObjectRepresentation = function (){
