@@ -3,15 +3,18 @@ $(document).ready(function() {
 
     form.on("submit", async function(event) {
         event.preventDefault();
+
         const data = getFormData($(this));
-        const res = await $.ajax({
-            type: "POST",
-            url: this.action,
-            data: JSON.stringify(data),
-            contentType: 'application/json',
-        }).promise();
-        console.log(res);
+        const res = await post(this.action, data);
+        if (res.error){
+
+            return false;
+        }
 
         return false;
     });
+
+    function hideForm() {
+
+    }
 });
