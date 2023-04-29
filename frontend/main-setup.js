@@ -8,6 +8,8 @@ const app = express();
 app.set('views', viewDirectories);
 app.engine('html', require('ejs').renderFile);
 app.use(express.static('public'));
+app.disable('view cache');
+
 
 
 app.use(homepageRoute);

@@ -4,6 +4,7 @@ const fs = require("fs");
 const {urls} = require("../core/configuration/urls");
 const url = require('url');
 const path = require('path');
+const ejs = require('ejs');
 
 const route = express.Router();
 
@@ -23,9 +24,12 @@ route.all("*", async (req, res) => {
     if (!fileExists(res, fileLocation))
         return;
 
+
+
     res.locals = {
         urls: urls,
-        req: req
+        req: req,
+        root: require.main.filename,
     }
     res.render(fileLocation, {});
 });
