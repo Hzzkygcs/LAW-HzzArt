@@ -12,8 +12,10 @@
 <body>
 
 <form id="submit-form"
+      class="register w-full h-full"
       action="<%= urls.authentication.register_post() %>"
-      method="post" class="w-full h-full">
+      method="post"
+      data-redirect-to="<%= urls.authentication.login_page() %>">
     <div class="flex justify-center items-center flex-col
                 h-screen w-full h-full">
         <div class="grid grid-table">

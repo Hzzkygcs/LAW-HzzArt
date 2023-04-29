@@ -22,6 +22,10 @@ module.exports.urls = {
 
         login_post: () => `${loginOrchestration()}/login/new-login`,
         register_post: () => `${authenticationService()}/auth/register`,
+    },
+
+    myCollections: {
+        myCollectionsPage: () => '/my-collections',
     }
 };
 
