@@ -1,16 +1,17 @@
 const express = require("express");
 const {StatusCollection, getStatusCollectionJoiValidation} = require("../model/status-collection");
+const {CollectionNotFoundException} = require("../modules/exceptions/CollectionNotFoundException");
 const route = express.Router();
 
 route.get("/:collectionId", async (req, res) => {
     const validate = getStatusCollectionJoiValidation(["collectionId"]);
+    const collectionId = req.params.collectionId;
     validate({
-        collectionId: req.params.collectionId
+        collectionId: collectionId
     });
-    const statusCollection = await StatusCollection.findOne({collectionId: req.params.collectionId});
+    const statusCollection = await StatusCollection.findOne({collectionId: collectionId});
     if (!statusCollection) {
-        console.log("Report not found");
-        res.status(404).send("Report not found");
+        throw new CollectionNotFoundException(`Collection ${collectionId} is not found`);
     }
     else {
         res.send(statusCollection.getObjectRepresentation());

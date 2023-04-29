@@ -1,6 +1,7 @@
 .text-input{
     padding: 5px;
     background-color: aliceblue;
+    border: 1px rgb(100, 100, 100);
 }
 
 
