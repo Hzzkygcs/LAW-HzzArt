@@ -4,13 +4,20 @@ const fs = require("fs");
 const {urls} = require("../core/configuration/urls");
 const url = require('url');
 const path = require('path');
+const {validateLoggedIn} = require("../services/validateLoggedIn");
 
 const route = express.Router();
 
 
 route.get("/", async (req, res) => {
-    res.redirect(301, urls.authentication.login_page());
+    const temporaryRedirect = 302;
+
+    if (!validateLoggedIn(req, res))
+        return;
+    res.redirect(temporaryRedirect, urls.homepage());
+
 });
+
 
 
 module.exports.homepageRoute = route;

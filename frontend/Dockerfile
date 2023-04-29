@@ -1,21 +1,16 @@
 FROM node:18
 
-# only for production
+
+RUN ["mkdir", "/install"]
+
+ADD ["./package.json", "/install"]
+WORKDIR /install
+RUN npm install --verbose
+ENV NODE_PATH=/install/node_modules
 
 WORKDIR /code-frontend-service
 
-#WORKDIR /app
-COPY package*.json ./
-#COPY . .
-
-RUN file="$(ls | wc -l)" && echo $file
-RUN file="$(ls -a .)" && echo $file
-RUN file="$(pwd)" && echo $file
-RUN echo "\n"
-
-RUN npm install
-
-# RUN apt -y update
+COPY . /code-frontend-service/
 
 
 ENV NODE_ENV production

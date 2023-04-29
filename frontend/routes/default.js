@@ -5,6 +5,7 @@ const {urls} = require("../core/configuration/urls");
 const url = require('url');
 const path = require('path');
 const ejs = require('ejs');
+const {validateLoggedIn} = require("../services/validateLoggedIn");
 
 const route = express.Router();
 
@@ -12,6 +13,7 @@ const route = express.Router();
 route.all("*", async (req, res) => {
     const parsed = url.parse(req.originalUrl);
     const fileUrl = parsed.pathname;
+    console.log(fileUrl);
     if (!validateFileIsAllowed(res, fileUrl))
         return;
 
@@ -23,16 +25,33 @@ route.all("*", async (req, res) => {
     fileLocation = removeLeadingSlash(fileLocation)
     if (!fileExists(res, fileLocation))
         return;
-
-
+    console.log("bsd")
+    if (isLoginNeeded(fileLocation) && !validateLoggedIn(req, res)){
+        return;
+    }
+    console.log("esd");
 
     res.locals = {
         urls: urls,
         req: req,
         root: require.main.filename,
-    }
+    };
     res.render(fileLocation, {});
 });
+
+
+function isLoginNeeded(url) {
+    if (urlPathNormalizer(url) === urlPathNormalizer(urls.authentication.login_page()))
+        return false;
+    return urlPathNormalizer(url) !== urlPathNormalizer(urls.authentication.register_page());
+}
+function urlPathNormalizer(url) {
+    if (!url.startsWith("/"))
+        url = `/${url}`;
+    return url.replace(".ejs", "").replace(".html", "");
+}
+
+
 
 function validateFileIsAllowed(res, fileUrl) {
     if (!basename(fileUrl).startsWith("-")){

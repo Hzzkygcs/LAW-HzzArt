@@ -24,8 +24,9 @@ module.exports.urls = {
         register_post: () => `${authenticationService()}/auth/register`,
     },
 
+    homepage: () => module.exports.urls.myCollections.myCollectionsPage(),
     myCollections: {
-        myCollectionsPage: () => '/my-collections',
+        myCollectionsPage: () => '/collections/my-collections.html',
     }
 };
 

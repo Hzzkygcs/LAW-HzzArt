@@ -2,11 +2,14 @@ function errorMsg() {
     return $(".error-msg");
 }
 
+function form() {
+    return $("form#submit-form");
+}
+
 $(document).ready(function() {
-    const form = $("form#submit-form");
     errorMsg().fadeOut(0);
 
-    form.on("submit", async function(event) {
+    form().on("submit", async function(event) {
         event.preventDefault();
         errorMsg().fadeOut();
 
@@ -20,15 +23,22 @@ $(document).ready(function() {
             errorMsg().fadeIn();
             return false;
         }
-
-        const redirect = $(this).attr('data-redirect-to');
-        window.location = redirect;
+        storeLoginSession(res);
+        window.location = $(this).attr('data-redirect-to');
         return false;
     });
 });
 
-function isRegistrationForm(form) {
-    return $(form).hasClass("register");
+function isRegistrationForm() {
+    return form().hasClass("register");
+}
+
+function storeLoginSession(res) {
+    if (isRegistrationForm())
+        return;
+    const jwtToken = res['x-jwt-token'];
+    localStorage.setItem("x-jwt-token", jwtToken);
+    Cookies.set('x-jwt-token', jwtToken, { expires: 7 });
 }
 
 
