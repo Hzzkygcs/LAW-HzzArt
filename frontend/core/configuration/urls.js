@@ -1,13 +1,3 @@
-function loginOrchestration() {
-    return "/login-orchestration";
-}
-
-function authenticationService() {
-    return "/authentication-service";
-}
-
-
-
 
 module.exports.urls = {
     utils: {
@@ -30,3 +20,13 @@ module.exports.urls = {
     }
 };
 
+
+
+function loginOrchestration() {
+    return "/login-orchestration";
+}
+
+
+function authenticationService() {
+    return "/authentication-service";
+}

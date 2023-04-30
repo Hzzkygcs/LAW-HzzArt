@@ -11,8 +11,7 @@ const route = express.Router();
 
 route.get("/", async (req, res) => {
     const temporaryRedirect = 302;
-
-    if (!validateLoggedIn(req, res))
+    if (!await validateLoggedIn(req, res))
         return;
     res.redirect(temporaryRedirect, urls.homepage());
 
