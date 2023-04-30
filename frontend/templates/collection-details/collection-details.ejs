@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Login</title>
 
-    <%- include("-global-dependencies.ejs", locals) %>
+    <%- include(urls.global_dependencies(), locals) %>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet" />
 
@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    <%- include("-navbar.ejs", locals) %>
+    <%- include(urls.footer_navbar.navbar(), locals) %>
     <div class="bg-neutral-800 border-black-200 dark:bg-black-300 h-screen w-full flex">
         <div class="w-1/6 bg-neutral-800 flex items-center justify-center">
           <button id="prev" class="text-white w-28 h-28">
