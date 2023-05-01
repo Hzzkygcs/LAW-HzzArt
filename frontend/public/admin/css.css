@@ -4,3 +4,42 @@
  .c-card:hover img {
 	 transform: scale(1.05);
 }
+
+
+ /*detailed-collection*/
+.left-side-button {
+	justify-content: center;
+	display: flex;
+	align-items: center;
+    --tw-text-opacity: 1;
+    color: rgb(17 24 39 / var(--tw-text-opacity));
+	padding-bottom: 0.5rem/* 8px */;
+	padding-top: 0.5rem/* 8px */;
+	font-weight: 600;
+}
+
+.button {
+	--tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+	font-weight: 700;
+	border-radius: 9999px;
+	padding: 0.5rem 1rem;;
+}
+
+.button-gray {
+	--tw-bg-opacity: 1;
+	background-color: rgb(107 114 128 / var(--tw-bg-opacity));
+}
+.button-gray:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgb(75 85 99 / var(--tw-bg-opacity));
+}
+
+.button-red {
+    --tw-bg-opacity: 1;
+    background-color: rgb(224 36 36 / var(--tw-bg-opacity));
+}
+.button-red:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgb(155 28 28 / var(--tw-bg-opacity));
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Image</title>
+
+    <%- include(urls.global_dependencies(), locals) %>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <%- include(urls.footer_navbar.navbar(), locals) %>
+    <div class="container mx-auto h-90">
+        <div class="flex flex-row items-center pt-5 pb-7">
+
+            <div class="pr-3">
+                <h1 class="text-2xl font-bold">Add new image to Statue of Liberty Collection</h1>  
+            </div>
+
+        </div>
+
+
+        <div class="grid grid-cols-5 grid-row-9 gap-6 h-full pr-5">
+
+            <div class="col-span-3 row-span-9">
+                <textarea id="message" rows="4" 
+                class="block p-2.5 w-full h-full 
+                text-sm text-gray-900 bg-gray-50 rounded-lg 
+                border border-gray-300 focus:ring-blue-500 focus:border-blue-500 
+                dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-700 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                placeholder="Image prompt..." text-lg></textarea>               
+            </div>
+
+            <div class="col-span-2 row-span-1">
+                <img
+                src="https://img.freepik.com/premium-photo/woman-s-face-is-made-up-geometric-shapes-cyberpunk-colorful-fractalism-cubism_834088-1.jpg"
+                alt=""
+                class="rounded h-60 w-full object-cover"
+                />            
+            </div>
+        </div>
+
+        <div class="flex mt-10 justify-center">
+            <button type="button" class="w-40 text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Generate</button>
+        </div>
+
+    </div>
+    <%- include(urls.footer_navbar.footer(), locals) %>
+</body>
+</html>

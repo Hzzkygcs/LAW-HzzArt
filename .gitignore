@@ -4,6 +4,7 @@
 **/.idea/
 **/package-lock.json
 **/coverage/
+**/venv/
 **/temp/
 **/profiling/
 **/venv/
