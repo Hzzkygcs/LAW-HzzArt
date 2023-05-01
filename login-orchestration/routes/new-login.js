@@ -16,6 +16,7 @@ route.post("/", async (req, res) => {
    if (userStatus.banned) {
        throw new UserIsBanned(username);
    }
+   user.admin = userStatus.admin;
 
    let secretKey = process.env.JWT_SECRET_KEY;
    let token = jwt.sign(user, secretKey);
