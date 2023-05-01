@@ -46,6 +46,14 @@ const urls = {
     homepage: () => module.exports.urls.collections.myCollectionsPage(),
 
     collections: {
+        // do not delete. it's actually used inside the template
+        components: {
+            components: () => `${noLeadingSlash(urls.collections.collections())}/components`,
+            saveVideoModal: () => `${urls.collections.components.components()}/-save-video-modal.ejs`,
+            commentsModal: () => `${urls.collections.components.components()}/-comments-modal.ejs`,
+            reportModal: () => `${urls.collections.components.components()}/-report-modal.ejs`,
+        },
+
         collections: () => '/collections',
         myCollectionsPage: () => `${urls.collections.collections()}/my-collections.html`,
         searchCollectionsPage: () => `${urls.collections.collections()}/search-result.html`,
@@ -70,4 +78,14 @@ function loginOrchestration() {
 
 function authenticationService() {
     return "/authentication-service";
+}
+
+
+/**
+ * @param {string} string
+ */
+function noLeadingSlash(string) {
+    if (!string.startsWith("/"))
+        return;
+    return string.substring(1);
 }
