@@ -3,6 +3,7 @@
 **/.idea/
 **/package-lock.json
 **/coverage/
+**/venv/
 **/temp/
 **/profiling/
 video-processor/uploads/
