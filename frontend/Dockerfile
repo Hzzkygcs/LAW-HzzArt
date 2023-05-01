@@ -9,9 +9,9 @@ RUN npm install --verbose
 ENV NODE_PATH=/install/node_modules
 
 WORKDIR /code-frontend-service
-
 COPY . /code-frontend-service/
+RUN rm -rf node_modules; ln -sf /install/node_modules .
 
-
-ENV NODE_ENV production
-CMD ["npm", "run", "nodemon_run_legacy"]
+ADD Dockerstart.sh /
+RUN chmod +x /Dockerstart.sh
+CMD ["/Dockerstart.sh"]
