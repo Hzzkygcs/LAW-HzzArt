@@ -5,6 +5,40 @@ const {getUserAuthInformation} = require("../service/get-user-auth-information")
 const {UserIsBanned} = require("../modules/exceptions/UserIsBanned");
 const route = express.Router();
 
+/**
+ * @openapi
+ * /:
+ *    post:
+ *       summary: Validates user credentials and returns a jwt token.
+ *       description: Handles user login by returning a jsonwebtoken after validating user credentials and status.
+ *       requestBody:
+ *          required: true
+ *          content:
+ *             application/json:
+ *                schema:
+ *                   type: object
+ *                   properties:
+ *                      username:
+ *                         type: string
+ *                      password:
+ *                         type: string
+ *                example:
+ *                   username: a
+ *                   password: a
+ *       responses:
+ *          '200':
+ *             description: A json web token filled with the username.
+ *             content:
+ *                application/json:
+ *                   schema:
+ *                      type: object
+ *                      properties:
+ *                         x-jwt-token:
+ *                            type: string
+ *          default:
+ *             description: The error explained in the reason json.
+ */
+
 route.post("/", async (req, res) => {
    console.log("POST new login");
 
