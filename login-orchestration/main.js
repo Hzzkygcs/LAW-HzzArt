@@ -1,9 +1,8 @@
 require("express-async-errors");
 const express = require("express");
-const {NEW_LOGIN_ENDPOINT, VALIDATE_LOGIN_ENDPOINT, DOCUMENTATION} = require("./routes/endpoints");
+const {NEW_LOGIN_ENDPOINT, VALIDATE_LOGIN_ENDPOINT} = require("./routes/endpoints");
 const {route: newLoginRoute} = require("./routes/new-login");
 const {route: validateLoginRoute} = require("./routes/validate-login");
-const {route: documentation} = require("./routes/documentation");
 const {exceptionHandlerMiddleware} = require("./modules/global-route-exceptions-handler/middlewares/exceptionHandlerMiddleware");
 const {jsonInvalidSyntaxHandlerMiddleware} = require("./modules/jsonInvalidSyntaxHandlerMiddleware");
 
@@ -16,7 +15,6 @@ module.exports.server = async function (test= false) {
 
     app.use(NEW_LOGIN_ENDPOINT, newLoginRoute);
     app.use(VALIDATE_LOGIN_ENDPOINT, validateLoginRoute);
-    app.use(DOCUMENTATION, documentation);
 
     app.use(exceptionHandlerMiddleware);
 
