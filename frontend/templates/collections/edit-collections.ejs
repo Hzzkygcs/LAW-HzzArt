@@ -17,7 +17,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
           <div class="relative mx-auto w-full">
-            <a href="http://localhost/collection-details/collection-details.html"
+            <a href="<%= urls.collections.collectionDetailsPage() %>"
                class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
               <div class="relative rounded-lg bg-white">
                 <img
@@ -39,7 +39,7 @@
             </a>
           </div>
             <div class="relative mx-auto w-full">
-                <a href="http://localhost/collection-details/collection-details.html" class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
+                <a href="<%= urls.collections.collectionDetailsPage() %>" class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
                     <div class="relative rounded-lg bg-white">
                         <img
                                 src="https://img.freepik.com/premium-photo/woman-s-face-is-made-up-geometric-shapes-cyberpunk-colorful-fractalism-cubism_834088-1.jpg"
@@ -68,9 +68,11 @@
                 <p class="text-xl font-bold text-center">Creating the image</p>
             </div>
             <div class="relative w-full rounded-xl">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1/2 h-full mx-auto hover:stroke-green-600">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <a href="<%= urls.collections.addImagePage() %>">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1/2 h-full mx-auto hover:stroke-green-600">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </a>
             </div>
         </div>
         <div class="pt-52">

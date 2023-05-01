@@ -35,9 +35,15 @@ const urls = {
     },
 
     adminHomepage: () => "/admin/reported-collections.html",
-    homepage: () => module.exports.urls.myCollections.myCollectionsPage(),
-    myCollections: {
+    homepage: () => module.exports.urls.collections.myCollectionsPage(),
+
+    collections: {
         myCollectionsPage: () => '/collections/my-collections.html',
+        searchCollectionsPage: () => '/collections/search-result.html',
+        popularCollectionsPage: () => '/collections/popular-collections.html',
+        collectionDetailsPage: () => '/collection-details/collection-details.html',
+        editCollectionsPage: () => '/collections/edit-collections.html',
+        addImagePage: () => '/collections/generator.html'
     }
 };
 
