@@ -7,7 +7,7 @@ const {exceptionHandlerMiddleware} = require("./modules/global-route-exceptions-
 const {jsonInvalidSyntaxHandlerMiddleware} = require("./modules/jsonInvalidSyntaxHandlerMiddleware");
 
 
-module.exports.server = async function (test= true) {
+module.exports.server = async function (test= false) {
     let app = express();
 
     app.use(express.json());
