@@ -17,14 +17,15 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
           <div class="relative mx-auto w-full">
-            <a href="#" class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
+            <a href="http://localhost/collection-details/collection-details.html"
+               class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
               <div class="relative rounded-lg bg-white">
                 <img
                   src="https://img.freepik.com/premium-photo/woman-s-face-is-made-up-geometric-shapes-cyberpunk-colorful-fractalism-cubism_834088-1.jpg"
                   class="rounded-lg h-full w-full object-cover"
                   alt=""
                 />
-                  <button class="group absolute top-1 right-2">
+                  <button class="group absolute top-1 right-2 delete-button">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white" class="w-10 h-10 group-hover:stroke-red-500">
                           <path stroke-linecap="round"
                                 stroke-linejoin="round"
@@ -38,7 +39,7 @@
             </a>
           </div>
             <div class="relative mx-auto w-full">
-                <a href="#" class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
+                <a href="http://localhost/collection-details/collection-details.html" class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
                     <div class="relative rounded-lg bg-white">
                         <img
                                 src="https://img.freepik.com/premium-photo/woman-s-face-is-made-up-geometric-shapes-cyberpunk-colorful-fractalism-cubism_834088-1.jpg"
@@ -46,7 +47,8 @@
                                 alt=""
                         />
                         <button class="group absolute top-1 right-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white" class="w-10 h-10 group-hover:stroke-red-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white"
+                                 class="w-10 h-10 group-hover:stroke-red-500 delete-button">
                                 <path stroke-linecap="round"
                                       stroke-linejoin="round"
                                       fill-rule="evenodd"
@@ -82,3 +84,10 @@
 </body>
 </html>
 
+<script>
+    $( document ).ready(function() {
+        $(".delete-button").on("click", function(event){
+            event.preventDefault()
+        });
+    });
+</script>
