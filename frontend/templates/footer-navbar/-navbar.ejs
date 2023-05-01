@@ -1,12 +1,12 @@
-<header>
-    <nav class="bg-white border-gray-200 dark:bg-gray-300">
-      <div class="flex flex-wrap items-center justify-between mx-auto p-1">
+<nav class="bg-white border-gray-200 dark:bg-gray-300" style=""
+     id="navbar">
+    <div class="flex flex-wrap items-center justify-between mx-auto p-1">
         <%- include(urls.footer_navbar.components.navbar_left(), locals); %>
         <%- include(urls.footer_navbar.components.search_bar(), locals); %>
         <%- include(urls.footer_navbar.components.navbar_show_mobile_modal_btn(), locals); %>
         <%- include(urls.footer_navbar.components.navbar_right(), locals); %>
-      </div>
-    </nav>
-</header>
+    </div>
+</nav>
 
+<link rel="stylesheet" href="<%= urls.footer_navbar.css.navbarCss() %>" />
 <script src="<%= urls.footer_navbar.js.logout() %>"></script>

@@ -6,6 +6,9 @@ const urls = {
             // leading slash because it's not used by ejs include()
             logout: () => `/${urls.footer_navbar.footer_navbar()}/logout.js`,
         },
+        css: {
+            navbarCss: () => `/${urls.footer_navbar.footer_navbar()}/navbar-css.css`,
+        },
 
         footer_navbar: () => "footer-navbar",
         footer: () => `${urls.footer_navbar.footer_navbar()}/-footer.ejs`,
