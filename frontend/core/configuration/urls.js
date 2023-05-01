@@ -43,13 +43,17 @@ const urls = {
     homepage: () => module.exports.urls.collections.myCollectionsPage(),
 
     collections: {
-        myCollectionsPage: () => '/collections/my-collections.html',
-        searchCollectionsPage: () => '/collections/search-result.html',
-        popularCollectionsPage: () => '/collections/popular-collections.html',
-        collectionDetailsPage: () => '/collection-details/collection-details.html',
-        editCollectionsPage: () => '/collections/edit-collections.html',
-        addImagePage: () => '/collections/generator.html'
-    }
+        collections: () => '/collections',
+        myCollectionsPage: () => `${urls.collections.collections()}/my-collections.html`,
+        searchCollectionsPage: () => `${urls.collections.collections()}/search-result.html`,
+        popularCollectionsPage: () => `${urls.collections.collections()}/popular-collections.html`,
+        editCollectionsPage: () => `${urls.collections.collections()}/edit-collections.html`,
+        addImagePage: () => `${urls.collections.collections()}/generator.html`,
+        collectionDetailsPage: () => `${urls.collections.collections()}/collection-details.html`,
+    },
+    video: {
+      videoProgress:   () => '/video/video-progress.html',
+    },
 };
 
 module.exports.urls = urls;
