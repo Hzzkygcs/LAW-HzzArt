@@ -22,6 +22,6 @@ RUN rm -rf node_modules; ln -sf /install/node_modules .
 
 EXPOSE 8085
 
-ADD Dockerstart.sh /root/Dockerstart.sh
-RUN chmod +x /root/Dockerstart.sh
-CMD ["/root/Dockerstart.sh"]
+ADD Dockerstart.sh ./Dockerstart.sh
+RUN chmod +x ./Dockerstart.sh
+CMD ["./Dockerstart.sh"]
