@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <%- include(urls.global_dependencies(), locals) %>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <%- include(urls.footer_navbar.navbar(), locals) %>
+    <div class="container mx-auto">
+        <div class="flex justify-between items-center pt-5 pb-7">
+            <h1 class="text-2xl font-bold">Report</h1>
+        </div>
+
+        <div class="container m-auto grid grid-cols-4  grid-rows-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div style="aspect-ratio: 1 / 1;">
+                <div class="row-start-1 row-end-3 col-span-1 md:col-span-1 lg:col-span-3">
+            <%- include("admin/-reported-card.ejs", locals ); %>
+          </div>
+                <div class="pt-2 pb-2 row-start-4 md:col-span-3 justify-center items-center flex">
+                <button class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-full">
+                  Reject All Reports
+                </button>
+          </div>
+                <div class="pt-2 pb-2  row-start-5 md:col-span-3 justify-center items-center flex">
+                <button class="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-full">
+                  Ban Collection
+                </button>
+            </div>
+                <div class="pt-2 pb-2 row-start-6 md:col-span-3 justify-center items-center flex">
+                <button class="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-full">
+                  Ban Collection’s Owner
+                </button>
+            </div>
+            </div>
+            <div>
+                <div class="lg:col-start-2 lg:col-span-full lg:row-start-1 lg:row-span-2">
+                        <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                      <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                      <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                      <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+
+                          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>
+                      </div>
+            </div>
+        </div>
+    </div>
+    <%- include(urls.footer_navbar.footer(), locals) %>
+</body>
+</html>
+
+<!--          <div class="row-start-1 row-end-3 col-span-1 md:col-span-1 lg:col-span-3">-->
+<!--            <%- include("admin/-reported-card.ejs", locals ); %>-->
+<!--          </div>-->
+<!--          <div class="lg:col-start-4 lg:col-span-full lg:row-start-1 lg:row-span-5">-->
+<!--            <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--              <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--              <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--              <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--              <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--              <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--              <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--              <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--              <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--              <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--              <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--          <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--              <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--              <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--              <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--              <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+
+<!--              <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--              <h1 class="text-2xl font-bold">@user: <span class="text-gray-500">I just don’t like it</span></h1>-->
+<!--          </div>-->
+<!--          <div class="row-start-4 md:col-span-3 justify-center items-center flex">-->
+<!--                <button class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-full">-->
+<!--                  Reject All Reports-->
+<!--                </button>-->
+<!--          </div>-->
+<!--            <div class="row-start-5 md:col-span-3 justify-center items-center flex">-->
+<!--                <button class="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-full">-->
+<!--                  Ban Collection-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <div class="row-start-6 md:col-span-3 justify-center items-center flex">-->
+<!--                <button class="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-full">-->
+<!--                  Ban Collection’s Owner-->
+<!--                </button>-->
+<!--            </div>-->

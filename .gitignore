@@ -6,4 +6,6 @@
 **/venv/
 **/temp/
 **/profiling/
+**/venv/
+**/pip-cache/
 video-processor/uploads/
