@@ -2,7 +2,7 @@ const {getAuthenticationServiceUrl} = require("../URLs/get-authentication-servic
 const axios = require("axios");
 const {NoExternalServiceResponse} = require("../modules/exceptions/NoExternalServiceResponse");
 const {ServiceResponseException} = require("../modules/exceptions/ServiceResponseException");
-async function getUser(username, password) {
+async function getUserAuthInformation(username, password) {
     console.log("Login Service: fetching user...");
     let currentService = "Authentication Service";
     let getUserResponse;
@@ -20,11 +20,9 @@ async function getUser(username, password) {
             console.log(error.response.status);
             console.log(error.response.data);
             throw new ServiceResponseException(currentService, error.response.status, error.response.data);
-            // res.status(error.response.status).send(error.response.data);
         } else if (error.request) {
             console.log(error.request);
             throw new NoExternalServiceResponse("Authentication");
-            // res.status(408).send("No response from authentication service.");
         } else {
             console.log('Error:', error.message);
             throw error;
@@ -35,4 +33,4 @@ async function getUser(username, password) {
     return getUserResponse.data;
 }
 
-module.exports.getUser = getUser;
+module.exports.getUserAuthInformation = getUserAuthInformation;

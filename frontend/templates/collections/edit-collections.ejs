@@ -4,20 +4,21 @@
     <meta charset="UTF-8">
     <title>Login</title>
 
+    <%- include(urls.collections.dependencies(), locals) %>
     <%- include(urls.global_dependencies(), locals) %>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
     <%- include(urls.footer_navbar.navbar(), locals) %>
-    <div class="container ml-10 mx-auto">
+    <div class="collections-outter-container">
         <div class="flex justify-between items-center pt-5 pb-7">
-            <h1 class="text-2xl font-bold">Heaven Collections</h1>
+            <h1 class="text-2xl font-bold">Statue of Liberty Collection</h1>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 w-full">
           <div class="relative mx-auto w-full">
-            <a href="http://localhost/collection-details/collection-details.html"
+            <a href="<%= urls.collections.collectionDetailsPage() %>"
                class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
               <div class="relative rounded-lg bg-white">
                 <img
@@ -26,7 +27,7 @@
                   alt=""
                 />
                   <button class="group absolute top-1 right-2 delete-button">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white" class="w-10 h-10 group-hover:stroke-red-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white" class="w-8 h-8 group-hover:stroke-red-500">
                           <path stroke-linecap="round"
                                 stroke-linejoin="round"
                                 fill-rule="evenodd"
@@ -39,7 +40,7 @@
             </a>
           </div>
             <div class="relative mx-auto w-full">
-                <a href="http://localhost/collection-details/collection-details.html" class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
+                <a href="<%= urls.collections.collectionDetailsPage() %>" class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
                     <div class="relative rounded-lg bg-white">
                         <img
                                 src="https://img.freepik.com/premium-photo/woman-s-face-is-made-up-geometric-shapes-cyberpunk-colorful-fractalism-cubism_834088-1.jpg"
@@ -48,7 +49,7 @@
                         />
                         <button class="group absolute top-1 right-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white"
-                                 class="w-10 h-10 group-hover:stroke-red-500 delete-button">
+                                 class="w-8 h-8 group-hover:stroke-red-500 delete-button">
                                 <path stroke-linecap="round"
                                       stroke-linejoin="round"
                                       fill-rule="evenodd"
@@ -68,18 +69,23 @@
                 <p class="text-xl font-bold text-center">Creating the image</p>
             </div>
             <div class="relative w-full rounded-xl">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1/2 h-full mx-auto hover:stroke-green-600">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </div>
-        </div>
-        <div class="pt-52">
-            <div class="drop-shadow-xl rounded-xl border-2 mx-auto p-2 w-1/6 bg-green-600">
-                <p class="text-xl font-bold text-center text-white">Changes Saved!</p>
+                <a href="<%= urls.collections.addImagePage() %>">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1/4 h-full mx-auto hover:stroke-blue-700">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </a>
             </div>
         </div>
 
+
     </div>
+
+    <div class="fixed" style="bottom: 2rem; left: 50%; transform: translate(-50%, 0);">
+        <div class="drop-shadow-xl rounded-xl border-2 mx-auto py-1 px-2 bg-green-600">
+            <p class="text-xl font-bold text-center text-white">Changes Saved!</p>
+        </div>
+    </div>
+
     <%- include(urls.footer_navbar.footer(), locals) %>
 </body>
 </html>

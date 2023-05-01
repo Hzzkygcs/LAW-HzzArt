@@ -6,6 +6,9 @@ const urls = {
             // leading slash because it's not used by ejs include()
             logout: () => `/${urls.footer_navbar.footer_navbar()}/logout.js`,
         },
+        css: {
+            navbarCss: () => `/${urls.footer_navbar.footer_navbar()}/navbar-css.css`,
+        },
 
         footer_navbar: () => "footer-navbar",
         footer: () => `${urls.footer_navbar.footer_navbar()}/-footer.ejs`,
@@ -17,6 +20,7 @@ const urls = {
             navbar_left: () => `${urls.footer_navbar.components.components()}/-navbar-left.ejs`,
             navbar_show_mobile_modal_btn: () => `${urls.footer_navbar.components.components()}/-navbar-show-mobile-modal-btn.ejs`,
             search_bar: () => `${urls.footer_navbar.components.components()}/-search-bar.ejs`,
+            search_bar_mobile: () => `${urls.footer_navbar.components.components()}/-search-bar-mobile.ejs`,
             navbar_right: () => `${urls.footer_navbar.components.components()}/-navbar-right.ejs`,
         }
     },
@@ -40,10 +44,30 @@ const urls = {
     },
 
     adminHomepage: () => "/admin/reported-collections.html",
-    homepage: () => module.exports.urls.myCollections.myCollectionsPage(),
-    myCollections: {
-        myCollectionsPage: () => '/collections/my-collections.html',
-    }
+    homepage: () => module.exports.urls.collections.myCollectionsPage(),
+
+    collections: {
+        // do not delete. it's actually used inside the template
+        components: {
+            components: () => `${noLeadingSlash(urls.collections.collections())}/components`,
+            saveVideoModal: () => `${urls.collections.components.components()}/-save-video-modal.ejs`,
+            commentsModal: () => `${urls.collections.components.components()}/-comments-modal.ejs`,
+            reportModal: () => `${urls.collections.components.components()}/-report-modal.ejs`,
+        },
+
+        collections: () => '/collections',
+        dependencies: () => `${noLeadingSlash(urls.collections.collections())}/-dependencies.ejs`,
+
+        myCollectionsPage: () => `${urls.collections.collections()}/my-collections.html`,
+        searchCollectionsPage: () => `${urls.collections.collections()}/search-result.html`,
+        popularCollectionsPage: () => `${urls.collections.collections()}/popular-collections.html`,
+        editCollectionsPage: () => `${urls.collections.collections()}/edit-collections.html`,
+        addImagePage: () => `${urls.collections.collections()}/generator.html`,
+        collectionDetailsPage: () => `${urls.collections.collections()}/collection-details.html`,
+    },
+    video: {
+      videoProgress:   () => '/video/video-progress.html',
+    },
 };
 
 module.exports.urls = urls;
@@ -57,4 +81,14 @@ function loginOrchestration() {
 
 function authenticationService() {
     return "/authentication-service";
+}
+
+
+/**
+ * @param {string} string
+ */
+function noLeadingSlash(string) {
+    if (!string.startsWith("/"))
+        return;
+    return string.substring(1);
 }
