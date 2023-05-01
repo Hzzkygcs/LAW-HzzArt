@@ -20,6 +20,7 @@ const urls = {
             navbar_left: () => `${urls.footer_navbar.components.components()}/-navbar-left.ejs`,
             navbar_show_mobile_modal_btn: () => `${urls.footer_navbar.components.components()}/-navbar-show-mobile-modal-btn.ejs`,
             search_bar: () => `${urls.footer_navbar.components.components()}/-search-bar.ejs`,
+            search_bar_mobile: () => `${urls.footer_navbar.components.components()}/-search-bar-mobile.ejs`,
             navbar_right: () => `${urls.footer_navbar.components.components()}/-navbar-right.ejs`,
         }
     },
