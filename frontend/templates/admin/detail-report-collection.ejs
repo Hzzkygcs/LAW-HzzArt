@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Detail Collection</title>
 
     <%- include(urls.global_dependencies(), locals) %>
+    <%- include("admin/-dependencies.ejs", locals) %>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
@@ -25,23 +26,23 @@
                 <div class="my-4"></div>
 
                 <div class="bg-white p-3 hover:shadow">
-                    <div class="justify-center flex items-center font-semi-bold text-gray-900 pb-2">
+                    <div class="left-side-button">
                         <span>
-                            <button class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-full">
+                            <button class="button button-gray">
                                 Reject Report's
                             </button>
                         </span>
                     </div>
-                    <div class="justify-center flex items-center font-semi-bold text-gray-900 pt-2 pb-2">
+                    <div class="left-side-button">
                         <span>
-                            <button class="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-full">
+                            <button class="button button-red">
                               Ban Collection
                             </button>
                         </span>
                     </div>
-                    <div class="justify-center flex items-center font-semi-bold text-gray-900 pt-2 pb-2">
+                    <div class="left-side-button">
                         <span>
-                            <button class="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-full">
+                            <button class="button button-red">
                               Ban Collection’s Owner
                             </button>
                         </span>

@@ -33,6 +33,11 @@ const urls = {
         login_post: () => `${loginOrchestration()}/login/new-login`,
         register_post: () => `${authenticationService()}/auth/register`,
     },
+    admin: {
+        css: () => `/admin/css.css`,
+        reported_collections_page: () => `/admin/reported-collections.html`,
+        detail_reported_collection_page: () => `/admin/detail-report-collection.html`,
+    },
 
     homepage: () => module.exports.urls.myCollections.myCollectionsPage(),
     myCollections: {
