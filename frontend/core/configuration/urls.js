@@ -39,6 +39,7 @@ const urls = {
         detail_reported_collection_page: () => `/admin/detail-report-collection.html`,
     },
 
+    adminHomepage: () => "/admin/reported-collections.html",
     homepage: () => module.exports.urls.myCollections.myCollectionsPage(),
     myCollections: {
         myCollectionsPage: () => '/collections/my-collections.html',
