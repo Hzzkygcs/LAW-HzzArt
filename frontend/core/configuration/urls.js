@@ -34,6 +34,7 @@ const urls = {
         register_post: () => `${authenticationService()}/auth/register`,
     },
 
+    adminHomepage: () => "/admin/reported-collections.html",
     homepage: () => module.exports.urls.myCollections.myCollectionsPage(),
     myCollections: {
         myCollectionsPage: () => '/collections/my-collections.html',
