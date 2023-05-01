@@ -12,6 +12,4 @@ WORKDIR /code-frontend-service
 COPY . /code-frontend-service/
 RUN rm -rf node_modules; ln -sf /install/node_modules .
 
-ADD Dockerstart.sh ./Dockerstart.sh
-RUN chmod +x ./Dockerstart.sh
-CMD ["./Dockerstart.sh"]
+CMD ["npm", "run", "nodemon_run_legacy"]
