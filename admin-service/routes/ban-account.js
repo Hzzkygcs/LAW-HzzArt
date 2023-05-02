@@ -2,7 +2,6 @@ const express = require("express");
 const {Account, getAccountJoiValidation} = require("../model/account");
 const {ReportedCollection} = require("../model/reported-collection");
 const {validateToken} = require("../service/validate-token");
-const {InvalidBooleanFieldsException} = require("../modules/exceptions/InvalidBooleanFields");
 const {UsernameNotFoundException} = require("../modules/exceptions/UsernameNotFoundException");
 
 const route = express.Router();
@@ -23,9 +22,6 @@ route.post("/", async (req, res) => {
     }
     else if (req.body.isBan === false) {
         userWithTheUsername.isBan = false;
-    }
-    else {
-        throw new InvalidBooleanFieldsException();
     }
 
     await ReportedCollection.deleteOne({owner: req.body.username});

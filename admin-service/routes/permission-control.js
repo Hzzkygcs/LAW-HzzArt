@@ -1,6 +1,5 @@
 const express = require("express");
 const {Account, getAccountJoiValidation} = require("../model/account");
-const {InvalidBooleanFieldsException} = require("../modules/exceptions/InvalidBooleanFields");
 const {validateToken} = require("../service/validate-token");
 const {UsernameNotFoundException} = require("../modules/exceptions/UsernameNotFoundException");
 
@@ -22,9 +21,6 @@ route.post("/", async (req, res) => {
     }
     else if (req.body.isAdmin === false) {
         userWithTheUsername.isAdmin = false;
-    }
-    else {
-        throw new InvalidBooleanFieldsException();
     }
 
     await userWithTheUsername.save();
