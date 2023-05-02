@@ -2,6 +2,7 @@ const express = require("express");
 const {Account, getAccountJoiValidation} = require("../model/account");
 const {InvalidBooleanFieldsException} = require("../modules/exceptions/InvalidBooleanFields");
 const {validateToken} = require("../service/validate-token");
+const {UserNotFoundException} = require("../modules/exceptions/UserNotFoundException");
 
 const route = express.Router();
 
@@ -12,6 +13,9 @@ route.post("/", async (req, res) => {
     validate(req.body);
 
     const userWithTheUsername = await Account.findOne({username: req.body.username})
+    if (userWithTheUsername === null){
+        throw new UserNotFoundException();
+    }
 
     if (req.body.isAdmin === true) {
         userWithTheUsername.isAdmin = true;

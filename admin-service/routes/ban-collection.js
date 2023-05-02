@@ -3,6 +3,7 @@ const {StatusCollection, getStatusCollectionJoiValidation} = require("../model/s
 const {ReportedCollection} = require("../model/reported-collection");
 const {InvalidBooleanFieldsException} = require("../modules/exceptions/InvalidBooleanFields");
 const {validateToken} = require("../service/validate-token");
+const {UserNotFoundException} = require("../modules/exceptions/UserNotFoundException");
 
 const route = express.Router();
 
@@ -13,6 +14,9 @@ route.post("/", async (req, res) => {
     validate(req.body);
 
     const idWithTheCollectionId = await StatusCollection.findOne({collectionId: req.body.collectionId})
+    if (idWithTheCollectionId === null){
+        throw new UserNotFoundException();
+    }
 
     if (req.body.isBan === true) {
         idWithTheCollectionId.isBan = true;
