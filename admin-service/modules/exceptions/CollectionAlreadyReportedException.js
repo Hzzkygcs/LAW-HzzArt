@@ -4,8 +4,13 @@ const {AutomaticallyHandledException} = require("../global-route-exceptions-hand
 
 
 class CollectionAlreadyReportedException extends AutomaticallyHandledException{
-    constructor(name="", message="") {
-        super(message, StatusCodes.BAD_REQUEST);
+    constructor(collectionId="", message="") {
+        if (message === ""){
+            message = `Collection ${collectionId} is already reported`;
+        }
+        super(message, StatusCodes.BAD_REQUEST, {
+            collectionId: collectionId
+        });
         this.name = "CollectionAlreadyReportedException";
     }
 }
