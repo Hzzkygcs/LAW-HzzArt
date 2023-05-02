@@ -4,7 +4,7 @@ const {AutomaticallyHandledException} = require("../global-route-exceptions-hand
 
 
 class InvalidTokenException extends AutomaticallyHandledException{
-    constructor(name="", message="") {
+    constructor(message="") {
         super(message, StatusCodes.UNAUTHORIZED);
         this.name = "InvalidTokenException";
     }
