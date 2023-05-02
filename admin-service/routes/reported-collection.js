@@ -21,7 +21,7 @@ route.post("/", async (req, res) => {
     }
 
     if (reportWithTheIDBy > 0){
-        throw new CollectionAlreadyReportedException()
+        throw new CollectionAlreadyReportedException();
     }
     else {
         reportedCollection = new ReportedCollection({

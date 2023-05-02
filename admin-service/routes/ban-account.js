@@ -3,7 +3,7 @@ const {Account, getAccountJoiValidation} = require("../model/account");
 const {ReportedCollection} = require("../model/reported-collection");
 const {validateToken} = require("../service/validate-token");
 const {InvalidBooleanFieldsException} = require("../modules/exceptions/InvalidBooleanFields");
-const {UserNotFoundException} = require("../modules/exceptions/UserNotFoundException");
+const {UsernameNotFoundException} = require("../modules/exceptions/UsernameNotFoundException");
 
 const route = express.Router();
 
@@ -15,7 +15,7 @@ route.post("/", async (req, res) => {
     
     const userWithTheUsername = await Account.findOne({username: req.body.username})
     if (userWithTheUsername === null){
-        throw new UserNotFoundException();
+        throw new UsernameNotFoundException(req.body.username);
     }
 
     if (req.body.isBan === true) {

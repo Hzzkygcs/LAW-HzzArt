@@ -2,7 +2,7 @@ const express = require("express");
 const {Account, getAccountJoiValidation} = require("../model/account");
 const {InvalidBooleanFieldsException} = require("../modules/exceptions/InvalidBooleanFields");
 const {validateToken} = require("../service/validate-token");
-const {UserNotFoundException} = require("../modules/exceptions/UserNotFoundException");
+const {UsernameNotFoundException} = require("../modules/exceptions/UsernameNotFoundException");
 
 const route = express.Router();
 
@@ -14,7 +14,7 @@ route.post("/", async (req, res) => {
 
     const userWithTheUsername = await Account.findOne({username: req.body.username})
     if (userWithTheUsername === null){
-        throw new UserNotFoundException();
+        throw new UsernameNotFoundException(req.body.username);
     }
 
     if (req.body.isAdmin === true) {
