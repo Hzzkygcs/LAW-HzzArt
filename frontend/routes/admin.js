@@ -9,14 +9,14 @@ const {validateLoggedIn} = require("../services/validateLoggedIn");
 const route = express.Router();
 
 
-route.get("/", async (req, res) => {
+route.get("/admin", async (req, res) => {
     const temporaryRedirect = 302;
     if (!await validateLoggedIn(req, res))
         return;
-    res.redirect(temporaryRedirect, urls.homepage());
+    res.redirect(temporaryRedirect, urls.adminHomepage());
 
 });
 
 
 
-module.exports.homepageRoute = route;
+module.exports.adminRoute = route;

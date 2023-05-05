@@ -2,14 +2,22 @@ FROM node:18
 
 LABEL authors="valordra"
 
-WORKDIR /app
+#WORKDIR /app
+#COPY package*.json ./
+# RUN npm install
+#COPY . .
 
-COPY package*.json ./
 
-RUN npm install
 
-COPY . .
+RUN ["mkdir", "/install"]
+ADD ["./package.json", "/install"]
+WORKDIR /install
+RUN npm install --verbose
+ENV NODE_PATH=/install/node_modules
+
+WORKDIR /code-login-orchestration
+COPY . /code-login-orchestration/
+RUN rm -rf node_modules; ln -sf /install/node_modules .
 
 EXPOSE 8085
-
-CMD ["npm", "start"]
+CMD ["npm", "run", "nodemon_run_legacy"]

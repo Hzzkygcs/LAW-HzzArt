@@ -1,0 +1,55 @@
+<div class="items-center justify-between hidden w-full md:flex md:w-auto md:space-x-6" id="navbar-search">
+    <%- include(urls.footer_navbar.components.search_bar_mobile(), locals); %>
+    <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-300 md:dark:bg-gray-300 dark:border-gray-400">
+        <li class="m-1">
+            <a href="<%= urls.collections.popularCollectionsPage() %>" class="navbar-mobile-button dark">
+                Popular Collections
+            </a>
+        </li>
+        <li class="m-1">
+            <a href="#" class="navbar-mobile-button dark" onclick="logout()">
+                Logout
+            </a>
+        </li>
+    </ul>
+</div>
+
+<style>
+    .navbar-mobile-button {
+        display: block;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        color: #1a202c;
+        border-radius: 9999px;
+        transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+        transition-duration: 200ms;
+    }
+
+    .navbar-mobile-button:hover {
+        background-color: #f7fafc;
+    }
+
+    .navbar-mobile-button.md:hover {
+        background-color: transparent;
+        color: #4c51bf;
+        padding: 0;
+    }
+
+    .navbar-mobile-button.md.dark:hover {
+        color: #4299e1;
+        background-color: transparent;
+    }
+
+    .navbar-mobile-button.dark {
+        color: #1a202c;
+        border-color: #4a5568;
+    }
+
+    .navbar-mobile-button.dark:hover {
+        background-color: #4a5568;
+        color: #fff;
+    }
+</style>
+

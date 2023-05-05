@@ -1,5 +1,5 @@
 const express = require("express");
-const {isUserBanned} = require("../service/is-user-banned");
+const {getUserRoleAndBanStatus} = require("../service/get-user-role-and-ban-status");
 const {validateJwtToken} = require("../service/jwt-validate/validate-token");
 const {UserIsBanned} = require("../modules/exceptions/UserIsBanned");
 const route = express.Router()
@@ -11,7 +11,8 @@ route.post("/", async (req, res) => {
     let decoded_token = validateJwtToken(token);
 
     let username = decoded_token.username;
-    if (await isUserBanned()) {
+    const userStatus = await getUserRoleAndBanStatus();
+    if (userStatus.banned) {
         throw new UserIsBanned(username);
     }
     console.log("Decoded token:\n" + JSON.stringify(decoded_token));
