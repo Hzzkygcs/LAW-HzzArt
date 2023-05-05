@@ -7,9 +7,9 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
-def get_user(request):
+def save_user(request):
     # Retrieve the JWT token from the request headers
-    jwt_token = request.META.get('HTTP_X_JWT_TOKEN')
+    jwt_token = request.META.get('x-jwt-token')
 
     # Send the token to the login orchestration service
     response = requests.post('<BASE_URL>/login',body={'Authorization': f'Bearer {jwt_token}'})
@@ -17,17 +17,17 @@ def get_user(request):
     data = response.json()
     username = data['username']
 
-    #create user
+    #save user
     user = Cust(username=username)
     user.save()
-    return JsonResponse({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
+    return JsonResponse({"message": "User successfully saved"}, status=status.HTTP_200_OK)
 
-@csrf_exempt 
-def create_user(request):
-    deserialize = json.loads(request.body)
-    user = Cust(username=deserialize['username'])
-    user.save()
-    return JsonResponse({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
+# @csrf_exempt 
+# def create_user(request):
+#     deserialize = json.loads(request.body)
+#     user = Cust(username=deserialize['username'])
+#     user.save()
+#     return JsonResponse({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
 
 @csrf_exempt
 def create_post(request, username):

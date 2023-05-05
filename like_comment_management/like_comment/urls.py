@@ -4,8 +4,8 @@ from . import views
 from .views import *
 
 urlpatterns = [
-    path('get_user', get_user, name='get_user'),
-    path('create_user', create_user, name='create_user'),
+    path('save_user', save_user, name='save_user'),
+    # path('create_user', create_user, name='create_user'),
     path('create_post/<str:username>', create_post, name='create_post'),
     path('get_post/<int:post_id>', get_post, name='get_post'),
     path('like/<int:post_id>/<str:username>', like, name='like'),
