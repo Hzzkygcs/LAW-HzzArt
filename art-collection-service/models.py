@@ -2,8 +2,8 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from database import Base
 
-class Art(Base):
-    __tablename__ = "arts"
+class Image(Base):
+    __tablename__ = "imagess"
 
     id = Column(Integer, primary_key=True, index=True)
     url = Column(String, index=True)
@@ -15,6 +15,7 @@ class ArtCollection(Base):
     __tablename__ = "art_collections"
 
     id = Column(Integer, primary_key=True, index=True)
+    owner = Column(String, index=True)
     name = Column(String, index=True)
 
     arts = relationship("Art", back_populates="collection")
