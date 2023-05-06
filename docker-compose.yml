@@ -160,7 +160,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
-  postgres:
+  postgres-like-and-comment:
     image: postgres
     restart: always
     environment:
