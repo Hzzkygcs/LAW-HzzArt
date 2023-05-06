@@ -77,25 +77,37 @@ WSGI_APPLICATION = "like_comment_management.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
+        'NAME': 'like-and-comment',
         'USER': 'postgres',
-        'PASSWORD': '60LD48iYfhQcXVD0',
-        'HOST': 'db.eyhnunitzuroplepapui.supabase.co',
-        'PORT': '5432',
+        'PASSWORD': 't9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq',
+        'HOST': 'localhost',
+        'PORT': '5433',
         # 'OPTIONS': {
         #     'options': '-c search_path=reminder'
         # }
     },
 
-    'temp': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'postgres',
+    #     'USER': 'postgres',
+    #     'PASSWORD': '60LD48iYfhQcXVD0',
+    #     'HOST': 'db.eyhnunitzuroplepapui.supabase.co',
+    #     'PORT': '5432',
+    #     # 'OPTIONS': {
+    #     #     'options': '-c search_path=reminder'
+    #     # }
+    # },
+
+    # 'temp': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
 #   'default': {
 #     'ENGINE': 'django.db.backends.postgresql',
 #     'NAME': 'postgres',
 #     'USER': 'postgres',
-#     'PASSWORD': '',
+#     'PASSWORD': 'pro212121',
 #     'HOST': 'localhost',
 #     'PORT': '5432',
 #     'OPTIONS': {
