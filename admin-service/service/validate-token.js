@@ -3,7 +3,7 @@ const {InvalidTokenException } = require("../modules/exceptions/InvalidTokenExce
 function validateToken(req) {
     const serviceToken = req.get("x-service-token")
     if (serviceToken !== process.env.ADMIN_SERVICE_TOKEN) {
-        throw new InvalidTokenException();
+        throw new InvalidTokenException("x-service-token is invalid");
     }
 }
 

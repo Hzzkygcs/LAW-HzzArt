@@ -1,0 +1,36 @@
+body, html{
+    margin:0;
+    padding:0;
+}
+
+.collections-outter-container {
+    /*margin-right: auto;*/
+    /*margin-left: auto;*/
+    width: 100%;
+    padding-right: 2.5rem;
+    padding-left: 2.5rem;
+}
+
+@media (min-width: 640px) {
+    .collections-outter-container {
+        max-width: 640px;
+    }
+}
+
+@media (min-width: 768px) {
+    .collections-outter-container {
+        max-width: 768px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .collections-outter-container {
+        max-width: 1024px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .collections-outter-container {
+        max-width: 1280px;
+    }
+}

@@ -1,7 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const {isUserBanned} = require("../service/is-user-banned");
-const {getUser} = require("../service/get-user");
+const {getUserRoleAndBanStatus} = require("../service/get-user-role-and-ban-status");
+const {getUserAuthInformation} = require("../service/get-user-auth-information");
 const {UserIsBanned} = require("../modules/exceptions/UserIsBanned");
 const route = express.Router();
 
@@ -10,11 +10,13 @@ route.post("/", async (req, res) => {
 
    const username = req.body.username;
    const password = req.body.password;
-   let user = await getUser(username, password);
+   let user = await getUserAuthInformation(username, password);
 
-   if (await isUserBanned()) {
+   const userStatus = await getUserRoleAndBanStatus();
+   if (userStatus.banned) {
        throw new UserIsBanned(username);
    }
+   user.admin = userStatus.admin;
 
    let secretKey = process.env.JWT_SECRET_KEY;
    let token = jwt.sign(user, secretKey);

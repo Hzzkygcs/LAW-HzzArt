@@ -8,14 +8,13 @@ const reportedCollectionDbSchema = new mongoose.Schema({
         type: String,
         minlength: 1,
         maxlength: 40,
-        required: true,
-        unique: true
+        required: true
     },    
     reportedBy: {
         type: String,
         minlength: 1,
         maxlength: 40,
-        required: true,
+        required: true
     },
     owner: {
         type: String,

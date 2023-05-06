@@ -1,8 +1,8 @@
 const express = require("express");
 const {StatusCollection, getStatusCollectionJoiValidation} = require("../model/status-collection");
 const {ReportedCollection} = require("../model/reported-collection");
-const {InvalidBooleanFieldsException} = require("../modules/exceptions/InvalidBooleanFields");
 const {validateToken} = require("../service/validate-token");
+const {CollectionNotFoundException} = require("../modules/exceptions/CollectionNotFoundException");
 
 const route = express.Router();
 
@@ -13,6 +13,9 @@ route.post("/", async (req, res) => {
     validate(req.body);
 
     const idWithTheCollectionId = await StatusCollection.findOne({collectionId: req.body.collectionId})
+    if (idWithTheCollectionId === null){
+        throw new CollectionNotFoundException(req.body.collectionId);
+    }
 
     if (req.body.isBan === true) {
         idWithTheCollectionId.isBan = true;
@@ -21,9 +24,7 @@ route.post("/", async (req, res) => {
     else if (req.body.isBan === false) {
         idWithTheCollectionId.isBan = false;
     }
-    else {
-        throw new InvalidBooleanFieldsException();
-    }
+
     await ReportedCollection.deleteOne({collectionId: req.body.collectionId});
     await idWithTheCollectionId.save();
     res.send(idWithTheCollectionId.getObjectRepresentation());
