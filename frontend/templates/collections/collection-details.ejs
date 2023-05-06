@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <%- include(urls.global_dependencies(), locals) %>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet" />
+
+    <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+
+
+</head>
+
+<body class="h-screen">
+    <%- include(urls.footer_navbar.navbar(), locals) %>
+    <div class="bg-neutral-800 border-black-200 dark:bg-black-300 w-full flex" style=";">
+        <div class="w-1/6 bg-neutral-800 flex items-center justify-center">
+          <button id="prev" class="text-white w-28 h-28">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+          </button>
+        </div> <!-- left element container -->
+      
+        <div id="image-container" class="shadow mx-auto rounded-lg bg-white h-full w-4/6 flex">
+          <img id="image" src="https://img.freepik.com/premium-photo/woman-s-face-is-made-up-geometric-shapes-cyberpunk-colorful-fractalism-cubism_834088-1.jpg" alt="" class="rounded-t-lg h-full w-full object-cover" />
+        </div>
+      
+        <div class="w-1/6 bg-neutral-800 flex items-center justify-center">
+          <button id="next" class="text-white w-28 h-28">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
+        </div>
+      
+      </div>
+      
+      <script>
+        const images = [
+          'https://img.freepik.com/premium-photo/woman-s-face-is-made-up-geometric-shapes-cyberpunk-colorful-fractalism-cubism_834088-1.jpg',
+          'https://cdn.pixabay.com/photo/2018/10/30/16/06/water-lily-3784022_960_720.jpg',
+          'https://cdn.pixabay.com/photo/2021/04/13/06/33/crocus-6177145_960_720.jpg'
+        ];
+      
+        let currentIndex = 0;
+        const imageElement = document.getElementById('image');
+        const prevButton = document.getElementById('prev');
+        const nextButton = document.getElementById('next');
+      
+        prevButton.addEventListener('click', () => {
+          if (currentIndex > 0) {
+            currentIndex--;
+            imageElement.src = images[currentIndex];
+          }
+        });
+      
+        nextButton.addEventListener('click', () => {
+          if (currentIndex < images.length - 1) {
+            currentIndex++;
+            imageElement.src = images[currentIndex];
+          }
+        });
+      </script>
+      
+    
+    
+    <div class="flex bg-red-900 h-20 bottom-0">
+        <div class="bg-neutral-800 flex w-96  items-center justify-center ...">
+                    <h2 class="ml-3 font-bold text-center text-2xl text-white line-clamp-1" title="New York ">
+                        report
+                    </h2>
+                    <!-- Modal toggle -->
+                    <div class="mt-1 inline-flex items-center">
+                        <a href="#" data-modal-target="defaultModal" data-modal-toggle="defaultModal" class="w-14 flex items-center font-medium text-white-800 block text-white 
+                        hover:bg-gray-400 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-2 py-2.5 text-center 
+                        ">
+                            <svg class="ml-2 w-7 h-7 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 480 512" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path d="M48 24C48 10.7 37.3 0 24 0S0 10.7 0 24V64 350.5 400v88c0 13.3 10.7 24 24 24s24-10.7 24-24V388l80.3-20.1c41.1-10.3 84.6-5.5 122.5 13.4c44.2 22.1 95.5 24.8 141.7 7.4l34.7-13c12.5-4.7 20.8-16.6 20.8-30V66.1c0-23-24.2-38-44.8-27.7l-9.6 4.8c-46.3 23.2-100.8 23.2-147.1 0c-35.1-17.6-75.4-22-113.5-12.5L48 52V24zm0 77.5l96.6-24.2c27-6.7 55.5-3.6 80.4 8.8c54.9 27.4 118.7 29.7 175 6.8V334.7l-24.4 9.1c-33.7 12.6-71.2 10.7-103.4-5.4c-48.2-24.1-103.3-30.1-155.6-17.1L48 338.5v-237z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                    <!-- Main modal -->
+                    <div id="defaultModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                        <div class="relative w-full max-w-2xl max-h-full">
+                            <!-- Modal content -->
+                            <div class="relative bg-white rounded-lg shadow dark:bg-white-700">
+                                <!-- Modal header -->
+                                <div class="flex items-start justify-between p-4 rounded-t dark:border-gray-600">
+                                    <h3 class="text-5xl font-semibold text-black dark:text-black">
+                                        Report
+                                    </h3>
+                                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
+                                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                        <span class="sr-only">Close modal</span>
+                                    </button>
+                                </div>
+                                <!-- Modal body -->
+                                <div class="p-6 space-y-6">
+
+                                    <div class="mb-6">
+                                        <input type="text" id="success" class="h-52 bg-white-700 border border-black-500
+                                        text-sm rounded-lg
+                                        block w-full p-2.5 dark:bg-white-700 dark:border-black-500 align-top text-top">
+                                    </div>
+                                    
+                                </div>
+                                <!-- Modal footer -->
+                                <div class="flex items-center p-4 flex-row-reverse border-gray-200 rounded-b dark:border-gray-600">
+                                    <button data-modal-hide="defaultModal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 
+                                    focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                                    dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Report</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+        <div class="bg-neutral-800 w-4/6 flex items-center justify-center ...">
+            <h2 class="font-bold text-3xl text-white line-clamp-1 mr-2" title="New York ">
+                Statue of Liberty
+            </h2>
+            <!-- Modal toggle -->
+            <a href="#" data-modal-target="downloadModal" data-modal-toggle="downloadModal" class="w-14 flex items-center font-medium text-white-800 block text-white 
+                    hover:bg-gray-400 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-2 py-2.5 text-center 
+                    ">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                </svg>
+            </a>
+        </div>
+
+
+        <%- include(urls.collections.components.saveVideoModal(), locals) %>
+        <%- include(urls.collections.components.reportModal(), locals) %>
+        <%- include(urls.collections.components.commentsModal(), locals) %>
+    </div>
+
+    <%- include(urls.footer_navbar.footer(), locals) %>
+</body>
+</html>
+

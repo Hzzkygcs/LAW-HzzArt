@@ -25,11 +25,15 @@ route.all("*", async (req, res) => {
     fileLocation = removeLeadingSlash(fileLocation)
     if (!fileExists(res, fileLocation))
         return;
-    console.log("bsd")
-    if (isLoginNeeded(fileLocation) && !validateLoggedIn(req, res)){
-        return;
+
+    const loginNeeded = isLoginNeeded(fileLocation);
+    console.log(`loginNeeded: ${loginNeeded}`);
+    if (loginNeeded){
+        const loginFail = !await validateLoggedIn(req, res);
+        if (loginFail)
+            return;
     }
-    console.log("esd");
+
 
     res.locals = {
         urls: urls,

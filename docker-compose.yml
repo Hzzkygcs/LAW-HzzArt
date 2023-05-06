@@ -118,6 +118,9 @@ services:
     environment:
       <<: *env
       JWT_SECRET_KEY: "jv3Vh7b0upzBgZ8ocoOASSTjk0ypkBxO6NHqA5RIHFWEN5U5Vd"
+    volumes:
+      - "./login-orchestration:/code-login-orchestration"
+      - "/code-login-orchestration/node_modules"
 
   mongodb:
     image: mongo
