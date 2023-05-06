@@ -31,10 +31,13 @@ def get_user(request):
         try:
             data = response.json()
             username = data['username']
+            customer = Cust(username=username)
+            customer.save()
             return username
         except json.decoder.JSONDecodeError as e:
             # Handle the JSONDecodeError
             return JsonResponse({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
     else:
         # Handle the HTTP error response
         return JsonResponse({"error": f"HTTP {response.status_code} error: {response.reason}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -44,56 +47,25 @@ def get_collection_id(request):
     return "http://localhost:8084"
 
 @csrf_exempt
-def get_collection(request):
-    data = response.json()
-    id = data['id']
-    name = data['name']
-    image = data['image']
-    owner = data['owner']
-    return id, name, image, owner
-
-# @csrf_exempt
-# def save_collection(request):
-#     # Send the token to the login orchestration service
-#     response = requests.post(get_collection_id() + '/login',body={'Authorization': f'Bearer {jwt_token}'})
-
-#     data = response.json()
-#     username = data['username']
-
-#     #save user
-#     user = Cust(username=username)
-#     user.save()
-#     return JsonResponse({"message": "User successfully saved"}, status=status.HTTP_200_OK)
-
-@csrf_exempt
-def create_post(request, username):
-    post = get_collection(request)
-    deserialize = json.loads(request.body)
-    post = Post(post_id=deserialize['id'], post_name=deserialize['name'],post_image_link=deserialize['image'], post_user_name=deserialize['owner'])
-    post.save()
-    return JsonResponse({"message": "Post created successfully"}, status=status.HTTP_201_CREATED)
-
-@csrf_exempt
 def get_post(request, post_id):
-    post = Post.objects.filter(post_id=post_id).values()[0]
+    post = Collection.objects.filter(post_id=post_id).values()[0]
     return JsonResponse({"response":post}, status=status.HTTP_200_OK)
 
 @csrf_exempt
 def like(request, post_id):
     user = get_user(request)
-    post = get_collection(request)
+    post = Collection.objects.get_or_create(post_id=post_id)
     like = Like.objects.filter(like_post=post, like_user=user)
-    collection = Post.objects.get(post_id=post)
     if not like.exists():
         add_like = Like(like_post=post, like_user=user)
         add_like.save()
-        collection.post_likes += 1
-        collection.save()
+        post.post_likes += 1
+        post.save()
         return JsonResponse({'message': 'Post Liked'}, status=status.HTTP_200_OK)
     else:
         like.delete()
-        collection.post_likes -= 1
-        collection.save()
+        post.post_likes -= 1
+        post.save()
         return JsonResponse({'message': 'Post Unliked'}, status=status.HTTP_200_OK)
     
 @csrf_exempt
