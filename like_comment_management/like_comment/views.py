@@ -7,33 +7,69 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
-def save_user(request):
+# @csrf_exempt
+# def get_login_url(request):
+#     return "http://login-orchestration:8085"
+
+@csrf_exempt
+def get_login_url(request):
+    return "http://localhost:8085"
+
+@csrf_exempt
+def get_user(request):
     # Retrieve the JWT token from the request headers
-    jwt_token = request.META.get('x-jwt-token')
+    jwt_token = request.META.get('HTTP_X_JWT_TOKEN')
 
     # Send the token to the login orchestration service
-    response = requests.post('<BASE_URL>/login',body={'Authorization': f'Bearer {jwt_token}'})
+    response = requests.post(
+        url=get_login_url(request) + '/login/validate-login',
+        data=json.dumps({'x-jwt-token': jwt_token}),
+        headers={'Content-Type': 'application/json'}
+    )
 
+    if response.status_code == 200:
+        try:
+            data = response.json()
+            username = data['username']
+            return username
+        except json.decoder.JSONDecodeError as e:
+            # Handle the JSONDecodeError
+            return JsonResponse({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        # Handle the HTTP error response
+        return JsonResponse({"error": f"HTTP {response.status_code} error: {response.reason}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@csrf_exempt
+def get_collection_id(request):
+    return "http://localhost:8084"
+
+@csrf_exempt
+def get_collection(request):
     data = response.json()
-    username = data['username']
+    id = data['id']
+    name = data['name']
+    image = data['image']
+    owner = data['owner']
+    return id, name, image, owner
 
-    #save user
-    user = Cust(username=username)
-    user.save()
-    return JsonResponse({"message": "User successfully saved"}, status=status.HTTP_200_OK)
+# @csrf_exempt
+# def save_collection(request):
+#     # Send the token to the login orchestration service
+#     response = requests.post(get_collection_id() + '/login',body={'Authorization': f'Bearer {jwt_token}'})
 
-# @csrf_exempt 
-# def create_user(request):
-#     deserialize = json.loads(request.body)
-#     user = Cust(username=deserialize['username'])
+#     data = response.json()
+#     username = data['username']
+
+#     #save user
+#     user = Cust(username=username)
 #     user.save()
-#     return JsonResponse({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
+#     return JsonResponse({"message": "User successfully saved"}, status=status.HTTP_200_OK)
 
 @csrf_exempt
 def create_post(request, username):
-    user = Cust.objects.get(username=username)
+    post = get_collection(request)
     deserialize = json.loads(request.body)
-    post = Post(post_desc=deserialize['desc'],post_image_link=deserialize['image'], post_user_name=user)
+    post = Post(post_id=deserialize['id'], post_name=deserialize['name'],post_image_link=deserialize['image'], post_user_name=deserialize['owner'])
     post.save()
     return JsonResponse({"message": "Post created successfully"}, status=status.HTTP_201_CREATED)
 
@@ -43,21 +79,26 @@ def get_post(request, post_id):
     return JsonResponse({"response":post}, status=status.HTTP_200_OK)
 
 @csrf_exempt
-def like(request, post_id, username):
-    user = Cust.objects.get(username=username)
-    post = Post.objects.get(post_id = post_id)
-    if not (post.post_likes_user.filter(username=user.username).exists()):
-        post.post_likes_user.add(user)
-        post.post_likes+=1
-        post.save()
+def like(request, post_id):
+    user = get_user(request)
+    post = get_collection(request)
+    like = Like.objects.filter(like_post=post, like_user=user)
+    collection = Post.objects.get(post_id=post)
+    if not like.exists():
+        add_like = Like(like_post=post, like_user=user)
+        add_like.save()
+        collection.post_likes += 1
+        collection.save()
         return JsonResponse({'message': 'Post Liked'}, status=status.HTTP_200_OK)
-
-    else :
-        return JsonResponse({'message': 'Post Already Liked'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        like.delete()
+        collection.post_likes -= 1
+        collection.save()
+        return JsonResponse({'message': 'Post Unliked'}, status=status.HTTP_200_OK)
     
 @csrf_exempt
-def comment(request, post_id, username):
-    user = Cust.objects.get(username=username)
+def comment(request, post_id):
+    user = get_user(request)
     post = Post.objects.get(post_id = post_id)
     deserialize = json.loads(request.body)
     comment = Comment(comment_post=post, comment_user=user, comment_text=deserialize['comment'])

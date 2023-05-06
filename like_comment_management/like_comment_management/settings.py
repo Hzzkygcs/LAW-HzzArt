@@ -95,11 +95,22 @@ DATABASES = {
 #     'ENGINE': 'django.db.backends.postgresql',
 #     'NAME': 'postgres',
 #     'USER': 'postgres',
-#     'PASSWORD': '',
+#     'PASSWORD': 'pro212121',
 #     'HOST': 'localhost',
 #     'PORT': '5432',
 #     'OPTIONS': {
 #         'options': '-c search_path=hzzart',
+#     },
+#   }
+#   'default': {
+#     'ENGINE': 'django.db.backends.postgresql',
+#     'NAME': 'postgres',
+#     'USER': 'postgres',
+#     'PASSWORD': 'pro212121',
+#     'HOST': 'localhost',
+#     'PORT': '5433',
+#     'OPTIONS': {
+#         'options': '-c search_path=dockerhzz',
 #     },
 #   }
 }
