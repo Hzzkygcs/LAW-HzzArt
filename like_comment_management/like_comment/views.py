@@ -71,7 +71,7 @@ def like(request, post_id):
 @csrf_exempt
 def comment(request, post_id):
     user = get_user(request)
-    post = Post.objects.get(post_id = post_id)
+    post = Collection.objects.get(post_id = post_id)
     deserialize = json.loads(request.body)
     comment = Comment(comment_post=post, comment_user=user, comment_text=deserialize['comment'])
     comment.save()
@@ -79,13 +79,13 @@ def comment(request, post_id):
 
 @csrf_exempt
 def get_comment(request, post_id):
-    post = Post.objects.get(post_id = post_id)
+    post = Collection.objects.get(post_id = post_id)
     comment_list = Comment.objects.filter(comment_post=post).order_by('-comment_id').values()[::1]
 
     return JsonResponse({"response":comment_list}, status=status.HTTP_200_OK)
 
 def liked(request, post_id):
-    result = Post.object.filter(post_id=post_id, post_likes_user=request.user.email)
+    result = Collection.object.filter(post_id=post_id, post_likes_user=request.user.email)
     if len(result) == 0:
         is_liked = False
     else :

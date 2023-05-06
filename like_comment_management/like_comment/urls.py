@@ -10,6 +10,6 @@ urlpatterns = [
     path('get-post/<int:post_id>', get_post, name='get_post'),
     path('like/<int:post_id>', like, name='like'),
     path('liked', liked, name='liked'),
-    path('comment/<int:post_id>/<str:username>', comment, name='comment'),
+    path('comment/<int:post_id>', comment, name='comment'),
     path('get-comment/<int:post_id>', get_comment, name='get_comment'),
 ]
