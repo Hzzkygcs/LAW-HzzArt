@@ -58,24 +58,24 @@ def get_post(request, collection_id):
 def like(request, collection_id):
     user = get_user(request)
     filter_collection = Collection.objects.filter(collection_id = collection_id).exists() 
-    if filter_collection == True :
-        collection = Collection.objects.get(collection_id=collection_id)
-        like = Like.objects.filter(like_collection=collection, like_user=user)
-        if not like.exists():
-            add_like = Like(like_collection=collection, like_user=user)
-            add_like.save()
-            collection.collection_likes += 1
-            collection.save()
-            return JsonResponse({'message': 'Post Liked'}, status=status.HTTP_200_OK)
-        else:
-            like.delete()
-            collection.collection_likes -= 1
-            collection.save()
-            return JsonResponse({'message': 'Post Unliked'}, status=status.HTTP_200_OK)
-    else :
+    if not filter_collection:
         create_collection = Collection(collection_id = collection_id)
         create_collection.save()
-        return JsonResponse({'message' : 'Collection Created Successfully'}, status=status.HTTP_200_OK)
+        
+    collection = Collection.objects.get(collection_id=collection_id)
+    like = Like.objects.filter(like_collection=collection, like_user=user)
+    
+    if not like.exists():
+        add_like = Like(like_collection=collection, like_user=user)
+        add_like.save()
+        collection.collection_likes += 1
+        collection.save()
+        return JsonResponse({'message': 'Post Liked'}, status=status.HTTP_200_OK)
+        
+    like.delete()
+    collection.collection_likes -= 1
+    collection.save()
+    return JsonResponse({'message': 'Post Unliked'}, status=status.HTTP_200_OK)
         
 @csrf_exempt
 def comment(request, collection_id):
