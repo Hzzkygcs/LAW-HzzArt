@@ -1,7 +1,7 @@
 from __future__ import annotations
 import aiohttp
 import requests
-from craiyon.templates import GeneratedImagesV1
+from CraiyonService.templates import GeneratedImagesV1
 
 # V1 version of Craiyon API, for backwards compatibility
 class Craiyon:

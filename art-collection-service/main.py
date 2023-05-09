@@ -19,8 +19,8 @@ def get_db():
     finally:
         db.close()
         
-def get_login_rul():
-    return "http://localhost:8085"
+def get_login_url():
+    return "http://login-orchestration:8085"
 
 def validate_jwt(jwt_token):
     if jwt_token is not None:

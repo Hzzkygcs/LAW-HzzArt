@@ -12,7 +12,7 @@ x-environment: &env
   VIDEO_PROCESSING_SERVICE_PORT: 8083
   COLLECTION_INTERACTIONS_ORCHESTRATION_PORT: 8084
   LOGIN_ORCHESTRATION_PORT: 8085
-  # ART_COLLECTIONS_PORT: 8086
+  ART_COLLECTIONS_PORT: 8086
   # LIKE_RATING_SERVICE_PORT: 8087
 #  SERVICE_REGISTRY_URL: "http://service-registry:9000"
   FRONTEND_SERVICE_URL: "http://frontend-service:8080"
@@ -21,7 +21,7 @@ x-environment: &env
   VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
   COLLECTION_ORCHESTRATION_URL: "http://collection-orchestration:8084"
   LOGIN_ORCHESTRATION_URL: "http://login-orchestration:8085"
-  # ART_COLLECTIONS_URL: "http://art-collections:8086"
+  ART_COLLECTIONS_URL: "http://art-collections:8086"
   # LIKE_RATING_SERVICE_URL: "http://like-rating-service:8087"
 
 

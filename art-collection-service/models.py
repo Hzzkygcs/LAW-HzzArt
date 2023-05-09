@@ -18,4 +18,4 @@ class ArtCollection(Base):
     owner = Column(String, index=True)
     name = Column(String, index=True)
 
-    arts = relationship("Art", back_populates="collection")
+    arts = relationship("Image", back_populates="collection")
