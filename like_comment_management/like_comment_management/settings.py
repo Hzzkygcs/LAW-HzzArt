@@ -75,33 +75,33 @@ WSGI_APPLICATION = "like_comment_management.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'ApxWa7IA3449C2sV',
-        'HOST': 'db.rvdjlgjibyvutofsapbm.supabase.co',
-        'PORT': '5432',
-        # 'OPTIONS': {
-        #     'options': '-c search_path=reminder'
-        # }
-    },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'postgres',
+    #     'USER': 'postgres',
+    #     'PASSWORD': 'ApxWa7IA3449C2sV',
+    #     'HOST': 'db.rvdjlgjibyvutofsapbm.supabase.co',
+    #     'PORT': '5432',
+    #     # 'OPTIONS': {
+    #     #     'options': '-c search_path=reminder'
+    #     # }
+    # },
 
-    'temp': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-#   'default': {
-#     'ENGINE': 'django.db.backends.postgresql',
-#     'NAME': 'postgres',
-#     'USER': 'postgres',
-#     'PASSWORD': 'pro212121',
-#     'HOST': 'localhost',
-#     'PORT': '5432',
-#     'OPTIONS': {
-#         'options': '-c search_path=hzzart',
-#     },
-#   }
+    # 'temp': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': 'postgres',
+    'USER': 'postgres',
+    'PASSWORD': 'pro212121',
+    'HOST': 'localhost',
+    'PORT': '5432',
+    'OPTIONS': {
+        'options': '-c search_path=hzzart',
+    },
+  }
 }
 
 
