@@ -11,11 +11,10 @@ ARG DATABASE_HOST_URL
 
 
 
-# RUN python alembic_config.py
+# RUN python alembic_config.py ${DATABASE_HOST_URL}
 # RUN alembic upgrade head
-RUN alembic upgrade 78f
-RUN alembic upgrade 914
 
 
 EXPOSE 8000
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8086"]
+#CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8086"]
+CMD ["sh", "-c", "./alembic.migrations.sh && uvicorn main:app --host 0.0.0.0 --port 8086"]

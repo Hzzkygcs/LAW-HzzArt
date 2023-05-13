@@ -4,7 +4,6 @@ not used
 
 import sys
 import os
-from configparser import ConfigParser
 
 # db_url = "postgresql://postgres:t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq@localhost:7000/ai-art-collections"
 
