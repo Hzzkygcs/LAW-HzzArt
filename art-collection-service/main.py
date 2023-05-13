@@ -47,6 +47,7 @@ def get_username(response):
 @app.post("/collections/generate", status_code = 200)
 def generate_art(request: Request, prompt: schemas.GeneratorRequestPrompt, db: Session = Depends(get_db)):
     
+    # TODO: Masih rusak generatenya
     jwt_token = request.headers.get('x-jwt-token')
     validate_jwt(jwt_token)
     
@@ -58,6 +59,7 @@ def generate_art(request: Request, prompt: schemas.GeneratorRequestPrompt, db: S
 
 @app.get("/collections/generated-images/{token}", status_code = 200)
 def get_generated_image(request: Request, token: str, db: Session = Depends(get_db)):
+    print("MASUK")
     
     jwt_token = request.headers.get('x-jwt-token')
     validate_jwt(jwt_token)

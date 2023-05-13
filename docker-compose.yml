@@ -149,14 +149,14 @@ services:
       DATABASE_HOST_URL: "postgres://postgres:t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq@postgres:5432/ai-art-collections"
 
   postgres:
-    image: postgres
+    image: postgres:latest
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq
       POSTGRES_DB: ai-art-collections
     ports:
-      - "5432:5432"
+      - "7000:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
 
