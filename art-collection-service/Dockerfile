@@ -17,4 +17,4 @@ ARG DATABASE_HOST_URL
 
 EXPOSE 8000
 #CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8086"]
-CMD ["sh", "-c", "./alembic.migrations.sh && uvicorn main:app --host 0.0.0.0 --port 8086"]
+CMD ["sh", "-c", "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8086"]
