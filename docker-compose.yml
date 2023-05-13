@@ -45,8 +45,6 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
     depends_on:
       - mongodb
       - eureka-server
@@ -159,7 +157,7 @@ services:
       - "./art-collection-service/pip-cache:/pip-cache"
     environment:
       <<: *env  # postgres:// beda?
-      DATABASE_HOST_URL: "postgres://postgres:t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq@postgres:5432/ai-art-collections"
+      DATABASE_HOST_URL: "postgresql://postgres:t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq@postgres:5432/ai-art-collections"
 
   postgres:
     image: postgres:latest
