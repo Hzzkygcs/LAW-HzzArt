@@ -158,7 +158,7 @@ services:
     volumes:
       - "./art-collection-service/pip-cache:/pip-cache"
     environment:
-      <<: *env
+      <<: *env  # postgres:// beda?
       DATABASE_HOST_URL: "postgres://postgres:t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq@postgres:5432/ai-art-collections"
 
   postgres:
