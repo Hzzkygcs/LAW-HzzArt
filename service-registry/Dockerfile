@@ -1,13 +1,16 @@
-FROM python:3.9-slim-buster
+FROM docker:latest
+
 
 WORKDIR /app
+COPY ./eureka .
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
 
-COPY service_registry.py .
+ENV DOCKER_HOST="tcp://eureka-hzzart:2375/"
+ENV DOCKER_TLS_CERTDIR=""
 
-# Expose the port defined by the SERVICE_REGISTRY_PORT environment variable
-EXPOSE ${SERVICE_REGISTRY_PORT}
 
-CMD [ "python", "service_registry.py" ]
+#RUN update-alternatives --set iptables /usr/sbin/iptables-legacy
+#RUN update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+
+CMD ["sh", "-c", "dockerd --iptables=false && docker compose up --build"]
+

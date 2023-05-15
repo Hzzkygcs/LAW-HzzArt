@@ -28,18 +28,6 @@ x-environment: &env
 
 
 services:
-  eureka-server:
-    image: springcloud/eureka
-    ports:
-      - "8761:8761"
-    environment:
-      EUREKA_SERVER_PORT: 8761
-      JAVA_OPTS: "-Xmx512m -Xms256m"
-    depends_on:
-      - mongodb
-      - postgres
-    volumes:
-      - "./eureka-server:/eureka-server"
 
   frontend-service:
     build:
