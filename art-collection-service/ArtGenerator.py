@@ -11,9 +11,9 @@ class ArtGenerator:
     def get_images(self) -> list:
         return self.images
     
-    async def generate_image(self, prompt) -> None:
-        self.result = await self.generator.async_generate(prompt, model_type='art')
-        self.images = await craiyon_utils.async_encode_base64(self.result.images)
+    def generate_image(self, prompt) -> None:
+        self.result = self.generator.generate(prompt, model_type='art')
+        self.images = craiyon_utils.encode_base64(self.result.images)
         
     def decode(self, images) -> list:
         result = []

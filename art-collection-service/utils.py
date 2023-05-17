@@ -2,9 +2,9 @@ from ArtGenerator import ArtGenerator
 import token_storage
 import string, random
 
-async def generate_async(prompt, token) -> None:
+def generate_sync(prompt, token) -> None:
     generator = ArtGenerator()
-    await generator.generate_image(prompt)
+    generator.generate_image(prompt)
     
     print("Udah Selesai Generate")
     token_storage.store(token, generator.get_images())

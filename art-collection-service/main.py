@@ -1,3 +1,5 @@
+import threading
+
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
@@ -54,9 +56,12 @@ def generate_art(request: Request, generator_promt: schemas.GeneratorRequestProm
     
     token = utils.generate_token()
     token_storage.store(token, None)
-    asyncio.run(utils.generate_async(generator_promt.prompt, token))
-    
+
+    run_in_new_thread(utils.generate_sync, args=(generator_promt.prompt, token))
     return {"token": token}
+
+
+
 
 @app.get("/collections/generated-images/{token}", status_code = 200)
 def get_generated_image(request: Request, token: str, db: Session = Depends(get_db)):
@@ -170,3 +175,12 @@ def get_image(request: Request, image_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Image does not exist")
     
     return db_image
+
+
+
+def run_in_new_thread(func, args: tuple):
+    thread = threading.Thread(target=func, args=args, daemon=True)
+    thread.start()
+    return thread
+
+
