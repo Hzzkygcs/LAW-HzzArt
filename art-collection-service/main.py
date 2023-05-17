@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
+import asyncio
 import json
 import requests
 import utils
@@ -45,15 +46,15 @@ def get_username(response):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/collections/generate", status_code = 200)
-def generate_art(request: Request, prompt: schemas.GeneratorRequestPrompt, db: Session = Depends(get_db)):
+def generate_art(request: Request, generator_promt: schemas.GeneratorRequestPrompt, db: Session = Depends(get_db)):
     
-    # TODO: Masih rusak generatenya
+    # TODO: Generatenya bisa tapi asyncnya aneh
     jwt_token = request.headers.get('x-jwt-token')
     validate_jwt(jwt_token)
     
     token = utils.generate_token()
     token_storage.store(token, None)
-    utils.generate_async(prompt, token)
+    asyncio.run(utils.generate_async(generator_promt.prompt, token))
     
     return {"token": token}
 
@@ -133,7 +134,7 @@ def add_image_to_collection(request: Request, collection_id: int, arts: schemas.
         raise HTTPException(status_code=404, detail="Collection does not exist")
     
     for image in arts.images:
-        art = models.Art(url=image, collection_id=db_collection.id)
+        art = models.Image(url=image, collection_id=db_collection.id)
         db.add(art)
         db_collection.images.append(art.id)
     db.commit()

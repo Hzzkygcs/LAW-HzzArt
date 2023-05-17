@@ -1,7 +1,7 @@
 from __future__ import annotations
 import aiohttp
 import requests
-from craiyon.templates import GeneratedImages
+from CraiyonService.templates import GeneratedImages
 
 
 # v3 version of Craiyon API

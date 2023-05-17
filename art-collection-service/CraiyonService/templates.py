@@ -2,7 +2,7 @@ import base64
 from pathlib import Path
 import aiofiles
 from aiopath import AsyncPath
-from craiyon.craiyon_utils import encode_base64, async_encode_base64
+from CraiyonService.craiyon_utils import encode_base64, async_encode_base64
 
 
 # Handles the images returned from the Craiyon API
