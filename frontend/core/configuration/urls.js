@@ -38,7 +38,9 @@ const urls = {
         register_post: () => `${authenticationService()}/auth/register`,
     },
     admin: {
-        css: () => `/admin/css.css`,
+        admin : () => `/admin`,
+        css: () => `${urls.admin.admin()}/css.css`,
+        dependencies: () => `${noLeadingSlash(urls.admin.admin())}/-dependencies.ejs`,
         reported_collections_page: () => `/admin/reported-collections.html`,
         detail_reported_collection_page: () => `/admin/detail-report-collection.html`,
     },
@@ -55,7 +57,9 @@ const urls = {
             reportModal: () => `${urls.collections.components.components()}/-report-modal.ejs`,
         },
 
-        collections: () => '/collections',
+        collections: () => `/collections`,
+
+        css: () => `${urls.collections.collections()}/css.css`,
         dependencies: () => `${noLeadingSlash(urls.collections.collections())}/-dependencies.ejs`,
 
         myCollectionsPage: () => `${urls.collections.collections()}/my-collections.html`,
