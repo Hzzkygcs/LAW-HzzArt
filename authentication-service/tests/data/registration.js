@@ -1,6 +1,6 @@
 function dummyRegistrationBody() {
     return {
-        'username': 'a',
+        'username': 'abc',
         'password': 'fake_password',
     };
 }
