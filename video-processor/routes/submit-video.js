@@ -34,7 +34,7 @@ route.post("/submit-video", upload.any(), async function (req, res) {
     if (estimated_number_of_frames > 9000){
         throw new VideoTooLargeException(estimated_number_of_frames);
     }
-    if (req.files.length === 0){
+    if (req.files == null || req.files.length === 0){
         throw new ImageRequiredException();
     }
 
