@@ -1,8 +1,8 @@
-const {getLikeRatingServiceUrl} = require("../../../URLs/get-like-rating-service-url");
+const {getLikeCommentServiceUrl} = require("../../../URLs/get-like-comment-service-url");
 const {makeRequest} = require("../../external-call/make-request");
 
 async function sendRatingService (username, collectionId, rating) {
-    const url = getLikeRatingServiceUrl("/rating-collection");
+    const url = getLikeCommentServiceUrl("/rating-collection");
     let response = await makeRequest("post", url, {
         "username": username,
         "collectionId": collectionId,
