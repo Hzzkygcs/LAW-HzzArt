@@ -2,13 +2,14 @@ const axios = require("axios");
 const {REASON_RESPONSE_PROPERTY_NAME} = require("../global-route-exceptions-handler/constants");
 const {AutomaticallyHandledException} = require("../global-route-exceptions-handler/exceptions/AutomaticallyHandledException");
 
-module.exports.makeRequest = async function(method, url, data){
+module.exports.makeRequest = async function(method, url, data,headers){
     let response;
     try{
         response = await axios({
             url: url,
             method: method,
-            data: data
+            data: data,
+            headers: headers
         });
     }catch (e){
         const response = e.response;

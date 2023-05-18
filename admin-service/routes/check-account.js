@@ -10,7 +10,7 @@ route.get("/:username", async (req, res) => {
     });
     const userWithTheUsername = await Account.findOne({username: req.params.username});
     if (!userWithTheUsername) {
-        console.log("User not found, creating new user");
+        console.log("User not found, creating new user: " + req.params.username);
         let user = new Account({
             username: req.params.username
         });
