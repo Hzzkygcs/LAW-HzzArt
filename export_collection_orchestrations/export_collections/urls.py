@@ -4,7 +4,9 @@ from . import views
 from .views import *
 
 urlpatterns = [
-    path('export', export, name='export'),
-    path('create_user', create_user, name='create_user'),
-    path('create_post/<str:username>', create_post, name='create_post'),
+    path('export/<int:collection_id>', export, name='export'),
+    path('get-collection/<int:collection_id>', get_collection, name='get_collection'),
+    path('check-status/<str:token>', cek_status, name='cek_status'),
+    path('download', download, name='download'),
+
 ]

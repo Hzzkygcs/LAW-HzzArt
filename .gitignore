@@ -9,4 +9,5 @@
 **/profiling/
 **/venv/
 **/pip-cache/
+**/*.sqlite3
 video-processor/uploads/
