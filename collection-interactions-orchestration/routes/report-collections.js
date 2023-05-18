@@ -8,13 +8,30 @@ const route = express.Router();
 route.post("/", async (req, res) => {
     const jwt = req.get(process.env.JWT_TOKEN_HEADER_NAME);
     let response = await getUsernameFromJWT(jwt);
-    const reportedBy = response.username;
-    // get owner of collection from pram
-    // const ownerCollection = validateCollection(req.body.collectionId);
-    const ownerCollection = "test";
+    if (response.status !== 200) {
+        res.send(response);
+        return;
+    }
+    const reportedBy = response.data.username;
 
-    response = await sendAdminManagementService(req.body.collectionId, reportedBy, ownerCollection, req.body.reason);
-    res.send(response);
+    const responseCollection = await validateCollection(req.body.collectionId,jwt);
+    console.log("Response collection: " + JSON.stringify(responseCollection.data));
+
+    if (responseCollection.status !== 200) {
+        res.send(responseCollection);
+        return;
+    }
+
+    let ownerCollection = responseCollection.data.owner;
+    console.log("Owner collection: " + ownerCollection);
+    let responseAdminManagement = await sendAdminManagementService(
+        req.body.collectionId,
+        reportedBy,
+        ownerCollection,
+        req.body.reason
+    );
+    console.log("Response admin management: " + JSON.stringify(responseAdminManagement));
+    res.send(responseAdminManagement);
 });
 
 module.exports.route = route;

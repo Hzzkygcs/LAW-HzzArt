@@ -21,7 +21,7 @@ x-environment: &env
   VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
   COLLECTION_ORCHESTRATION_URL: "http://collection-orchestration:8084"
   LOGIN_ORCHESTRATION_URL: "http://login-orchestration:8085"
-  ART_COLLECTIONS_URL: "http://art-collections:8086"
+  ART_COLLECTIONS_URL: "http://art-collection-service:8086"
   # LIKE_RATING_SERVICE_URL: "http://like-rating-service:8087"
   INSIDE_DOCKER_CONTAINER: 1
 

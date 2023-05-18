@@ -11,7 +11,7 @@ route.post("/", async (req, res) => {
     let decoded_token = validateJwtToken(token);
 
     let username = decoded_token.username;
-    const userStatus = await getUserRoleAndBanStatus();
+    const userStatus = await getUserRoleAndBanStatus(username);
     if (userStatus.banned) {
         throw new UserIsBanned(username);
     }
