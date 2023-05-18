@@ -16,3 +16,9 @@ class ArtCollection(Base):
     id = Column(Integer, primary_key=True, index=True)
     owner = Column(String, index=True)
     name = Column(String, index=True)
+    
+class Token(Base):
+    __tablename__ = "token"
+    
+    token = Column(String, primary_key=True, index=True)
+    value = Column(String, default=None)
