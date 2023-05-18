@@ -12,13 +12,17 @@ const {getTokenName} = require("./get-token-name");
  * @param submittedFiles
  * @param tokenAsPath
  * @param {number} fps
+ * @param {number} slideDuration
+ * @param {number} transitionDuration
  * @returns {Promise<void>}
  */
-module.exports.submitVideo = async function (submittedFiles, tokenAsPath, fps) {
+module.exports.submitVideo = async function (submittedFiles, tokenAsPath, fps,
+                                             slideDuration, transitionDuration) {
     const tokenName = getTokenName(tokenAsPath);
     videoProgressRepository.register(tokenName);
 
-    const durationInSecond = await generateFolderOfImageFrames(submittedFiles, tokenAsPath, fps);
+    const durationInSecond = await generateFolderOfImageFrames(
+        submittedFiles, tokenAsPath, fps, slideDuration, transitionDuration);
 
     await combineImagesToVideo(tokenAsPath, durationInSecond, tokenAsPath, "video.mp4", fps);
     videoProgressRepository.setProgress(tokenName, 100, ProgressPhaseEnums.DONE);
@@ -28,10 +32,10 @@ module.exports.submitVideo = async function (submittedFiles, tokenAsPath, fps) {
 };
 
 
-async function generateFolderOfImageFrames(submittedFiles, tokenAsPath, fps) {
+async function generateFolderOfImageFrames(submittedFiles, tokenAsPath, fps, slideDuration, transitionDuration) {
     const images = await getImagesWithNormalizedSize(submittedFiles);
     const imageFrameGenerator = new FadeImageTransitionStrategy(images, fps);
-    imageFrameGenerator.planForWholeSlideshow(4, 3);
+    imageFrameGenerator.planForWholeSlideshow(slideDuration, transitionDuration);
     const numberOfFrames = imageFrameGenerator.getEstimateNumberOfFrame();
 
     const tokenName = getTokenName(tokenAsPath);

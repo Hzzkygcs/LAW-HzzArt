@@ -5,7 +5,7 @@ const {AutomaticallyHandledException} = require("../global-route-exceptions-hand
 
 class UsernameAlreadyExists extends AutomaticallyHandledException{
     constructor(username="") {
-        super(`Username ${username} already exists`, StatusCodes.UNAUTHORIZED, {
+        super(`Username ${username} already exists`, StatusCodes.CONFLICT, {
             username: username
         });
         this.name = "UsernameAlreadyExists";
