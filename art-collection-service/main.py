@@ -54,10 +54,10 @@ def generate_art(request: Request, generator_promt: schemas.GeneratorRequestProm
     jwt_token = request.headers.get('x-jwt-token')
     validate_jwt(jwt_token)
     
-    token = utils.generate_token()
-    token_storage.store(token, None)
+    token = utils.generate_token(db)
+    token_storage.store(token, None, db)
 
-    run_in_new_thread(utils.generate_sync, args=(generator_promt.prompt, token))
+    run_in_new_thread(utils.generate_sync, args=(generator_promt.prompt, token, db))
     return {"token": token}
 
 
@@ -70,7 +70,7 @@ def get_generated_image(request: Request, token: str, db: Session = Depends(get_
     jwt_token = request.headers.get('x-jwt-token')
     validate_jwt(jwt_token)
     
-    images = token_storage.get(token)
+    images = token_storage.get(token, db)
     if images == None:
         return {"token": token, "status": "In Progress"}
     elif images == 404:
@@ -93,6 +93,36 @@ def create_collection(request: Request, collection: schemas.CreateArtCollectionR
     db.refresh(db_collection)
     return {"id": db_collection.id, "message": "Successfully created"}
 
+@app.get("/collections")
+def get_owned_collection(request: Request, db: Session = Depends(get_db)):
+    
+    jwt_token = request.headers.get('x-jwt-token')
+    response = validate_jwt(jwt_token)
+    
+    username = get_username(response)
+    
+    db_collection = db.query(models.ArtCollection).filter(models.ArtCollection.owner == username).all()
+    owned_collection = []
+    
+    if db_collection is not None:
+        for collection in db_collection:
+            images = []
+            db_images = db.query(models.Image).filter(models.Image.collection_id == collection.id).all()
+            
+            if db_images is not None:
+                for image in db_images:
+                    images.append(image.id)
+            
+            response_data = {
+                'id': collection.id,
+                'name': collection.name,
+                'owner': collection.owner,
+                'images': images
+            }
+            
+            owned_collection.append(response_data)
+    
+    return {'collections' : owned_collection}
 
 @app.get("/collections/{collection_id}")
 def get_collection(request: Request, collection_id: int, db: Session = Depends(get_db)):
@@ -100,11 +130,24 @@ def get_collection(request: Request, collection_id: int, db: Session = Depends(g
     jwt_token = request.headers.get('x-jwt-token')
     validate_jwt(jwt_token)
     
-    #TODO: Tambahin error id yang gasesuai
     db_collection = db.query(models.ArtCollection).filter(models.ArtCollection.id == collection_id).first()
     if db_collection is None:
         raise HTTPException(status_code=404, detail="Collection does not exist")
-    return db_collection
+    
+    images = []
+    db_images = db.query(models.Image).filter(models.Image.collection_id == collection_id).all()
+    if db_images is not None:
+        for image in db_images:
+            images.append(image.id)
+    
+    response_data = {
+        'id': db_collection.id,
+        'name': db_collection.name,
+        'owner': db_collection.owner,
+        'images': images
+    }
+    
+    return response_data
 
 
 @app.put("/collections/{collection_id}", status_code = 200)
@@ -141,10 +184,9 @@ def add_image_to_collection(request: Request, collection_id: int, arts: schemas.
     for image in arts.images:
         art = models.Image(url=image, collection_id=db_collection.id)
         db.add(art)
-        db_collection.images.append(art.id)
     db.commit()
     
-    return {"message": "Successfully added"}
+    return {"id": db_collection.id, "message": "Successfully added"}
 
 
 @app.delete("/collections/delete-image/{image_id}", status_code = 200)
