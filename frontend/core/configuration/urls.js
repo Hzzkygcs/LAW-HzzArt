@@ -38,9 +38,12 @@ const urls = {
         register_post: () => `${authenticationService()}/auth/register`,
     },
     admin: {
-        css: () => `/admin/css.css`,
-        reported_collections_page: () => `/admin/reported-collections.html`,
-        detail_reported_collection_page: () => `/admin/detail-report-collection.html`,
+        admin : () => `/admin`,
+        css: () => `${urls.admin.admin()}/css.css`,
+        dependencies: () => `${noLeadingSlash(urls.admin.admin())}/-dependencies.ejs`,
+        reported_collections_page: () => `${urls.admin.admin()}/reported-collections.html`,
+        detailReportedCollectionPage: () => `${urls.admin.admin()}/detail-report-collection.html`,
+        adminDownloadPage: () => `${urls.admin.admin()}//admin-download-page.html`,
     },
 
     adminHomepage: () => "/admin/reported-collections.html",
@@ -55,7 +58,9 @@ const urls = {
             reportModal: () => `${urls.collections.components.components()}/-report-modal.ejs`,
         },
 
-        collections: () => '/collections',
+        collections: () => `/collections`,
+
+        css: () => `${urls.collections.collections()}/css.css`,
         dependencies: () => `${noLeadingSlash(urls.collections.collections())}/-dependencies.ejs`,
 
         myCollectionsPage: () => `${urls.collections.collections()}/my-collections.html`,
@@ -64,6 +69,7 @@ const urls = {
         editCollectionsPage: () => `${urls.collections.collections()}/edit-collections.html`,
         addImagePage: () => `${urls.collections.collections()}/generator.html`,
         collectionDetailsPage: () => `${urls.collections.collections()}/collection-details.html`,
+        userDownloadPage: () => `${urls.collections.collections()}/user-download-page.html`,
     },
     video: {
       videoProgress:   () => '/video/video-progress.html',

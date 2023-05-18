@@ -12,7 +12,7 @@ route.post("/", async (req, res) => {
    const password = req.body.password;
    let user = await getUserAuthInformation(username, password);
 
-   const userStatus = await getUserRoleAndBanStatus();
+   const userStatus = await getUserRoleAndBanStatus(username);
    if (userStatus.banned) {
        throw new UserIsBanned(username);
    }

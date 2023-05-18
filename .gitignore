@@ -9,4 +9,5 @@
 **/profiling/
 **/venv/
 **/pip-cache/
+**/.env
 video-processor/uploads/

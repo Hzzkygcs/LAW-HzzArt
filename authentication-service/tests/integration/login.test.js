@@ -32,14 +32,14 @@ describe('/auth/login', function () {
         });
         it('should return 404 unauthorized if username not found', async function () {
             const data = dummyRegistrationBody();
-            data.username = "wrong_username";
+            data.username = "wrongusername";
             const res = await request(server).post(VALIDATE_LOGIN_ENDPOINT).send(data);
             expect(res.status).toBe(404);
         });
         it('should return the user correctly', async function () {
             const res = await request(server).post(VALIDATE_LOGIN_ENDPOINT).send(dummyRegistrationBody());
             const hasil = JSON.parse(res.text);
-            expect(hasil.username).toStrictEqual('a');
+            expect(hasil.username).toStrictEqual('abc');
         });
     });
 });

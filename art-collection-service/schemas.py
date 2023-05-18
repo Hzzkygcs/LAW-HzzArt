@@ -1,12 +1,12 @@
 from typing import List
 from pydantic import BaseModel
 
-class Art(BaseModel):
+class Image(BaseModel):
     url: str
 
-class ArtCollection(BaseModel):
+class ImageCollection(BaseModel):
     name: str
-    arts: List[Art]
+    images: List[Image]
     
 class CreateArtCollectionRequest(BaseModel):
     name: str

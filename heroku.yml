@@ -1,0 +1,14 @@
+setup:
+  addons:
+    - plan: heroku-postgresql
+      as: DATABASE
+build:
+  docker:
+    web: ./frontend/Dockerfile
+    authentication-service: ./authentication-service/Dockerfile
+    admin-service: ./admin-service/Dockerfile
+    video-processing-service: ./video-processor/Dockerfile
+    collection-interactions-orchestration: ./collection-interactions-orchestration/Dockerfile
+    login-orchestration: ./login-orchestration/Dockerfile
+run:
+  web: nginx -c nginx/nginx.conf

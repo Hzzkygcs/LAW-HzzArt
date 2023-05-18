@@ -2,13 +2,14 @@ from ArtGenerator import ArtGenerator
 import token_storage
 import string, random
 
-async def generate_async(prompt, token) -> None:
+def generate_sync(prompt, token) -> None:
     generator = ArtGenerator()
-    await generator.generate_image(prompt)
+    generator.generate_image(prompt)
     
+    print("Udah Selesai Generate")
     token_storage.store(token, generator.get_images())
 
 def generate_token() -> str:
     letters = string.ascii_letters + string.digits
-    token = ''.join(random.choice(letters) for _ in range(15))
+    token = ''.join(random.choice(letters) for _ in range(25))
     return token

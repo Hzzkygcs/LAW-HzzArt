@@ -1,0 +1,6 @@
+[submodule "eureka-and-elk-stack/navigator-server"]
+	path = eureka-and-elk-stack/navigator-server
+	url = https://github.com/Hzzkygcs/LAW-Hzzart-navigator-server.git
+[submodule "eureka-and-elk-stack/eureka-and-elk-stack"]
+	path = eureka-and-elk-stack/eureka-and-elk-stack
+	url = https://github.com/Hzzkygcs/LAW-Hzzart-eureka-and-elk-stack.git
