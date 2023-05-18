@@ -15,6 +15,8 @@ const {route: checkCollectionsRoute} = require("./routes/check-collections");
 const {route: reportedCollectionsRoute} = require("./routes/reported-collection");
 const {route: banCollectionRoute} = require("./routes/ban-collection");
 const {route: banAccountRoute} = require("./routes/ban-account");
+const {consulHealthRoute} = require("./routes/consul");
+const {getConsulSingleton} = require("./config/consul");
 
 module.exports.server = async function (test=true) {
     let app = express();
@@ -29,6 +31,7 @@ module.exports.server = async function (test=true) {
     app.use(REPORTED_COLLECTIONS_ENDPOINT, reportedCollectionsRoute);
     app.use(BAN_COLLECTION_ENDPOINT, banCollectionRoute);
     app.use(BAN_ACCOUNT_ENDPOINT, banAccountRoute);
+    app.use("/", consulHealthRoute);
 
     app.use(exceptionHandlerMiddleware);
 
@@ -38,7 +41,10 @@ module.exports.server = async function (test=true) {
         if (PORT == null){
             throw new Error("env PORT IS NOT SET");
         }
-        return app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+        return app.listen(PORT, () => {
+            console.log(`Listening on port ${PORT}`);
+            getConsulSingleton(PORT, process.env.ADMIN_SERVICE_NAME);
+        });
     }
     return app.listen(() => console.log(`Listening on any port`));
 };
