@@ -10,6 +10,7 @@ import requests
 import utils
 import token_storage
 import models, schemas
+import base64
 
 app = FastAPI()
 
@@ -50,7 +51,6 @@ def get_username(response):
 @app.post("/collections/generate", status_code = 200)
 def generate_art(request: Request, generator_promt: schemas.GeneratorRequestPrompt, db: Session = Depends(get_db)):
     
-    # TODO: Generatenya bisa tapi asyncnya aneh
     jwt_token = request.headers.get('x-jwt-token')
     validate_jwt(jwt_token)
     
@@ -75,7 +75,8 @@ def get_generated_image(request: Request, token: str, db: Session = Depends(get_
         return {"token": token, "status": "In Progress"}
     elif images == 404:
         raise HTTPException(status_code=404, detail="Token does not exist")
-    return images
+    
+    return {"value": images}
 
 
 @app.post("/collections", status_code = 201)
@@ -211,7 +212,6 @@ def get_image(request: Request, image_id: int, db: Session = Depends(get_db)):
     jwt_token = request.headers.get('x-jwt-token')
     validate_jwt(jwt_token)
     
-    #TODO: Tambahin error id yang gasesuai
     db_image = db.query(models.Image).filter(models.Image.id == image_id).first()
     if db_image is None:
         raise HTTPException(status_code=404, detail="Image does not exist")
