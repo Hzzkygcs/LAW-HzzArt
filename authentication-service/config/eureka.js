@@ -2,44 +2,75 @@
 const Eureka = require('eureka-js-client').Eureka;
 const stun = require('stun');
 const ping = require("ping");
+const axios = require("axios");
 
 
+let eurekaSingleton = null;
 
-module.exports.setupEureka = async function () {
-    return;
-
-    const res = await stun.request('stun.l.google.com:19302');
-    const ipAddr = res.getXorAddress().address;
-    console.log('your ip', ipAddr);
-    console.log('your port', res.getXorAddress().port);
-
-    let hosts = ['google.com', ipAddr, "authentication-service:8081", "localhost:8081"];
-    hosts.forEach(function(host){
-        ping.sys.probe(host, function(isAlive){
-            let msg = isAlive ? 'host ' + host + ' is alive' : 'host ' + host + ' is dead';
-            console.log(msg);
-        });
-    });
+async function getEurekaSingleton(port=null, seviceName=null){
+    if (eurekaSingleton == null){
+        if (port==null || seviceName==null){
+            throw new Error(`eurekaSingleton is null when calling getEurekaSingleton(${port}, ${seviceName})`)
+        }
+        eurekaSingleton = await getEurekaClient(port, seviceName);
+    }
+    return eurekaSingleton;
+}
+module.exports.getEurekaSingleton = getEurekaSingleton;
 
 
+async function getEurekaClient(thisServicePort, thisServiceName) {
+    const ip = (await getIpAndPort()).ipAddr;
+    const eurekaAddr = await getEurekaServerAddr();
+    console.log(`Eureka (${eurekaAddr})`)
+
+    if (typeof thisServicePort === 'string')
+        thisServicePort = parseInt(thisServicePort);
 
 // example configuration
     const client = new Eureka({
         // application instance information
         instance: {
-            app: 'jqservice',
-            hostName: 'localhost',
-            ipAddr: '127.0.0.1',
-            port: 8080,
-            vipAddress: 'jq.test.something.com',
+            app: thisServiceName,
+            hostName: ip,
+            ipAddr: ip,
+            port: thisServicePort,
+            vipAddress: ip,
             dataCenterInfo: {
                 name: 'MyOwn',
-            },
+            }
         },
         eureka: {
             // eureka server host / port
-            host: '192.168.99.100',
-            port: 32768,
+            host: eurekaAddr,
+            port: 8761,
+            servicePath: '/eureka/apps/',
         },
     });
+    await client.start();
+    return client;
 }
+
+module.exports.getEurekaClient = getEurekaClient;
+
+
+async function getIpAndPort() {
+    const res = await stun.request('stun.l.google.com:19302');
+    const ipAddr = res.getXorAddress().address;
+    const port = res.getXorAddress().port;
+    return {
+        ipAddr: ipAddr,
+        port: port,
+    };
+}
+
+async function getEurekaServerAddr() {
+    console.log(`process.env.HZZART_NAVIGATOR_SERVER ${process.env.HZZART_NAVIGATOR_SERVER}`)
+    const response = await axios({
+        url: process.env.HZZART_NAVIGATOR_SERVER,
+        method: "GET",
+    });
+
+    return response.data.EurekaElkStack.value;
+}
+

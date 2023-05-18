@@ -7,15 +7,13 @@ const mongoose = require("mongoose");
 const {jsonInvalidSyntaxHandlerMiddleware} = require("./modules/jsonInvalidSyntaxHandlerMiddleware");
 const {USERNAME_VALID_ENDPOINT, REGISTER_ENDPOINT, VALIDATE_LOGIN_ENDPOINT} = require("./routes/endpoints");
 const {route: usernameValidRoute} = require("./routes/get-user");
-const {setupEureka} = require("./config/eureka");
+const {getEurekaClient, getEurekaSingleton} = require("./config/eureka");
 
 
 
 
 module.exports.server = async function (test=true) {
     let app = express();
-
-    setupEureka();
 
     await  connectToMongodb(test);
     app.use(express.json());
@@ -33,6 +31,8 @@ module.exports.server = async function (test=true) {
         if (PORT == null){
             throw new Error("env PORT IS NOT SET");
         }
+
+        await getEurekaSingleton(PORT, process.env.AUTHENTICATION_SERVICE_NAME);
         return app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
     }
     return app.listen(() => console.log(`Listening on any port`));
