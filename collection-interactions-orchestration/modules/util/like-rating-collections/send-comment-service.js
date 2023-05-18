@@ -1,16 +1,15 @@
 const {getLikeCommentServiceUrl} = require("../../../URLs/get-like-comment-service-url");
 const {makeRequest} = require("../../external-call/make-request");
 
-async function sendLikeService(username, collectionId, token) {
-    const url = getLikeCommentServiceUrl("/like-comment/like/");
+async function sendCommentService (username, collectionId, token) {
+    const url = getLikeCommentServiceUrl("/like-comment/comment/");
     let response = await makeRequest("post",
         url+collectionId,
         {},
         {
             "x-jwt-token": token,
-        }
-    );
+        })
     return response.data;
 }
 
-module.exports.sendLikeService = sendLikeService;
+module.exports.sendRatingService = sendCommentService;

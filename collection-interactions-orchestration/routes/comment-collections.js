@@ -1,7 +1,7 @@
 const express = require("express");
 const {getUsernameFromJWT} = require("../modules/util/account/get-username-from-JWT");
 const {validateCollection} = require("../modules/util/collections/validate-collection");
-const {sendRatingService} = require("../modules/util/like-rating-collections/send-rating-service");
+const {sendRatingService} = require("../modules/util/like-rating-collections/send-comment-service");
 
 const route = express.Router();
 
@@ -12,7 +12,7 @@ route.post("/", async (req, res) => {
 
     await validateCollection(req.body.collectionId);
 
-    response = sendRatingService(username, req.body.collectionId, req.body.rating);
+    response = sendRatingService(username, req.body.collectionId, jwt);
     res.send(response);
 });
 

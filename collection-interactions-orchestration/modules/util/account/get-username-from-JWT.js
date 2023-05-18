@@ -3,9 +3,10 @@ const {makeRequest} = require("../../external-call/make-request");
 
 async function getUsernameFromJWT(token) {
     const url = getLoginOrchestrationUrl("/login/validate-login");
-    return await makeRequest("post", url, {
+    let response = await makeRequest("post", url, {
         "x-jwt-token": token,
     });
+    return response.data;
 }
 
 module.exports.getUsernameFromJWT = getUsernameFromJWT;
