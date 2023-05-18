@@ -1,9 +1,9 @@
 const {getLikeCommentServiceUrl} = require("../../../URLs/get-like-comment-service-url");
 const {makeRequest} = require("../../external-call/make-request");
 
-async function sendLikeService(username, collectionId, token) {
+async function getLikeService(username, collectionId, token) {
     const url = getLikeCommentServiceUrl("/like-comment/like/");
-    let response = await makeRequest("post",
+    let response = await makeRequest("get",
         url+collectionId,
         {},
         {
@@ -13,4 +13,4 @@ async function sendLikeService(username, collectionId, token) {
     return response.data;
 }
 
-module.exports.sendLikeService = sendLikeService;
+module.exports.getLikeService = getLikeService;

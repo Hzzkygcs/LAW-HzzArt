@@ -3,13 +3,14 @@ const {makeRequest} = require("../../external-call/make-request");
 
 async function validateCollection(idCollection,token){
     const url = getArtCollectionsUrl("/collections/");
-    return await makeRequest("get",
+    let response = await makeRequest("get",
         url + idCollection,
         {},
         {
             "x-jwt-token": token,
         }
     );
+    return response.data;
 }
 
 module.exports.validateCollection = validateCollection;
