@@ -26,8 +26,9 @@ module.exports.getConsulSingleton = getConsulSingleton;
 async function getConsulClient(thisServicePort, thisServiceName) {
     const ip = (await getIpAndPort()).ipAddr;
     const consulAddr = await getEurekaServerAddr();
-    console.log(`Eureka (${consulAddr})`)
-    console.log(`Registering ${thisServiceName}  ${ip}:${thisServicePort}`)
+    console.log(`Consul (${consulAddr})`)
+    console.log(`Registering ${thisServiceName}  ${ip}:${thisServicePort}. 
+    Instance id: ${getInstanceId(thisServiceName, ip)}`)
 
     if (typeof thisServicePort === 'string')
         thisServicePort = parseInt(thisServicePort);
@@ -38,6 +39,7 @@ async function getConsulClient(thisServicePort, thisServiceName) {
     });
     await consul.agent.service.register({
         name: thisServiceName,
+        id: getInstanceId(thisServiceName, ip),
         address: ip,
         port: thisServicePort,
         check: {
@@ -50,6 +52,14 @@ async function getConsulClient(thisServicePort, thisServiceName) {
 }
 
 module.exports.getConsulClient = getConsulClient;
+
+
+function getInstanceId(serviceName, ipAddress) {
+    return `${serviceName}-${ipAddress}-${getRandomInt(999)}`
+}
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+}
 
 
 async function getIpAndPort() {
