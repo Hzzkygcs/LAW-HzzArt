@@ -1,6 +1,6 @@
 import threading
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
@@ -216,8 +216,8 @@ def get_image(request: Request, image_id: int, db: Session = Depends(get_db)):
     if db_image is None:
         raise HTTPException(status_code=404, detail="Image does not exist")
     
-    return db_image
-
+    image_decode_bytes = base64.b64decode(db_image.url)
+    return Response(content=image_decode_bytes, media_type="image/png")
 
 
 def run_in_new_thread(func, args: tuple):

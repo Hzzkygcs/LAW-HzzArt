@@ -9,6 +9,7 @@ def store(token, value, db):
     if check_token is not None:
         for i in range(len(value)):
             value[i] = value[i].decode('UTF-8')
+            
         json_value = json.dumps(value)
         check_token.value = json_value
         db.commit()
