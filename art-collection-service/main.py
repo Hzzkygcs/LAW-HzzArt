@@ -93,8 +93,8 @@ def create_collection(request: Request, collection: schemas.CreateArtCollectionR
     db.refresh(db_collection)
     return {"id": db_collection.id, "message": "Successfully created"}
 
-@app.get("/collections/")
-def get_owned_collection(request: Request, collection_id: int, db: Session = Depends(get_db)):
+@app.get("/collections")
+def get_owned_collection(request: Request, db: Session = Depends(get_db)):
     
     jwt_token = request.headers.get('x-jwt-token')
     response = validate_jwt(jwt_token)

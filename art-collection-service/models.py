@@ -8,7 +8,7 @@ class Image(Base):
     id = Column(Integer, primary_key=True, index=True)
     url = Column(String, index=True)
     
-    collection_id = Column(Integer, ForeignKey("art_collections.id"))
+    collection_id = Column(Integer, ForeignKey("art_collection.id"))
 
 class ArtCollection(Base):
     __tablename__ = "art_collection"
