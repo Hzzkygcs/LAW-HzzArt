@@ -7,53 +7,49 @@ const Consul = require('consul');
 
 
 
-let eurekaSingleton = null;
 
-async function getEurekaSingleton(port=null, seviceName=null){
-    if (eurekaSingleton == null){
+
+
+let consulSingleton = null;
+
+async function getConsulSingleton(port=null, seviceName=null){
+    if (consulSingleton == null){
         if (port==null || seviceName==null){
             throw new Error(`eurekaSingleton is null when calling getEurekaSingleton(${port}, ${seviceName})`)
         }
-        eurekaSingleton = await getEurekaClient(port, seviceName);
+        consulSingleton = await getConsulClient(port, seviceName);
     }
-    return eurekaSingleton;
+    return consulSingleton;
 }
-module.exports.getEurekaSingleton = getEurekaSingleton;
+module.exports.getConsulSingleton = getConsulSingleton;
 
-
-async function getEurekaClient(thisServicePort, thisServiceName) {
+async function getConsulClient(thisServicePort, thisServiceName) {
     const ip = (await getIpAndPort()).ipAddr;
-    const eurekaAddr = await getEurekaServerAddr();
-    console.log(`Eureka (${eurekaAddr})`)
+    const consulAddr = await getEurekaServerAddr();
+    console.log(`Eureka (${consulAddr})`)
+    console.log(`Registering ${thisServiceName}  ${ip}:${thisServicePort}`)
 
     if (typeof thisServicePort === 'string')
         thisServicePort = parseInt(thisServicePort);
 
-// example configuration
-    const client = new Eureka({
-        // application instance information
-        instance: {
-            app: thisServiceName,
-            hostName: ip,
-            ipAddr: ip,
-            port: thisServicePort,
-            vipAddress: ip,
-            dataCenterInfo: {
-                name: 'MyOwn',
-            }
-        },
-        eureka: {
-            // eureka server host / port
-            host: eurekaAddr,
-            port: 8761,
-            servicePath: '/eureka/apps/',
+    const consul = new Consul({
+        host: consulAddr,
+        port: 8500,
+    });
+    await consul.agent.service.register({
+        name: thisServiceName,
+        address: ip,
+        port: thisServicePort,
+        check: {
+            http: `http://${ip}:${thisServicePort}/health`,
+            interval: '10s',
+            timeout: '5s',
         },
     });
-    await client.start();
-    return client;
+    return consul;
 }
 
-module.exports.getEurekaClient = getEurekaClient;
+module.exports.getConsulClient = getConsulClient;
 
 
 async function getIpAndPort() {

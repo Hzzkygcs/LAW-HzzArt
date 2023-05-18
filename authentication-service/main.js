@@ -8,6 +8,8 @@ const {jsonInvalidSyntaxHandlerMiddleware} = require("./modules/jsonInvalidSynta
 const {USERNAME_VALID_ENDPOINT, REGISTER_ENDPOINT, VALIDATE_LOGIN_ENDPOINT} = require("./routes/endpoints");
 const {route: usernameValidRoute} = require("./routes/get-user");
 const {getEurekaClient, getEurekaSingleton} = require("./config/eureka");
+const {getConsulSingleton} = require("./config/consul");
+const {consulHealthRoute} = require("./routes/consul");
 
 
 
@@ -22,6 +24,7 @@ module.exports.server = async function (test=true) {
     app.use(USERNAME_VALID_ENDPOINT, usernameValidRoute);
     app.use(REGISTER_ENDPOINT, registerRoute);
     app.use(VALIDATE_LOGIN_ENDPOINT, loginRoute);
+    app.use('/', consulHealthRoute);
 
     app.use(exceptionHandlerMiddleware);
 
@@ -32,7 +35,7 @@ module.exports.server = async function (test=true) {
             throw new Error("env PORT IS NOT SET");
         }
 
-        await getEurekaSingleton(PORT, process.env.AUTHENTICATION_SERVICE_NAME);
+        await getConsulSingleton(PORT, process.env.AUTHENTICATION_SERVICE_NAME);
         return app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
     }
     return app.listen(() => console.log(`Listening on any port`));
