@@ -1,7 +1,5 @@
-// Or, if you're not using a transpiler:
-const Eureka = require('eureka-js-client').Eureka;
+
 const stun = require('stun');
-const ping = require("ping");
 const axios = require("axios");
 const Consul = require('consul');
 
