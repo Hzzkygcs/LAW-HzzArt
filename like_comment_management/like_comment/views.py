@@ -15,6 +15,14 @@ from django.views.decorators.csrf import csrf_exempt
 def get_login_url(request):
     return "http://localhost:8085"
 
+# @csrf_exempt
+# def get_collection_url(request):
+#     return "http://art-collection-service:8086"
+
+@csrf_exempt
+def get_collection_url(request):
+    return "http://localhost:8086"
+
 @csrf_exempt
 def get_user(request):
     # Retrieve the JWT token from the request headers
@@ -34,9 +42,11 @@ def get_user(request):
             if not (Cust.objects.filter(username=username).exists()) :
                 customer = Cust(username=username)
                 customer.save()
-                return username
+                return JsonResponse({"username":username}, 
+                        status=status.HTTP_200_OK)
             else :
-                return username
+                return JsonResponse({"username":username}, 
+                        status=status.HTTP_200_OK)
         except json.decoder.JSONDecodeError as e:
             # Handle the JSONDecodeError
             return JsonResponse({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -45,9 +55,25 @@ def get_user(request):
         # Handle the HTTP error response
         return JsonResponse({"error": f"HTTP {response.status_code} error: {response.reason}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@csrf_exempt
-def get_collection_id(request):
-    return "http://localhost:8084"
+def get_collection(request, collection_id):
+    # Retrieve the JWT token from the request headers
+    jwt_token = request.META.get('HTTP_X_JWT_TOKEN')
+
+    # Get collection by ID
+    response = requests.get(
+        url=get_collection_url(request) + '/collections/' + str(collection_id),
+        headers={'x-jwt-token': jwt_token}
+    )   
+    data = response.json()
+    collection_id = data['id']
+    name = data['name']
+    owner = data['owner']
+    images = data['images']
+
+    return JsonResponse({"collection_id": collection_id, 
+                        "name": name, "owner": owner, "images":images}, 
+                        status=status.HTTP_200_OK)
+
 
 @csrf_exempt
 def get_post(request, collection_id):
@@ -56,17 +82,24 @@ def get_post(request, collection_id):
 
 @csrf_exempt
 def like(request, collection_id):
-    user = get_user(request)
-    filter_collection = Collection.objects.filter(collection_id = collection_id).exists() 
+    user_response = get_user(request)
+    user_data = json.loads(user_response.content)
+    user = user_data['username']
+    cust = Cust.objects.get(username = user)
+    collection_response = get_collection(request, collection_id)
+    collection_data = json.loads(collection_response.content)
+    post_id = collection_data['id']
+    post_name = collection_data['name']
+    filter_collection = Collection.objects.filter(collection_id = post_id).exists() 
     if not filter_collection:
-        create_collection = Collection(collection_id = collection_id)
+        create_collection = Collection(collection_id = post_id)
         create_collection.save()
         
     collection = Collection.objects.get(collection_id=collection_id)
-    like = Like.objects.filter(like_collection=collection, like_user=user)
+    like = Like.objects.filter(like_collection=collection, like_user=cust)
     
     if not like.exists():
-        add_like = Like(like_collection=collection, like_user=user)
+        add_like = Like(like_collection=collection, like_user=cust)
         add_like.save()
         collection.collection_likes += 1
         collection.save()
@@ -80,11 +113,12 @@ def like(request, collection_id):
 @csrf_exempt
 def comment(request, collection_id):
     user = get_user(request)
+    cust = Cust.objects.get(username = user)
     filter_collection = Collection.objects.filter(collection_id = collection_id).exists() 
     if filter_collection == True :
         collection = Collection.objects.get(collection_id = collection_id)
         deserialize = json.loads(request.body)
-        comment = Comment(comment_collection=collection, comment_user=user, comment_text=deserialize['comment'])
+        comment = Comment(comment_collection=collection, comment_user=cust, comment_text=deserialize['comment'])
         comment.save()
         return JsonResponse({'message': 'Comment added successfully'}, status=status.HTTP_200_OK)
     else :
@@ -102,6 +136,7 @@ def get_comment(request, collection_id):
 @csrf_exempt
 def liked_by_user(request):
     user = get_user(request)
-    result = Like.objects.filter(like_user = user).order_by('-like_collection').values()[::1]
+    cust = Cust.objects.get(username = user)
+    result = Like.objects.filter(like_user = cust).order_by('-like_collection').values()[::1]
     return JsonResponse({"response":result}, status=status.HTTP_200_OK)
    

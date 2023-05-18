@@ -9,7 +9,7 @@ urlpatterns = [
     path('get-user', get_user, name='get_user'),
     path('get-post/<int:collection_id>', get_post, name='get_post'),
     path('like/<int:collection_id>', like, name='like'),
-    path('liked', liked, name='liked'),
+    path('liked', liked_by_user, name='liked'),
     path('comment/<int:collection_id>', comment, name='comment'),
     path('get-comment/<int:collection_id>', get_comment, name='get_comment'),
 ]
