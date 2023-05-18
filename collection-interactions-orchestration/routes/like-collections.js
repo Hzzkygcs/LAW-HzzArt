@@ -8,9 +8,10 @@ const route = express.Router();
 route.post("/", async (req, res) => {
     const jwt = req.get(process.env.JWT_JWT_TOKEN_HEADER_NAME);
     let response = await getUsernameFromJWT(jwt);
-    const username = response.username;
 
-    await validateCollection(req.body.collectionId);
+    const username = response.data.username;
+
+    await validateCollection(req.body.collectionId,jwt);
 
     response = await sendLikeService(username, req.body.collectionId, req.body.like);
     res.send(response);
