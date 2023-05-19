@@ -3,6 +3,7 @@ import json
 from typing import Union
 
 import requests
+from PIL import Image
 
 from export_collections.exceptions.InvalidFieldTypeException import InvalidFieldTypeException
 from export_collections.exceptions.NotJsonRequestException import NotJsonRequestException
@@ -61,6 +62,7 @@ def extract_export_collection_request_data(request):
 def prepare_list_of_bytes_to_be_sent_in_http_request(images: list[bytes]):
     files = []
     for image_index, image_data in images.items():
+        image_data = any_format_to_png(image_data)
         image_file = io.BytesIO(image_data)
         image_file.name = f"{image_index}.png"
         files.append((image_index, image_file))
@@ -87,6 +89,12 @@ def call_video_processing_service(per_image_duration: Union[int, float],
         raise ResponseAsException(response.content, response.status_code)
     return response
 
+
+def any_format_to_png(webp_bytes: bytes) -> bytes:
+    webp_image = Image.open(io.BytesIO(webp_bytes))
+    png_buffer = io.BytesIO()
+    webp_image.save(png_buffer, format='PNG')
+    return png_buffer.getvalue()
 
 
 def parse_json_request(req):
