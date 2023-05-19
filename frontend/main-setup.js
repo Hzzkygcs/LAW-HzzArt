@@ -3,6 +3,7 @@ const {viewDirectories} = require("./core/configuration/viewDirectories");
 const {defaultRoute} = require("./routes/default");
 const {homepageRoute} = require("./routes/homepage");
 const cookieParser = require("cookie-parser");
+const {adminRoute} = require("./routes/admin");
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(cookieParser());
 
 
 
+app.use(adminRoute);
 app.use(homepageRoute);
 app.use(defaultRoute);
 

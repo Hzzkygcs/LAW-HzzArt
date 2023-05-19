@@ -6,27 +6,26 @@ x-environment: &env
   JWT_TOKEN_HEADER_NAME: "x-jwt-token"
 
   FRONTEND_SERVICE_PORT: 8080
+  FRONTEND_SERVICE_NAME: "frontend-service"
+  FRONTEND_SERVICE_URL: "http://frontend-service:8080"
   AUTHENTICATION_SERVICE_PORT: 8081
   AUTHENTICATION_SERVICE_NAME: "authentication-service"
   ADMIN_SERVICE_PORT: 8082
   ADMIN_SERVICE_NAME: "admin-service"
+  ADMIN_SERVICE_URL: "http://admin-service:8082"
   VIDEO_PROCESSING_SERVICE_PORT: 8083
   COLLECTION_INTERACTIONS_ORCHESTRATION_PORT: 8084
   COLLECTION_INTERACTIONS_ORCHESTRATION_NAME: "collection-orchestration"
   LOGIN_ORCHESTRATION_PORT: 8085
   LOGIN_ORCHESTRATION_NAME: "login-orchestration"
+  LOGIN_ORCHESTRATION_URL: "http://login-orchestration:8085"
   ART_COLLECTIONS_PORT: 8086
   ART_COLLECTIONS_NAME: "art-collection-service"
-  # LIKE_RATING_SERVICE_PORT: 8087
 #  SERVICE_REGISTRY_URL: "http://service-registry:9000"
-  FRONTEND_SERVICE_URL: "http://frontend-service:8080"
   AUTHENTICATION_SERVICE_URL: "http://authentication-service:8081"
-  ADMIN_SERVICE_URL: "http://admin-service:8082"
   VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
   COLLECTION_ORCHESTRATION_URL: "http://collection-orchestration:8084"
-  LOGIN_ORCHESTRATION_URL: "http://login-orchestration:8085"
   ART_COLLECTIONS_URL: "http://art-collection-service:8086"
-  # LIKE_RATING_SERVICE_URL: "http://like-rating-service:8087"
   INSIDE_DOCKER_CONTAINER: 1
   HZZART_NAVIGATOR_SERVER: "https://hzzart-navigator-server.herokuapp.com"
 
@@ -106,7 +105,6 @@ services:
       - login-orchestration
 #      - eureka-server
 #      - art-collections
-#      - like-rating-service
     environment:
       <<: *env
 
@@ -126,6 +124,20 @@ services:
     volumes:
       - "./login-orchestration:/code-login-orchestration"
       - "/code-login-orchestration/node_modules"
+
+  like-comment-service:
+    build:
+      context: ./like_comment_service
+      dockerfile: Dockerfile
+    ports:
+      - "8087:8000"
+    depends_on:
+      - login-orchestration
+    volumes:
+      - "./like-comment-service/pip-cache:/pip-cache"
+    environment:
+      <<: *env
+
 
   mongodb:
     image: mongo
@@ -163,18 +175,6 @@ services:
       POSTGRES_DB: ai-art-collections
     ports:
       - "7000:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
-
-  postgres-like-and-comment:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq
-      POSTGRES_DB: like-and-comment
-    ports:
-      - "5433:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
 

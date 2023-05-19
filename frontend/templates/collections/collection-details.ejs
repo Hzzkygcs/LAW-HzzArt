@@ -14,58 +14,33 @@
 
 </head>
 
-<body class="h-screen">
+<body class="h-screen grid" style="height: calc(100vh); grid-template-rows: auto 1fr auto;">
     <%- include(urls.footer_navbar.navbar(), locals) %>
-    <div class="bg-neutral-800 border-black-200 dark:bg-black-300 w-full flex" style=";">
-        <div class="w-1/6 bg-neutral-800 flex items-center justify-center">
-          <button id="prev" class="text-white w-28 h-28">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-            </svg>
-          </button>
-        </div> <!-- left element container -->
-      
-        <div id="image-container" class="shadow mx-auto rounded-lg bg-white h-full w-4/6 flex">
-          <img id="image" src="https://img.freepik.com/premium-photo/woman-s-face-is-made-up-geometric-shapes-cyberpunk-colorful-fractalism-cubism_834088-1.jpg" alt="" class="rounded-t-lg h-full w-full object-cover" />
+    <div class="">
+        <div class="bg-neutral-800 border-black-200 dark:bg-black-300 h-full flex">
+            <div class="w-1/6 bg-neutral-800 flex items-center justify-center">
+                <button id="prev" class="text-white w-28 h-28">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                </button>
+            </div> <!-- left element container -->
+
+            <div id="image-container" class="shadow mx-auto rounded-lg bg-white h-full w-4/6 flex">
+                <img id="image" src="https://img.freepik.com/premium-photo/woman-s-face-is-made-up-geometric-shapes-cyberpunk-colorful-fractalism-cubism_834088-1.jpg" alt="" class="rounded-t-lg h-full w-full object-cover" />
+            </div>
+
+            <div class="w-1/6 bg-neutral-800 flex items-center justify-center">
+                <button id="next" class="text-white w-28 h-28">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                </button>
+            </div>
+
         </div>
-      
-        <div class="w-1/6 bg-neutral-800 flex items-center justify-center">
-          <button id="next" class="text-white w-28 h-28">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-            </svg>
-          </button>
-        </div>
-      
-      </div>
-      
-      <script>
-        const images = [
-          'https://img.freepik.com/premium-photo/woman-s-face-is-made-up-geometric-shapes-cyberpunk-colorful-fractalism-cubism_834088-1.jpg',
-          'https://cdn.pixabay.com/photo/2018/10/30/16/06/water-lily-3784022_960_720.jpg',
-          'https://cdn.pixabay.com/photo/2021/04/13/06/33/crocus-6177145_960_720.jpg'
-        ];
-      
-        let currentIndex = 0;
-        const imageElement = document.getElementById('image');
-        const prevButton = document.getElementById('prev');
-        const nextButton = document.getElementById('next');
-      
-        prevButton.addEventListener('click', () => {
-          if (currentIndex > 0) {
-            currentIndex--;
-            imageElement.src = images[currentIndex];
-          }
-        });
-      
-        nextButton.addEventListener('click', () => {
-          if (currentIndex < images.length - 1) {
-            currentIndex++;
-            imageElement.src = images[currentIndex];
-          }
-        });
-      </script>
-      
+
+    </div>
     
     
     <div class="flex bg-red-900 h-20 bottom-0">
@@ -138,6 +113,35 @@
         <%- include(urls.collections.components.reportModal(), locals) %>
         <%- include(urls.collections.components.commentsModal(), locals) %>
     </div>
+
+
+    <script>
+        const images = [
+            'https://img.freepik.com/premium-photo/woman-s-face-is-made-up-geometric-shapes-cyberpunk-colorful-fractalism-cubism_834088-1.jpg',
+            'https://cdn.pixabay.com/photo/2018/10/30/16/06/water-lily-3784022_960_720.jpg',
+            'https://cdn.pixabay.com/photo/2021/04/13/06/33/crocus-6177145_960_720.jpg'
+        ];
+
+        let currentIndex = 0;
+        const imageElement = document.getElementById('image');
+        const prevButton = document.getElementById('prev');
+        const nextButton = document.getElementById('next');
+
+        prevButton.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                imageElement.src = images[currentIndex];
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentIndex < images.length - 1) {
+                currentIndex++;
+                imageElement.src = images[currentIndex];
+            }
+        });
+    </script>
+
 
     <%- include(urls.footer_navbar.footer(), locals) %>
 </body>
