@@ -43,6 +43,8 @@ services:
 #      - eureka-server
     environment:
       <<: *env
+    ports:
+      - "8080:8080"
     volumes:
       - "./frontend:/code-frontend-service"
       - "/code-frontend-service/node_modules"
