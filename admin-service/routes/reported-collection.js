@@ -60,4 +60,42 @@ route.post("/", async (req, res) => {
     res.send(reportedCollection.getObjectRepresentation());
 });
 
+route.get("/", async (req, res) => {
+    validateToken(req);
+
+    const reportedCollections = await ReportedCollection.aggregate([
+        {
+            $group: {
+                _id: "$collectionId",
+                reportedCount: {$sum: 1}
+            }
+        }
+    ]);
+
+    const reportedCollectionsWithCount = reportedCollections.map((reportedCollection) => {
+        return {
+            collectionId: reportedCollection._id,
+            reportedCount: reportedCollection.reportedCount
+        }
+    });
+
+    const reportedCollectionsWithCounts = reportedCollectionsWithCount.map((reportedCollection) => {
+        return {
+            collectionId: reportedCollection.collectionId,
+            reportedCount: reportedCollection.reportedCount,
+        }
+    });
+
+    res.send(reportedCollectionsWithCounts);
+});
+
+route.get("/:collectionId", async (req, res) => {
+    validateToken(req);
+
+    const reportedCollections = await ReportedCollection.find({collectionId: req.params.collectionId});
+    res.send(reportedCollections.map((reportedCollection) => {
+        return reportedCollection.getObjectRepresentation();
+    }));
+});
+
 module.exports.route = route;
