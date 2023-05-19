@@ -43,7 +43,6 @@ const urls = {
         dependencies: () => `${noLeadingSlash(urls.admin.admin())}/-dependencies.ejs`,
         reportedCollectionsPage: () => `${urls.admin.admin()}/reported-collections.html`,
         detailReportedCollectionPage: () => `${urls.admin.admin()}/detail-report-collection.html`,
-        // reportedCollectionsGetCollections: () => `/admin-service/admin/reported-collection`,
         adminDownloadPage: () => `${urls.admin.admin()}/admin-download-page.html`,
     },
 
@@ -80,7 +79,7 @@ const urls = {
     },
 
     collection_interactions_orchestration: {
-        reportedCollectionsGetCollections: () => '/collection-interactions-orchestration/reported-collections',
+        reportedCollectionsGetCollections: () => `${collectionInteractionsOrchestration()}/reported-collections`,
     }
 };
 
@@ -95,6 +94,10 @@ function loginOrchestration() {
 
 function authenticationService() {
     return "/authentication-service";
+}
+
+function collectionInteractionsOrchestration() {
+    return "/collection-interactions-orchestration";
 }
 
 
