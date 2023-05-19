@@ -87,9 +87,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8083:8083"
-    depends_on:
-      - mongodb
     environment: *env
+    volumes:
+      - "./video-processor:/app-codes"
+      - "/app-codes/node_modules"
 
   collection-interactions-orchestration:
     build:

@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "export_collections"
+    "export_collections",
+    'global_exception',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +49,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'global_exception.middleware.AutomaticExceptionHandler.AutomaticExceptionHandler',
 ]
 
 ROOT_URLCONF = "export_collection_orchestrations.urls"
