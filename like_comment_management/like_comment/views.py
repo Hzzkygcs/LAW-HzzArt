@@ -1,81 +1,110 @@
-from django.shortcuts import render
-from django.http import response, HttpResponse, JsonResponse, request
+from django.core.exceptions import FieldDoesNotExist
+from django.db.models import Count
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST, require_GET
+
+from .exceptions.FieldRequiredException import FieldRequiredException
+from .exceptions.InvalidFieldTypeException import InvalidFieldTypeException
 from .models import *
-import json, requests
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 
+from .services import get_collection_information, parse_json_request, get_username
+
+
 # Create your views here.
-
-def get_user(request):
-    # Retrieve the JWT token from the request headers
-    jwt_token = request.META.get('HTTP_X_JWT_TOKEN')
-
-    # Send the token to the login orchestration service
-    response = requests.post('<BASE_URL>/login',body={'Authorization': f'Bearer {jwt_token}'})
-
-    data = response.json()
-    username = data['username']
-
-    #create user
-    user = Cust(username=username)
-    user.save()
-    return JsonResponse({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
-
-@csrf_exempt 
-def create_user(request):
-    deserialize = json.loads(request.body)
-    user = Cust(username=deserialize['username'])
-    user.save()
-    return JsonResponse({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
+@csrf_exempt
+@require_GET
+def get_collection_information_view(_req, collection_id):
+    data = get_collection_information(collection_id)
+    return JsonResponse(data, status=status.HTTP_200_OK)
 
 @csrf_exempt
-def create_post(request, username):
-    user = Cust.objects.get(username=username)
-    deserialize = json.loads(request.body)
-    post = Post(post_desc=deserialize['desc'],post_image_link=deserialize['image'], post_user_name=user)
-    post.save()
-    return JsonResponse({"message": "Post created successfully"}, status=status.HTTP_201_CREATED)
+@require_POST
+def get_multiple_collection_information_view(req):
+    json_data = parse_json_request(req)
+    InvalidFieldTypeException.assert_correct_type('collection_ids', json_data, list)
+
+    collection_ids = json_data['collection_ids']
+
+    ret = []
+    for collection_id in collection_ids:
+        ret.append(
+            get_collection_information(collection_id)
+        )
+    return JsonResponse(ret, safe=False, status=status.HTTP_200_OK)
+
+
 
 @csrf_exempt
-def get_post(request, post_id):
-    post = Post.objects.filter(post_id=post_id).values()[0]
-    return JsonResponse({"response":post}, status=status.HTTP_200_OK)
+@require_POST
+def like_or_dislike(req, post_id):
+    username = get_username(req)
+    collection = Collections.get_or_create(post_id)
+    like_obj = Like.objects.filter(username=username, collection=collection).first()
+    collection = Collections.get_or_create(post_id)
+
+    if like_obj is None:  # like
+        Like.objects.create(username=username, collection=collection)
+        return JsonResponse({'message': 'Post Liked', 'liked': True}, status=status.HTTP_200_OK)
+
+    # dislike
+    like_obj.delete()
+    return JsonResponse({'message': 'Post Unliked', 'liked': False}, status=status.HTTP_200_OK)
+
 
 @csrf_exempt
-def like(request, post_id, username):
-    user = Cust.objects.get(username=username)
-    post = Post.objects.get(post_id = post_id)
-    if not (post.post_likes_user.filter(username=user.username).exists()):
-        post.post_likes_user.add(user)
-        post.post_likes+=1
-        post.save()
-        return JsonResponse({'message': 'Post Liked'}, status=status.HTTP_200_OK)
+@require_POST
+def comment(req, post_id):
+    json_data = parse_json_request(req)
+    FieldRequiredException.assert_has_field('comment', json_data)
 
-    else :
-        return JsonResponse({'message': 'Post Already Liked'}, status=status.HTTP_400_BAD_REQUEST)
-    
-@csrf_exempt
-def comment(request, post_id, username):
-    user = Cust.objects.get(username=username)
-    post = Post.objects.get(post_id = post_id)
-    deserialize = json.loads(request.body)
-    comment = Comment(comment_post=post, comment_user=user, comment_text=deserialize['comment'])
-    comment.save()
+    collection = Collections.get_or_create(post_id)
+    username = get_username(req)
+
+    created_comment = Comment(collection=collection, username=username,
+                              comment_text=json_data['comment'])
+    created_comment.save()
     return JsonResponse({'message': 'Comment added successfully'}, status=status.HTTP_200_OK)
 
+
 @csrf_exempt
-def get_comment(request, post_id):
-    post = Post.objects.get(post_id = post_id)
-    comment_list = Comment.objects.filter(comment_post=post).order_by('-comment_id').values()[::1]
+@require_GET
+def get_comments_of_a_collection(_req, post_id):
+    post = Collections.get_or_create(post_id)
+    comment_list = post.comment_set.all().order_by('-comment_id').values()[::1]
 
-    return JsonResponse({"response":comment_list}, status=status.HTTP_200_OK)
+    return JsonResponse({"response": comment_list}, status=status.HTTP_200_OK)
 
-def liked(request, post_id):
-    result = Post.object.filter(post_id=post_id, post_likes_user=request.user.email)
-    if len(result) == 0:
-        is_liked = False
-    else :
-        is_liked = True
-    return JsonResponse({"isLiked":is_liked}, safe=False, status=status.HTTP_200_OK)
-   
+
+@require_GET
+def get_popular_collections(_req):
+    popular_collections = (
+        Collections.objects.all()
+        .annotate(likes_count=Count('like'), comment_count=Count('comment'), )
+        .order_by('-likes_count', 'comment_count')
+    )
+    ret = []
+    for collection in popular_collections:
+        ret.append(
+            get_collection_information(collection.post_id)
+        )
+    return JsonResponse(ret, safe=False, status=status.HTTP_200_OK)
+
+
+
+# @csrf_exempt
+# def create_user(request):
+#     deserialize = json.loads(request.body)
+#     user = Cust(username=deserialize['username'])
+#     user.save()
+#     return JsonResponse({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
+
+# @csrf_exempt
+# def create_post(request, username):
+#     user = Cust.objects.get(username=username)
+#     deserialize = json.loads(request.body)
+#     post = Post(post_desc=deserialize['desc'],post_image_link=deserialize['image'], post_user_name=user)
+#     post.save()
+#     return JsonResponse({"message": "Post created successfully"}, status=status.HTTP_201_CREATED)
+
