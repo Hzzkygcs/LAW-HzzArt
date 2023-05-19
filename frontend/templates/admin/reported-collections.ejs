@@ -11,20 +11,41 @@
 <body>
     <%- include(urls.footer_navbar.navbar(), locals) %>
     <div class="collections-outter-container">
-        <div class="flex justify-between items-center pt-5 pb-7">
+        <div class="flex flex-row items-center pt-5 pb-7">
+
             <div class="pr-3">
                 <h1 class="text-2xl font-bold">Reported Collections</h1>
             </div>
+
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
-            <%- include("admin/-reported-card.ejs", locals ); %>
-            <%- include("admin/-reported-card.ejs", locals ); %>
-            <%- include("admin/-reported-card.ejs", locals ); %>
-            <%- include("admin/-reported-card.ejs", locals ); %>
+         <%- include("-reported-card.ejs", locals ); %>
+        <div class="container-of-all-collections
+                    grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
+            Loading
         </div>
+
     </div>
+
     <%- include(urls.footer_navbar.footer(), locals) %>
 </body>
 </html>
 
+<script>
+    $(document).ready(async function() {
+        const container = $(".container-of-all-collections");
+
+        const getReportedCollectionsUrl = "<%- urls.collection_interactions_orchestration.reportedCollectionsGetCollections() %>";
+        let collections = await get(getReportedCollectionsUrl, {});
+        container.empty();
+
+        for (const collection of collections) {
+            const {id, name, owner, images, reportedCount} = collection;
+            const imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
+            console.log(id, name, imageThumbnail)
+
+            newReportCollectionCard(id, reportedCount, name, imageThumbnail, container);
+        }
+
+    });
+</script>

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "like_comment",
+    'global_exception',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +49,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'global_exception.middleware.AutomaticExceptionHandler.AutomaticExceptionHandler',
 ]
 
 ROOT_URLCONF = "like_comment_management.urls"
@@ -79,12 +81,12 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'ApxWa7IA3449C2sV',
-        'HOST': 'db.rvdjlgjibyvutofsapbm.supabase.co',
+        'PASSWORD': '60LD48iYfhQcXVD0',
+        'HOST': 'db.duffupofvjtegpcwkxqe.supabase.co',
         'PORT': '5432',
-        # 'OPTIONS': {
-        #     'options': '-c search_path=reminder'
-        # }
+        'OPTIONS': {
+            'options': '-c search_path=likecomment,public'
+        },
     },
 
     'temp': {
@@ -95,7 +97,7 @@ DATABASES = {
 #     'ENGINE': 'django.db.backends.postgresql',
 #     'NAME': 'postgres',
 #     'USER': 'postgres',
-#     'PASSWORD': 'pro212121',
+#     'PASSWORD': '',
 #     'HOST': 'localhost',
 #     'PORT': '5432',
 #     'OPTIONS': {
