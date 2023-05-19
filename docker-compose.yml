@@ -166,5 +166,17 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
+  postgres-like-and-comment:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq
+      POSTGRES_DB: like-and-comment
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
 volumes:
   db_data:
