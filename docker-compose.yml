@@ -32,7 +32,6 @@ x-environment: &env
 
 
 services:
-
   frontend-service:
     build:
       context: ./frontend
@@ -158,7 +157,7 @@ services:
     volumes:
       - "./art-collection-service/pip-cache:/pip-cache"
     environment:
-      <<: *env  # postgres:// beda?
+      <<: *env
       DATABASE_HOST_URL: "postgresql://postgres:t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq@postgres:5432/ai-art-collections"
 
   postgres:
