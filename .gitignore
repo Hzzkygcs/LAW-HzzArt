@@ -10,4 +10,5 @@
 **/venv/
 **/pip-cache/
 **/.env
+**/db.sqlite3
 video-processor/uploads/
