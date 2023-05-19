@@ -4,6 +4,8 @@ from .models import *
 import json, requests
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST, require_GET
+import io
 
 # Create your views here.
 
@@ -34,49 +36,57 @@ def get_collection(request, collection_id):
         headers={'x-jwt-token': jwt_token}
     )   
     data = response.json()
-    print("INI DATA", data)
     collection_id = data['id']
-    name = data['name']
-    owner = data['owner']
     images = data['images']
+    image_data = []
+    for i in images :
+        response_image = requests.get(
+        url=get_collection_url(request) + '/collections/image/' + str(i),
+        headers={'x-jwt-token': jwt_token}
+        )
+        data_image = response_image.content
+        image_data.append(data_image)
+    return image_data
 
-    return JsonResponse({"collection_id": collection_id, 
-                        "name": name, "owner": owner, "images":images}, 
-                        status=status.HTTP_200_OK)
+def get_collection_as_dict(request, collection_id):
+    collection_response = get_collection(request, collection_id)
+    init = {}
+    for i in range(len(collection_response)):
+        init[f"img-{i}"] = collection_response[i]
+    return init
 
 @csrf_exempt
+@require_POST
 def export(request, collection_id):
-    collection_response = get_collection(request, collection_id)
-    if collection_response.status_code == 200:
-        collection_data = collection_response.json()
-        images = collection_data['images']
+    collection_response = get_collection_as_dict(request, collection_id)
 
-        data = json.loads(request.body)
-        per_image_duration = data.get('per_image_duration')
-        transition_duration = data.get('transition_duration')
-        fps = data.get('fps')
+    data = json.loads(request.body)
+    per_image_duration = data.get('per_image_duration')
+    transition_duration = data.get('transition_duration')
+    fps = data.get('fps')
+    images = collection_response
 
-        if per_image_duration is None or transition_duration is None or fps is None:
-            return JsonResponse({"error": "Invalid input data"}, 
-                            status=status.HTTP_400_BAD_REQUEST)
-        files = []
-        for image_path in images:
-            with open(image_path, 'rb') as file:
-                files.append(('images', file))
+    if per_image_duration is None or transition_duration is None or fps is None:
+        return JsonResponse({"error": "Invalid input data"}, 
+                        status=status.HTTP_400_BAD_REQUEST)
+    files = []
+    for image_index, image_data in images.items():
+        image_file = io.BytesIO(image_data)
+        image_file.name = f"{image_index}"
+        files.append(('img', image_file))
+        print('ini nama file', image_file.name)
 
-        response = requests.post(
-        url=get_nuel_url(request) + '/submit-video',
-        data={"per_image_duration": str(per_image_duration),
-              "transition_duration": str(transition_duration),
-              "fps": str(fps)},
-        files=files
-        )
-        token = response.json()
-        return JsonResponse({"response", token}, 
-                            status=status.HTTP_200_OK)
-    else:
-        return JsonResponse({"error": "Failed to retrieve images"}, 
-                            status=collection_response.status_code)
+    response = requests.post(
+    url=get_nuel_url(request) + '/submit-video',
+    data={"per_image_duration": str(per_image_duration),
+            "transition_duration": str(transition_duration),
+            "fps": str(fps)},
+    files=files
+    )
+    token = response.json()
+    print("ini token", token)
+    return JsonResponse({"response": token}, 
+                    status=status.HTTP_200_OK)
 
 
 @csrf_exempt
