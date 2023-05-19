@@ -64,6 +64,9 @@ const urls = {
         dependencies: () => `${noLeadingSlash(urls.collections.collections())}/-dependencies.ejs`,
 
         myCollectionsPage: () => `${urls.collections.collections()}/my-collections.html`,
+        myCollectionsGetCollections: () => `/art-collection-service/collections`,
+        myCollectionsGetImage: () => `/art-collection-service/collections/image/`,
+
         searchCollectionsPage: () => `${urls.collections.collections()}/search-result.html`,
         popularCollectionsPage: () => `${urls.collections.collections()}/popular-collections.html`,
         editCollectionsPage: () => `${urls.collections.collections()}/edit-collections.html`,

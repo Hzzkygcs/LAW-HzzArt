@@ -7,15 +7,14 @@ const mongoose = require("mongoose");
 const {jsonInvalidSyntaxHandlerMiddleware} = require("./modules/jsonInvalidSyntaxHandlerMiddleware");
 const {USERNAME_VALID_ENDPOINT, REGISTER_ENDPOINT, VALIDATE_LOGIN_ENDPOINT} = require("./routes/endpoints");
 const {route: usernameValidRoute} = require("./routes/get-user");
-const {setupEureka} = require("./config/eureka");
+const {getConsulSingleton} = require("./config/consul");
+const {consulHealthRoute} = require("./routes/consul");
 
 
 
 
 module.exports.server = async function (test=true) {
     let app = express();
-
-    setupEureka();
 
     await  connectToMongodb(test);
     app.use(express.json());
@@ -24,6 +23,7 @@ module.exports.server = async function (test=true) {
     app.use(USERNAME_VALID_ENDPOINT, usernameValidRoute);
     app.use(REGISTER_ENDPOINT, registerRoute);
     app.use(VALIDATE_LOGIN_ENDPOINT, loginRoute);
+    app.use('/', consulHealthRoute);
 
     app.use(exceptionHandlerMiddleware);
 
@@ -33,7 +33,12 @@ module.exports.server = async function (test=true) {
         if (PORT == null){
             throw new Error("env PORT IS NOT SET");
         }
-        return app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+
+        return app.listen(PORT, () => {
+            console.log(`Listening on port ${PORT}`);
+            getConsulSingleton(PORT, process.env.AUTHENTICATION_SERVICE_NAME);
+        });
     }
     return app.listen(() => console.log(`Listening on any port`));
 };

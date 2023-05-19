@@ -3,13 +3,15 @@ const express = require("express");
 const {exceptionHandlerMiddleware} = require("./modules/global-route-exceptions-handler/middlewares/exceptionHandlerMiddleware");
 const {jsonInvalidSyntaxHandlerMiddleware} = require("./modules/jsonInvalidSyntaxHandlerMiddleware");
 const {REPORT_COLLECTIONS_ENDPOINT,
-    RATING_COLLECTIONS_ENDPOINT,
+    COMMENT_COLLECTIONS_ENDPOINT,
     LIKE_COLLECTIONS_ENDPOINT,
     SEARCH_COLLECTIONS_ENDPOINT} = require("./routes/endpoints");
 const {route: reportCollectionsRoute} = require("./routes/report-collections");
-const {route: ratingCollectionsRoute} = require("./routes/rating-collections");
+const {route: commentCollectionsRoute} = require("./routes/comment-collections");
 const {route: likeCollectionsRoute} = require("./routes/like-collections");
 const {route: searchCollectionsRoute} = require("./routes/search-collections");
+const {consulHealthRoute} = require("./routes/consul");
+const {getConsulSingleton} = require("./config/consul");
 
 
 module.exports.server = async function (test=true) {
@@ -19,9 +21,10 @@ module.exports.server = async function (test=true) {
     app.use(jsonInvalidSyntaxHandlerMiddleware);
 
     app.use(REPORT_COLLECTIONS_ENDPOINT, reportCollectionsRoute);
-    app.use(RATING_COLLECTIONS_ENDPOINT, ratingCollectionsRoute);
+    app.use(COMMENT_COLLECTIONS_ENDPOINT, commentCollectionsRoute);
     app.use(LIKE_COLLECTIONS_ENDPOINT, likeCollectionsRoute);
     app.use(SEARCH_COLLECTIONS_ENDPOINT, searchCollectionsRoute);
+    app.use("/", consulHealthRoute);
 
     app.use(exceptionHandlerMiddleware);
 
@@ -31,7 +34,10 @@ module.exports.server = async function (test=true) {
         if (PORT == null){
             throw new Error("env PORT IS NOT SET");
         }
-        return app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+        return app.listen(PORT, () => {
+            console.log(`Listening on port ${PORT}`);
+            getConsulSingleton(PORT, process.env.COLLECTION_INTERACTIONS_ORCHESTRATION_NAME);
+        });
     }
     return app.listen(() => console.log(`Listening on any port`));
 };

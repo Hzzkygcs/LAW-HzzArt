@@ -6,7 +6,9 @@
     "nodemon_run_legacy": "nodemon index.js -e js,mjs,json --legacy-watch"
   },
   "dependencies": {
+    "consul": "^1.2.0",
     "axios": "^1.3.6",
+    "stun": "^2.1.0",
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.5",
     "dotenv": "^10.0.0",

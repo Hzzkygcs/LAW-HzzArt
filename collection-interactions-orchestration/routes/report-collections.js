@@ -8,13 +8,17 @@ const route = express.Router();
 route.post("/", async (req, res) => {
     const jwt = req.get(process.env.JWT_TOKEN_HEADER_NAME);
     let response = await getUsernameFromJWT(jwt);
-    const reportedBy = response.username;
-    // get owner of collection from pram
-    // const ownerCollection = validateCollection(req.body.collectionId);
-    const ownerCollection = "test";
+    const responseCollection = await validateCollection(req.body.collectionId,jwt);
 
-    response = await sendAdminManagementService(req.body.collectionId, reportedBy, ownerCollection, req.body.reason);
-    res.send(response);
+    const reportedBy = response.username;
+    let ownerCollection = responseCollection.owner;
+    let responseAdminManagement = await sendAdminManagementService(
+        req.body.collectionId,
+        reportedBy,
+        ownerCollection,
+        req.body.reason
+    );
+    res.send(responseAdminManagement);
 });
 
 module.exports.route = route;

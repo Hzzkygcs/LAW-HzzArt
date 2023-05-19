@@ -1,11 +1,15 @@
 const {getArtCollectionsUrl} = require("../../../URLs/get-art-collections-url");
 const {makeRequest} = require("../../external-call/make-request");
 
-async function validateCollection(idCollection){
-    const url = getArtCollectionsUrl("/validate-collection");
-    let response = await makeRequest("post", url, {
-        "idCollection": idCollection
-    })
+async function validateCollection(idCollection,token){
+    const url = getArtCollectionsUrl("/collections/");
+    let response = await makeRequest("get",
+        url + idCollection,
+        {},
+        {
+            "x-jwt-token": token,
+        }
+    );
     return response.data;
 }
 

@@ -4,15 +4,19 @@ x-environment: &env
   SERVICE_REGISTRY_TOKEN: "ABCDEFG"
   ADMIN_SERVICE_TOKEN: "a90xIy6XopQkp8WNuaOFqRrg2XB6BfAYNdPJqKuIRmM0q5jyJj"
   JWT_TOKEN_HEADER_NAME: "x-jwt-token"
-  SERVICE_REGISTRY_PORT: 9000
 
   FRONTEND_SERVICE_PORT: 8080
   AUTHENTICATION_SERVICE_PORT: 8081
+  AUTHENTICATION_SERVICE_NAME: "authentication-service"
   ADMIN_SERVICE_PORT: 8082
+  ADMIN_SERVICE_NAME: "admin-service"
   VIDEO_PROCESSING_SERVICE_PORT: 8083
   COLLECTION_INTERACTIONS_ORCHESTRATION_PORT: 8084
+  COLLECTION_INTERACTIONS_ORCHESTRATION_NAME: "collection-orchestration"
   LOGIN_ORCHESTRATION_PORT: 8085
+  LOGIN_ORCHESTRATION_NAME: "login-orchestration"
   ART_COLLECTIONS_PORT: 8086
+  ART_COLLECTIONS_NAME: "art-collection-service"
   # LIKE_RATING_SERVICE_PORT: 8087
 #  SERVICE_REGISTRY_URL: "http://service-registry:9000"
   FRONTEND_SERVICE_URL: "http://frontend-service:8080"
@@ -21,9 +25,10 @@ x-environment: &env
   VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
   COLLECTION_ORCHESTRATION_URL: "http://collection-orchestration:8084"
   LOGIN_ORCHESTRATION_URL: "http://login-orchestration:8085"
-  ART_COLLECTIONS_URL: "http://art-collections:8086"
+  ART_COLLECTIONS_URL: "http://art-collection-service:8086"
   # LIKE_RATING_SERVICE_URL: "http://like-rating-service:8087"
   INSIDE_DOCKER_CONTAINER: 1
+  HZZART_NAVIGATOR_SERVER: "https://hzzart-navigator-server.herokuapp.com"
 
 
 
@@ -38,6 +43,8 @@ services:
 #      - eureka-server
     environment:
       <<: *env
+    ports:
+      - "8080:8080"
     volumes:
       - "./frontend:/code-frontend-service"
       - "/code-frontend-service/node_modules"
@@ -156,6 +163,18 @@ services:
       POSTGRES_DB: ai-art-collections
     ports:
       - "7000:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  postgres-like-and-comment:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq
+      POSTGRES_DB: like-and-comment
+    ports:
+      - "5433:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
 
