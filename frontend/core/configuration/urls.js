@@ -41,9 +41,10 @@ const urls = {
         admin : () => `/admin`,
         css: () => `${urls.admin.admin()}/css.css`,
         dependencies: () => `${noLeadingSlash(urls.admin.admin())}/-dependencies.ejs`,
-        reported_collections_page: () => `${urls.admin.admin()}/reported-collections.html`,
+        reportedCollectionsPage: () => `${urls.admin.admin()}/reported-collections.html`,
         detailReportedCollectionPage: () => `${urls.admin.admin()}/detail-report-collection.html`,
-        adminDownloadPage: () => `${urls.admin.admin()}//admin-download-page.html`,
+        // reportedCollectionsGetCollections: () => `/admin-service/admin/reported-collection`,
+        adminDownloadPage: () => `${urls.admin.admin()}/admin-download-page.html`,
     },
 
     adminHomepage: () => "/admin/reported-collections.html",
@@ -77,6 +78,10 @@ const urls = {
     video: {
       videoProgress:   () => '/video/video-progress.html',
     },
+
+    collection_interactions_orchestration: {
+        reportedCollectionsGetCollections: () => '/collection-interactions-orchestration/reported-collections',
+    }
 };
 
 module.exports.urls = urls;
