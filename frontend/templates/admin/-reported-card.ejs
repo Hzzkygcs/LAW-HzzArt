@@ -1,6 +1,8 @@
 <template id="template-card-collections">
   <div class="relative mx-auto w-full">
-    <a href="<%= urls.admin.detailReportedCollectionPage() %>" class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
+    <a href="<%= urls.admin.detailReportedCollectionPage() %>"
+       class="click-url
+        relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
       <div class="shadow p-4 rounded-lg bg-white">
         <div class="flex justify-center relative rounded-lg overflow-hidden h-52">
           <div class="transition-transform duration-500 transform ease-in-out hover:scale-110 w-full">
@@ -28,6 +30,13 @@
                    font-bold text-center text-base md:text-lg text-gray-800 line-clamp-1" title="New York">
             Statue of Liberty
           </h2>
+          <h4 class="text-center text-sm text-gray-600 line-clamp-1" title="New York">
+            owner:
+            <span class="collection-owner
+                font-bold">
+              John Doe
+            </span>
+          </h4>
         </div>
       </div>
     </a>
@@ -35,7 +44,7 @@
 </template>
 
 <script>
-  function newReportCollectionCard(collectionId, numOfReport, name, photoUrl, parent=null) {
+  function newReportCollectionCard(collectionId, numOfReport, owner, name, photoUrl, parent=null) {
     const template = $("#template-card-collections");
     const ret = $(template.html());
     ret.attr("id", `collection-${collectionId}`);
@@ -44,6 +53,7 @@
     hrefElement.attr('href', hrefElement.attr('href') + collectionId.toString());
     ret.find(".num-of-report").text(numOfReport.toString());
     ret.find(".collection-name").text(name);
+    ret.find(".collection-owner").text(owner);
     ret.find(".collection-photo").attr("src", photoUrl);
 
     if (parent != null)

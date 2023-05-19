@@ -44,7 +44,7 @@
             const imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
             console.log(id, name, imageThumbnail)
 
-            newReportCollectionCard(id, reportedCount, name, imageThumbnail, container);
+            newReportCollectionCard(id, reportedCount, owner, name, imageThumbnail, container);
         }
 
     });
