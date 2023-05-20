@@ -42,12 +42,10 @@
     </a>
   </div>
 </template>
-<p>
-  <%= JSON.stringify(req.query)%>
-</p>
+
 <script>
   var collectionId = <%= req.query.id ?? -1 %>;
-  console.log(collectionId);
+
   function newReportCollectionCard(collectionId, numOfReport, owner, name, photoUrl, parent=null) {
     if (collectionId == null || collectionId < 0)
       return alert("collectionId Not Provided");
