@@ -64,14 +64,11 @@ def comment(req, post_id):
     comment_list = get_collection_comments(post_id)
     return JsonResponse({'response': comment_list}, status=status.HTTP_200_OK)
 
-
 @csrf_exempt
 @require_GET
-def get_comments_of_a_collection(_req, post_id):
-    post = Collections.get_or_create(post_id)
-    comment_list = post.comment_set.all().order_by('comment_id').values()[::1]
-
-    return JsonResponse({"response": list(comment_list)}, status=status.HTTP_200_OK)
+def get_comments_of_a_collection_view(_req, post_id):
+    comment_list = get_collection_comments(post_id)
+    return JsonResponse({"response": comment_list}, status=status.HTTP_200_OK)
 
 
 @require_GET

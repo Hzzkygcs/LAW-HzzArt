@@ -73,4 +73,4 @@ def did_user_like_a_comment(username, collection: Collections):
 
 def get_collection_comments(post_id):
     post = Collections.get_or_create(post_id)
-    return post.comment_set.all().order_by('-comment_id').values()[::1]
+    return post.comment_set.all().order_by('comment_id').values()[::1]
