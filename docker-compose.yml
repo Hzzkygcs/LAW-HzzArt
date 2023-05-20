@@ -146,7 +146,7 @@ services:
       - "./export_collection_orchestrations/pip-cache:/pip-cache"
     environment:
       <<: *env
-      MONGO_DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/export-collection-orchestration"
+      MONGO_DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb:27017/export-collection-orchestration"
 
 
   mongodb:

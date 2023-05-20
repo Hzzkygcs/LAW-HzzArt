@@ -90,24 +90,28 @@ WSGI_APPLICATION = "export_collection_orchestrations.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-if 'INSIDE_DOCKER_CONTAINER' not in os.environ:
-    os.environ['MONGO_DATABASE_HOST_URL'] = 'asdfghjkl'
-print("Database: ", required_env("MONGO_DATABASE_HOST_URL"))
+# if 'INSIDE_DOCKER_CONTAINER' not in os.environ:
+#     os.environ['MONGO_DATABASE_HOST_URL'] = 'asdfghjkl'
+# print("Database: ", required_env("MONGO_DATABASE_HOST_URL"))
 
 DATABASES = {
     # still fail
-    # 'default': {
-    #     'ENGINE': 'djongo',
-    #     'NAME': 'mydatabase',
-    #     'CLIENT': {
-    #         'host': required_env("MONGO_DATABASE_HOST_URL"),
-    #     }
-    # }
-
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'export-collection-orchestration',
+        'CLIENT': {
+            'host': "mongodb://localhost:27017/export-collection-orchestration",
+            'username': 'main-user',
+            'password': '391A0777775C663B07E6B5B7E0886D56',
+            'authSource': 'admin',
+            'authMechanism': 'SCRAM-SHA-1',
+        }
     }
+
+    # "default": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": BASE_DIR / "db.sqlite3",
+    # }
 }
 
 
