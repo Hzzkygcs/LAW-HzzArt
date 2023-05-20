@@ -41,7 +41,6 @@ const urls = {
         admin : () => `/admin`,
         css: () => `${urls.admin.admin()}/css.css`,
         dependencies: () => `${noLeadingSlash(urls.admin.admin())}/-dependencies.ejs`,
-        reportedCollectionsPage: () => `${urls.admin.admin()}/reported-collections.html`,
         detailReportedCollectionPage: () => `${urls.admin.admin()}/detail-report-collection.html`,
         adminDownloadPage: () => `${urls.admin.admin()}/admin-download-page.html`,
     },
@@ -95,7 +94,9 @@ const urls = {
     collection_interactions_orchestration: {
         reportedCollectionsGetCollections: () => `${collectionInteractionsOrchestration()}/reported-collections`,
         getSpecificCollection: (collectionId) => `${collectionInteractionsOrchestration()}/reported-collections/${collectionId}`,
-    }
+        sendBanCollection: () => `${collectionInteractionsOrchestration()}/ban-collection`,
+        sendBanAccount: () => `${collectionInteractionsOrchestration()}/ban-account`,
+    },
 };
 
 module.exports.urls = urls;

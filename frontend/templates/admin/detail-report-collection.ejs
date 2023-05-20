@@ -27,7 +27,7 @@
                 <div class="my-4"></div>
 
                 <div class="bg-white p-3">
-                    <div class="left-side-button">
+                    <div class="left-side-button" onclick="<%- urls.collection_interactions_orchestration.sendBanCollection() %>">
                         <span>
                             <button class="button button-gray">
                                 Reject Report's
@@ -41,7 +41,7 @@
                             </button>
                         </span>
                     </div>
-                    <div class="left-side-button">
+                    <div class="left-side-button" onclick="<%- urls.collection_interactions_orchestration.sendBanAccount() %>">
                         <span>
                             <button class="button button-red">
                               Ban Collection’s Owner
