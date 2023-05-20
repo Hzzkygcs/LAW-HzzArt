@@ -11,10 +11,19 @@ const route = express.Router();
 
 route.get("/", async (req, res) => {
     const temporaryRedirect = 302;
-    if (!await validateLoggedIn(req, res))
+    const loginUser = await validateLoggedIn(req, res);
+    console.log("-->",loginUser);
+    res.cookie('userIsAdmin', loginUser.data.admin);
+    if (!loginUser)
         return;
-    res.redirect(temporaryRedirect, urls.homepage());
-
+    if (loginUser.data.admin) {
+        console.log("admin");
+        res.redirect(temporaryRedirect, urls.adminHomepage());
+    }
+    else {
+        console.log("not admin");
+        res.redirect(temporaryRedirect, urls.homepage());
+    }
 });
 
 

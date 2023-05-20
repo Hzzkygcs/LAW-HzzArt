@@ -27,6 +27,7 @@ def get_username(req):
     print(url, data)
     resp = requests.post(url, json=data)
     if resp.status_code != 200:
+        print("Received from login orchestration: ", resp.content)
         raise ResponseAsException(resp.content, resp.status_code)
 
     data = resp.json()

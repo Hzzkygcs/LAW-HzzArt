@@ -1,14 +1,20 @@
+# FROM jrottenberg/ffmpeg
 FROM node:18
 
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
 
-RUN apt -y update
-RUN apt -y install ffmpeg
+RUN ["mkdir", "/install"]
 
+ADD ["./package.json", "/install"]
+WORKDIR /install
+RUN npm install --verbose
+ENV NODE_PATH=/install/node_modules
 
-COPY . .
+#RUN apt -y update
+#RUN apt -y install ffmpeg
 
-ENV NODE_ENV production
-CMD ["npm", "start"]
+WORKDIR /app-codes
+COPY . /app-codes/
+RUN rm -rf node_modules; ln -sf /install/node_modules .
+
+#CMD ["npm", "run", "nodemon_run_legacy"]
+CMD ["sh", "-c", "npm run nodemon_run_legacy"]

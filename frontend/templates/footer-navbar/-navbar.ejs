@@ -10,3 +10,19 @@
 
 <link rel="stylesheet" href="<%= urls.footer_navbar.css.navbarCss() %>" />
 <script src="<%= urls.footer_navbar.js.logout() %>"></script>
+
+<script>
+    // Get the value of the "userIsAdmin" cookie
+    function getCookie(name) {
+        const value = "; " + document.cookie;
+        const parts = value.split("; " + name + "=");
+        return parts[1];
+    }
+
+    // Change the href attribute based on the "userIsAdmin" cookie
+    const isAdmin = getCookie("userIsAdmin");
+    if (isAdmin === "true") {
+        const downloadsLink = document.getElementById("downloadsLink");
+        downloadsLink.href = "<%= urls.admin.adminDownloadPage() %>"
+    }
+</script>

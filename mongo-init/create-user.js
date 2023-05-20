@@ -6,6 +6,8 @@ const initServiceDb = createDatabase("auth-service");
 createMainUser(initServiceDb, "auth-service");
 const adminServiceDb = createDatabase("admin-service");
 createMainUser(adminServiceDb, "admin-service");
+const exportCollectionOrchestration = createDatabase("export-collection-orchestration");
+createMainUser(exportCollectionOrchestration, "export-collection-orchestration");
 
 function createDatabase(databaseName){
     const currDb = db.getSiblingDB(databaseName);
