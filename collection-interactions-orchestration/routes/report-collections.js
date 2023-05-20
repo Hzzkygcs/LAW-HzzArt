@@ -3,7 +3,7 @@ const {getUsernameFromJWT} = require("../modules/util/account/get-username-from-
 const {validateCollection} = require("../modules/util/collections/validate-collection");
 const {sendAdminManagementService} = require("../modules/util/admin-service/send-admin-management-service");
 const {UserIsNotAdminException} = require("../modules/exceptions/UserIsNotAdminException");
-const {getReportedCollections} = require("../modules/util/admin-service/get-reported-collections");
+const {getReportedCollections,getDetailsReportedCollections} = require("../modules/util/admin-service/get-reported-collections");
 const route = express.Router();
 
 route.post("/", async (req, res) => {
@@ -58,6 +58,22 @@ route.get("/", async (req, res) => {
     const aggregatedArray = Array.from(aggregatedData.values());
 
     res.send(aggregatedArray);
+});
+
+route.get("/:collectionId", async (req, res) => {
+    console.log("req.params.collectionId");
+    const jwt = req.get(process.env.JWT_TOKEN_HEADER_NAME);
+    let response = await getUsernameFromJWT(jwt);
+
+    if (!response.admin) {
+        throw new UserIsNotAdminException(response.username);
+    }
+    await validateCollection(req.params.collectionId,jwt);
+
+    const responseReportedCollection = await getDetailsReportedCollections(req.params.collectionId);
+
+    res.send(responseReportedCollection);
+
 });
 
 module.exports.route = route;

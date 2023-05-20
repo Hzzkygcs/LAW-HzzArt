@@ -13,4 +13,17 @@ async function getReportedCollections() {
     return response.data;
 }
 
-module.exports.getReportedCollections = getReportedCollections;
+async function getDetailsReportedCollections(collectionId) {
+    const url = getAdminManagerUrl("/admin/reported-collection/" + collectionId);
+    let response = await makeRequest("get",
+        url,
+        {},
+        {
+            "x-service-token": process.env.ADMIN_SERVICE_TOKEN,
+        }
+    );
+    console.log(response.data);
+    return response.data;
+}
+
+module.exports = {getReportedCollections,getDetailsReportedCollections};
