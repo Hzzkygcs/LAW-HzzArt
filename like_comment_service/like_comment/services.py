@@ -7,8 +7,7 @@ import requests
 
 from global_exception.exceptions.ResponseAsException import ResponseAsException
 from like_comment.exceptions.NotJsonRequestException import NotJsonRequestException
-from like_comment.models import Collections
-
+from like_comment.models import Collections, Like
 
 
 def get_login_orchestration_url():
@@ -48,7 +47,7 @@ def parse_json_request(req):
         raise NotJsonRequestException()
 
 
-def get_collection_information(collection_id):
+def get_collection_information(collection_id, username=None):
     post = Collections.objects.filter(post_id=collection_id).first()
 
     post_id = collection_id
@@ -58,8 +57,20 @@ def get_collection_information(collection_id):
         post_likes = post.like_set.count()
         post_comments = post.comment_set.count()
 
-    return {
+    ret = {
         "post_id": post_id,
         "post_likes": post_likes,
         "post_comments": post_comments,
     }
+    if username is not None:
+        ret['liked'] = did_user_like_a_comment(username, post)
+    return ret
+
+
+def did_user_like_a_comment(username, collection: Collections):
+    return Like.objects.filter(username=username, collection=collection).exists()
+
+
+def get_collection_comments(post_id):
+    post = Collections.get_or_create(post_id)
+    return post.comment_set.all().order_by('-comment_id').values()[::1]
