@@ -49,18 +49,33 @@
         const getMyCollectionsUrl = "<%= urls.collections.myCollectionsGetCollections() %>";
         let collections = await get(getMyCollectionsUrl, {});
         collections = collections.collections;
-        console.log("col",collections);
-        container.empty();
 
-        for (const collection of collections) {
-            const {id, name, owner, images} = collection;
+        const collectionIds = extractCollectionId(collections);
+        const likeCommentInformations = await post(joinUrl(
+            `<%= urls.collections.getLikeCommentCollections() %>`,
+        ), {
+            collection_ids: collectionIds
+        });
+
+        container.empty();
+        for (let i = 0; i < collections.length; i++) {
+            const {id, name, images} = collections[i];
+            const {post_likes, post_comments} = likeCommentInformations[i];
 
             const imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
             console.log(id, name, imageThumbnail)
 
             // TODO
-            newCollectionCard(id, 0, 0, name, imageThumbnail, container);
+            newCollectionCard(id, post_likes, post_comments, name, imageThumbnail, container, true);
         }
     });
+
+    function extractCollectionId(collections) {
+        const ret = [];
+        for (const collection of collections) {
+            ret.push(collection.id);
+        }
+        return ret;
+    }
 
 </script>

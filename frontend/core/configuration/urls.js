@@ -46,7 +46,7 @@ const urls = {
     },
 
     adminHomepage: () => "/admin/reported-collections.html",
-    homepage: () => module.exports.urls.collections.myCollectionsPage(),
+    homepage: () => urls.collections.myCollectionsPage(),
 
     collections: {
         // do not delete. it's actually used inside the template
@@ -81,9 +81,13 @@ const urls = {
         myCollectionsGetImage: () => `${urls.collections.artCollectionService()}/collections/image/`,
         myCollectionsSetName: () => `${urls.collections.artCollectionService()}/collections/`,
 
+        likeCommentService: () => `/like-comment-service`,
+        getLikeCommentCollections: () => `${urls.collections.likeCommentService()}/like-comment/get-posts/`,
+
+        editCollectionsPage: () => `${urls.collections.collections()}/edit-collections.html`,
+
         searchCollectionsPage: () => `${urls.collections.collections()}/search-result.html`,
         popularCollectionsPage: () => `${urls.collections.collections()}/popular-collections.html`,
-        editCollectionsPage: () => `${urls.collections.collections()}/edit-collections.html`,
         addImagePage: () => `${urls.collections.collections()}/generator.html`,
         collectionDetailsPage: () => `${urls.collections.collections()}/collection-details.html`,
         userDownloadPage: () => `${urls.collections.collections()}/user-download-page.html`,
@@ -95,8 +99,9 @@ const urls = {
     collection_interactions_orchestration: {
         reportedCollectionsGetCollections: () => `${collectionInteractionsOrchestration()}/reported-collections`,
         getSpecificCollection: (collectionId) => `${collectionInteractionsOrchestration()}/reported-collections/${collectionId}`,
-        sendBanCollection: () => `${collectionInteractionsOrchestration()}/ban-collection`,
-        sendBanAccount: () => `${collectionInteractionsOrchestration()}/ban-account`,
+        rejectReportCollection: () => `${collectionInteractionsOrchestration()}/reported-collections/reject-report`,
+        sendBanCollection: () => `${collectionInteractionsOrchestration()}/reported-collections/ban-collection`,
+        sendBanAccountOwner: () => `${collectionInteractionsOrchestration()}/reported-collections/ban-account`,
     },
 };
 
