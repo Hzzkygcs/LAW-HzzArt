@@ -28,8 +28,15 @@ route.get("/", async (req, res) => {
         };
     });
 
-    console.log(aggregatedData);
-    res.send(aggregatedData);
+    const aggregatedDataSorted = aggregatedData.sort((a, b) => {
+        if (a.likes !== b.likes) {
+            return b.likes - a.likes; // Sort by likes in descending order
+        } else {
+            return b.comments - a.comments; // Sort by comments in descending order if likes are the same
+        }
+    });
+    console.log(aggregatedDataSorted);
+    res.send(aggregatedDataSorted);
 });
 
 module.exports.route = route;
