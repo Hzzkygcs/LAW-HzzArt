@@ -27,21 +27,21 @@
                 <div class="my-4"></div>
 
                 <div class="bg-white p-3">
-                    <div class="left-side-button" onclick="<%- urls.collection_interactions_orchestration.sendBanCollection() %>">
+                    <div class="reject-button left-side-button">
                         <span>
                             <button class="button button-gray">
                                 Reject Report's
                             </button>
                         </span>
                     </div>
-                    <div class="left-side-button">
+                    <div class="ban-collection left-side-button">
                         <span>
                             <button class="button button-red">
                               Ban Collection
                             </button>
                         </span>
                     </div>
-                    <div class="left-side-button" onclick="<%- urls.collection_interactions_orchestration.sendBanAccount() %>">
+                    <div class="ban-account-owner left-side-button">
                         <span>
                             <button class="button button-red">
                               Ban Collection’s Owner
@@ -91,34 +91,60 @@
 
 <script>
   var collectionId = <%= req.query.id ?? -1 %>;
+  var ownerCollection;
   if (collectionId === -1) {
     window.location.href = "/";
   }
   else {
-      $.ajax({
-          url: "<%- urls.collection_interactions_orchestration.getSpecificCollection(req.query.id) %>",
-          method: "GET",
-          headers: {
-              "x-jwt-token": Cookies.get("x-jwt-token")
-          },
-          success: function (collection) {
-                const container = $(".container-image");
-                container.empty();
-                const reportsLength = collection.reports.length;
-                const {id, name, owner, images} = collection;
-                const imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
-                console.log(id, name, imageThumbnail)
-                newReportCollectionCard(id, reportsLength, owner, name, imageThumbnail, container);
+      (async function (){
+            const collection = await get("<%- urls.collection_interactions_orchestration.getSpecificCollection(req.query.id) %>",{});
+            const container = $(".container-image");
+            container.empty();
+            const reportsLength = collection.reports.length;
+            const {id, name, owner, images} = collection;
+            ownerCollection = owner;
+            const imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
+            console.log(id, name, imageThumbnail)
+            newReportCollectionCard(id, reportsLength, owner, name, imageThumbnail, container);
 
-                const reasonContainer = $(".container-reason");
-                reasonContainer.empty();
-                for (let i = 0; i < reportsLength; i++) {
-                    const {reportedBy, reason} = collection.reports[i];
-                    const createdAt = collection.reports[i].dateTime;
-                    // console.log(reportedBy, reason, createdAt);
-                    newReasonCollection(reportedBy, reason, createdAt, reasonContainer);
-                }
-          }
+            const reasonContainer = $(".container-reason");
+            reasonContainer.empty();
+            for (let i = 0; i < reportsLength; i++) {
+                const {reportedBy, reason} = collection.reports[i];
+                const createdAt = collection.reports[i].dateTime;
+
+                newReasonCollection(reportedBy, reason, createdAt, reasonContainer);
+            }
+      })();
+    }
+
+    $(".reject-button").click(async function () {
+      console.log("reject button clicked: ", collectionId);
+      const response = await post(
+          "<%- urls.collection_interactions_orchestration.rejectReportCollection() %>", {
+          collectionId: collectionId.toString()
       });
-  }
+      console.log(response);
+      window.location.href = "/";
+    });
+
+    $(".ban-collection").click(async function () {
+        console.log("ban collection button clicked: ", collectionId);
+        const response = await post(
+            "<%- urls.collection_interactions_orchestration.sendBanCollection() %>", {
+            collectionId: collectionId.toString()
+        });
+        console.log(response);
+        window.location.href = "/";
+    });
+
+    $(".ban-account-owner").click(async function () {
+        console.log("ban account owner button clicked: ", ownerCollection);
+        const response = await post(
+            "<%- urls.collection_interactions_orchestration.sendBanAccountOwner() %>", {
+            username: ownerCollection
+        });
+        console.log(response);
+        window.location.href = "/";
+    });
 </script>

@@ -25,7 +25,7 @@ route.post("/", async (req, res) => {
         idWithTheCollectionId.isBan = false;
     }
 
-    await ReportedCollection.deleteOne({collectionId: req.body.collectionId});
+    await ReportedCollection.deleteMany({collectionId: req.body.collectionId});
     await idWithTheCollectionId.save();
     res.send(idWithTheCollectionId.getObjectRepresentation());
 });

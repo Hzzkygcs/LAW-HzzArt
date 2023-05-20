@@ -98,8 +98,9 @@ const urls = {
     collection_interactions_orchestration: {
         reportedCollectionsGetCollections: () => `${collectionInteractionsOrchestration()}/reported-collections`,
         getSpecificCollection: (collectionId) => `${collectionInteractionsOrchestration()}/reported-collections/${collectionId}`,
-        sendBanCollection: () => `${collectionInteractionsOrchestration()}/ban-collection`,
-        sendBanAccount: () => `${collectionInteractionsOrchestration()}/ban-account`,
+        rejectReportCollection: () => `${collectionInteractionsOrchestration()}/reported-collections/reject-report`,
+        sendBanCollection: () => `${collectionInteractionsOrchestration()}/reported-collections/ban-collection`,
+        sendBanAccountOwner: () => `${collectionInteractionsOrchestration()}/reported-collections/ban-account`,
     },
 };
 

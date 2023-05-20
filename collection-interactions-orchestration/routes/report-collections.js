@@ -4,13 +4,8 @@ const {validateCollection} = require("../modules/util/collections/validate-colle
 const {sendAdminManagementService} = require("../modules/util/admin-service/send-admin-management-service");
 const {UserIsNotAdminException} = require("../modules/exceptions/UserIsNotAdminException");
 const {getReportedCollections,getDetailsReportedCollections} = require("../modules/util/admin-service/get-reported-collections");
-const {sendBanCollection} = require("../modules/util/admin-service/send-ban-account");
+const {sendBanAccount,reportAcceptReject} = require("../modules/util/admin-service/./send-ban");
 const route = express.Router();
-
-// TODO
-// - ban collection
-// - ban owner
-// - reject report
 
 route.post("/", async (req, res) => {
     const jwt = req.get(process.env.JWT_TOKEN_HEADER_NAME);
@@ -33,7 +28,7 @@ route.post("/ban-collection", async (req, res) => {
 
     await validateCollection(req.body.collectionId,jwt);
 
-    let response = await sendBanCollection(req.body.collectionId,true);
+    let response = await reportAcceptReject(req.body.collectionId,true);
 
     res.send(response);
 });
@@ -42,11 +37,19 @@ route.post("/ban-account", async (req, res) => {
     const jwt = req.get(process.env.JWT_TOKEN_HEADER_NAME);
     await getUsernameFromJWT(jwt);
 
-    let response = await sendBanCollection(req.body.username,true);
+    let response = await sendBanAccount(req.body.username);
 
     res.send(response);
 });
 
+route.post("/reject-report", async (req, res) => {
+    const jwt = req.get(process.env.JWT_TOKEN_HEADER_NAME);
+    await getUsernameFromJWT(jwt);
+
+    let response = await reportAcceptReject(req.body.collectionId,false);
+
+    res.send(response);
+});
 
 route.get("/", async (req, res) => {
     const jwt = req.get(process.env.JWT_TOKEN_HEADER_NAME);
