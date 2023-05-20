@@ -15,5 +15,5 @@ urlpatterns = [
     path('like/<int:post_id>', like_or_dislike, name='like'),
     path('sort-collection/', get_popular_collections, name='liked'),
     path('comment/<int:post_id>', comment, name='comment'),
-    path('get-comment/<int:post_id>', get_comments_of_a_collection, name='get_comment'),
+    path('get-comment/<int:post_id>', get_comments_of_a_collection_view, name='get_comment'),
 ]

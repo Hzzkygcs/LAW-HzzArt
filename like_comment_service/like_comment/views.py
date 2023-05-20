@@ -9,7 +9,7 @@ from .models import *
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 
-from .services import get_collection_information, parse_json_request, get_username
+from .services import get_collection_information, parse_json_request, get_username, get_collection_comments
 
 
 # Create your views here.
@@ -61,14 +61,14 @@ def comment(req, post_id):
     created_comment = Comment(collection=collection, username=username,
                               comment_text=json_data['comment'])
     created_comment.save()
-    comment_list = get_comments_of_a_collection(post_id)
+    comment_list = get_collection_comments(post_id)
     return JsonResponse({'response': comment_list}, status=status.HTTP_200_OK)
 
 
 @csrf_exempt
 @require_GET
-def get_comments_of_a_collection(_req, post_id):
-    comment_list = get_comments_of_a_collection(post_id)
+def get_comments_of_a_collection_view(_req, post_id):
+    comment_list = get_collection_comments(post_id)
     return JsonResponse({"response": comment_list}, status=status.HTTP_200_OK)
 
 
