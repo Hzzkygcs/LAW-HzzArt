@@ -16,3 +16,6 @@ class GeneratorRequestPrompt(BaseModel):
     
 class AddImageToCollectionRequest(BaseModel):
     images: List[str]
+    
+class GetCollectionByName(BaseModel):
+    name: str
