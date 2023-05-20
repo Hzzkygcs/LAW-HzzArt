@@ -125,7 +125,7 @@ services:
       context: ./like_comment_service
       dockerfile: Dockerfile
     ports:
-      - "8087:8000"
+      - "8087:8087"
     depends_on:
       - login-orchestration
     volumes:
