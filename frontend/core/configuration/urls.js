@@ -96,6 +96,7 @@ const urls = {
     },
 
     collection_interactions_orchestration: {
+        getPopularCollections: () => `${collectionInteractionsOrchestration()}/popular-collections`,
         reportedCollectionsGetCollections: () => `${collectionInteractionsOrchestration()}/reported-collections`,
         getSpecificCollection: (collectionId) => `${collectionInteractionsOrchestration()}/reported-collections/${collectionId}`,
         rejectReportCollection: () => `${collectionInteractionsOrchestration()}/reported-collections/reject-report`,
