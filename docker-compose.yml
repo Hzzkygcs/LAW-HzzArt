@@ -45,8 +45,8 @@ x-environment: &env
 x-logging: &elk-logging
   driver: syslog
   options:
-    syslog-address: 'udp://localhost:5000'
-    syslog-facility: 'daemon'
+    syslog-address: "udp://localhost:5000"
+    syslog-facility: "daemon"
 
 services:
   frontend-service:
