@@ -94,6 +94,35 @@ def create_collection(request: Request, collection: schemas.CreateArtCollectionR
     db.refresh(db_collection)
     return {"id": db_collection.id, "message": "Successfully created"}
 
+@app.get("/collections-all")
+def get_all_collection(request: Request, db: Session = Depends(get_db)):
+    
+    jwt_token = request.headers.get('x-jwt-token')
+    validate_jwt(jwt_token)
+    
+    db_collection = db.query(models.ArtCollection).all()
+    collections = []
+    
+    if db_collection is not None:
+        for collection in db_collection:
+            images = []
+            db_images = db.query(models.Image).filter(models.Image.collection_id == collection.id).all()
+            
+            if db_images is not None:
+                for image in db_images:
+                    images.append(image.id)
+            
+            response_data = {
+                'id': collection.id,
+                'name': collection.name,
+                'owner': collection.owner,
+                'images': images
+            }
+            
+            collections.append(response_data)
+    
+    return {'collections' : collections}
+
 @app.get("/collections")
 def get_owned_collection(request: Request, db: Session = Depends(get_db)):
     
@@ -181,6 +210,9 @@ def add_image_to_collection(request: Request, collection_id: int, arts: schemas.
     db_collection = db.query(models.ArtCollection).filter(models.ArtCollection.id == collection_id).first()
     if db_collection is None:
         raise HTTPException(status_code=404, detail="Collection does not exist")
+    
+    if db_collection.owner != username:
+        raise HTTPException(status_code=403, detail="This collection does not belong to you")
     
     for image in arts.images:
         art = models.Image(url=image, collection_id=db_collection.id)
