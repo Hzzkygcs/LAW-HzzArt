@@ -32,14 +32,12 @@ x-environment: &env
 
 
 services:
-
   frontend-service:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     depends_on:
       - mongodb
-#      - eureka-server
     environment:
       <<: *env
     ports:
@@ -65,7 +63,6 @@ services:
       - "8081:8081"
     depends_on:
       - mongodb
-#      - eureka-server
     environment:
       <<: *env
       DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/auth-service"
@@ -78,7 +75,7 @@ services:
       - "8082:8082"
     depends_on:
       - mongodb
-#      - eureka-server
+
     environment:
       <<: *env
       DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/admin-service"
@@ -89,10 +86,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8083:8083"
-    depends_on:
-      - mongodb
-#      - eureka-server
     environment: *env
+    volumes:
+      - "./video-processor:/app-codes"
+      - "/app-codes/node_modules"
 
   collection-interactions-orchestration:
     build:
@@ -103,7 +100,6 @@ services:
     depends_on:
       - admin-service
       - login-orchestration
-#      - eureka-server
 #      - art-collections
     environment:
       <<: *env
@@ -117,7 +113,6 @@ services:
     depends_on:
       - authentication-service
       - admin-service
-#      - eureka-server
     environment:
       <<: *env
       JWT_SECRET_KEY: "jv3Vh7b0upzBgZ8ocoOASSTjk0ypkBxO6NHqA5RIHFWEN5U5Vd"
@@ -159,11 +154,10 @@ services:
       - "8086:8086"
     depends_on:
       - postgres
-#      - eureka-server
     volumes:
       - "./art-collection-service/pip-cache:/pip-cache"
     environment:
-      <<: *env  # postgres:// beda?
+      <<: *env
       DATABASE_HOST_URL: "postgresql://postgres:t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq@postgres:5432/ai-art-collections"
 
   postgres:

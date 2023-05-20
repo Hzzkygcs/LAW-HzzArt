@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.http import response, HttpResponse, JsonResponse, request
+
+from .exceptions.InvalidFieldTypeException import InvalidFieldTypeException
 from .models import *
 import json, requests
 from rest_framework import status
@@ -7,97 +9,46 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 import io
 
+from .services import extract_export_collection_request_data, get_collection_as_dict, get_nuel_url, \
+    prepare_list_of_bytes_to_be_sent_in_http_request, call_video_processing_service
+
+
 # Create your views here.
 
 # @csrf_exempt
 # def get_nuel_url(request):
 #     return "http://video-processor:8083"
 
-@csrf_exempt
-def get_nuel_url(request):
-    return "http://localhost:8083"
 
 # @csrf_exempt
 # def get_collection_url(request):
 #     return "http://art-collection-service:8086"
 
-@csrf_exempt
-def get_collection_url(request):
-    return "http://localhost:8086"
 
 
-def get_collection(request, collection_id):
-    # Retrieve the JWT token from the request headers
-    jwt_token = request.META.get('HTTP_X_JWT_TOKEN')
-
-    # Get collection by ID
-    response = requests.get(
-        url=get_collection_url(request) + '/collections/' + str(collection_id),
-        headers={'x-jwt-token': jwt_token}
-    )   
-    data = response.json()
-    collection_id = data['id']
-    images = data['images']
-    image_data = []
-    for i in images :
-        response_image = requests.get(
-        url=get_collection_url(request) + '/collections/image/' + str(i),
-        headers={'x-jwt-token': jwt_token}
-        )
-        data_image = response_image.content
-        image_data.append(data_image)
-    return image_data
-
-def get_collection_as_dict(request, collection_id):
-    collection_response = get_collection(request, collection_id)
-    init = {}
-    for i in range(len(collection_response)):
-        init[f"img-{i}"] = collection_response[i]
-    return init
 
 @csrf_exempt
 @require_POST
 def export(request, collection_id):
-    collection_response = get_collection_as_dict(request, collection_id)
-
-    data = json.loads(request.body)
-    per_image_duration = data.get('per_image_duration')
-    transition_duration = data.get('transition_duration')
-    fps = data.get('fps')
-    images = collection_response
-
-    if per_image_duration is None or transition_duration is None or fps is None:
-        return JsonResponse({"error": "Invalid input data"}, 
-                        status=status.HTTP_400_BAD_REQUEST)
-    files = []
-    for image_index, image_data in images.items():
-        image_file = io.BytesIO(image_data)
-        image_file.name = f"{image_index}"
-        files.append(('img', image_file))
-        print('ini nama file', image_file.name)
-
-    response = requests.post(
-    url=get_nuel_url(request) + '/submit-video',
-    data={"per_image_duration": str(per_image_duration),
-            "transition_duration": str(transition_duration),
-            "fps": str(fps)},
-    files=files
-    )
-    token = response.json()
+    per_image_duration, transition_duration, fps = extract_export_collection_request_data(request)
+    images = get_collection_as_dict(request, collection_id)
+    resp = call_video_processing_service(per_image_duration, transition_duration, fps, images)
+    token = resp.json()
     print("ini token", token)
-    return JsonResponse({"response": token}, 
-                    status=status.HTTP_200_OK)
+    return JsonResponse({"response": token}, status=status.HTTP_200_OK)
+
 
 
 @csrf_exempt
 def download(request, token):
     return ""
 
+
 @csrf_exempt
 def cek_status(request, token):
     # Send the token to the login orchestration service
     response = requests.post(
-        url=get_nuel_url(request) + '/cek-status' + token,
+        url=get_nuel_url() + '/cek-status' + token,
         data=json.dumps({'token': token}),
         headers={'Content-Type': 'application/json'}
     )

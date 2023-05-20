@@ -9,8 +9,21 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os
 
+import djongo
 from pathlib import Path
+
+from export_collection_orchestrations.exceptions.UnconfiguredEnvironment import UnconfiguredEnvironment
+
+
+def required_env(env_name):
+    ret = os.environ.get(env_name, None)
+    if ret is None:
+        raise UnconfiguredEnvironment(f"{env_name} env variable is not set")
+    return ret
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,7 +50,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "export_collections"
+    "djongo",
+
+    "export_collections",
+    'global_exception',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +64,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'global_exception.middleware.AutomaticExceptionHandler.AutomaticExceptionHandler',
 ]
 
 ROOT_URLCONF = "export_collection_orchestrations.urls"
@@ -74,7 +91,18 @@ WSGI_APPLICATION = "export_collection_orchestrations.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+print("Database: ", required_env("MONGO_DATABASE_HOST_URL"))
+
 DATABASES = {
+    # still fail
+    # 'default': {
+    #     'ENGINE': 'djongo',
+    #     'NAME': 'mydatabase',
+    #     'CLIENT': {
+    #         'host': required_env("MONGO_DATABASE_HOST_URL"),
+    #     }
+    # }
+
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",

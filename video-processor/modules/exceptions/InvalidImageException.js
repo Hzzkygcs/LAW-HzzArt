@@ -4,9 +4,10 @@ const {AutomaticallyHandledException} = require("../global-route-exceptions-hand
 
 
 class InvalidImageException extends AutomaticallyHandledException{
-    constructor(imageId="") {
-        super("Invalid image format", StatusCodes.BAD_REQUEST, {
-            imageId: imageId
+    constructor(imageId="", mimeType="") {
+        super(`Unsupported image format: ${mimeType}`, StatusCodes.BAD_REQUEST, {
+            imageId: imageId,
+            format: mimeType,
         });
         this.name = "InvalidImageException";
     }
