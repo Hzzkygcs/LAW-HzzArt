@@ -42,7 +42,11 @@ x-environment: &env
   COLLECTION_ORCHESTRATION_URL: "http://collection-orchestration:8084"
   HZZART_NAVIGATOR_SERVER: "https://hzzart-navigator-server.herokuapp.com"
 
-
+x-logging: &elk-logging
+  driver: syslog
+  options:
+    syslog-address: 'udp://localhost:5000'
+    syslog-facility: 'daemon'
 
 services:
   frontend-service:
@@ -59,6 +63,7 @@ services:
       - "./frontend:/code-frontend-service"
       - "/code-frontend-service/node_modules"
 
+
   nginx:
     image: nginx:latest
     ports:
@@ -67,6 +72,8 @@ services:
       - type: bind
         source: ./nginx/nginx.conf
         target: /etc/nginx/nginx.conf
+    logging:
+      *elk-logging
 
   authentication-service:
     build:
@@ -79,6 +86,9 @@ services:
     environment:
       <<: *env
       DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/auth-service"
+    logging:
+      *elk-logging
+
 
   admin-service:
     build:
@@ -92,6 +102,8 @@ services:
     environment:
       <<: *env
       DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/admin-service"
+    logging:
+      *elk-logging
 
   video-processing-service:
     build:
@@ -103,6 +115,9 @@ services:
     volumes:
       - "./video-processor:/app-codes"
       - "/app-codes/node_modules"
+    logging:
+      *elk-logging
+
 
   collection-interactions-orchestration:
     build:
@@ -116,6 +131,9 @@ services:
 #      - art-collections
     environment:
       <<: *env
+    logging:
+      *elk-logging
+
 
   login-orchestration:
     build:
@@ -132,6 +150,8 @@ services:
     volumes:
       - "./login-orchestration:/code-login-orchestration"
       - "/code-login-orchestration/node_modules"
+    logging:
+      *elk-logging
 
   like-comment-service:
     build:
@@ -145,6 +165,9 @@ services:
       - "./like-comment-service/pip-cache:/pip-cache"
     environment:
       <<: *env
+    logging:
+      *elk-logging
+
 
   export-collection-orchestrations:
     build:
@@ -160,6 +183,8 @@ services:
     environment:
       <<: *env
       MONGO_DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/export-collection-orchestration"
+    logging:
+      *elk-logging
 
 
   mongodb:
@@ -187,6 +212,9 @@ services:
     environment:
       <<: *env
       DATABASE_HOST_URL: "postgresql://postgres:t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq@postgres:5432/ai-art-collections"
+    logging:
+      *elk-logging
+
 
   postgres:
     image: postgres:latest
