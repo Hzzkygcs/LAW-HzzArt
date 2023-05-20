@@ -18,8 +18,9 @@
             <div class="w-full md:w-3/12 md:mx-2">
                 <!-- Report Card -->
                 <div class="bg-white p-3 border-gray-700">
-                    <div class="image overflow-hidden">
-                        <%- include("admin/-reported-card.ejs", locals ); %>
+                    <%- include("-reported-card.ejs", locals ); %>
+                    <div class="container-image overflow-hidden">
+                        Loading...
                     </div>
                 </div>
 
@@ -70,19 +71,11 @@
                                 </span>
                             </div>
                             <ul class="list-inside space-y-2">
-                                <li>
-                                    <div>
-                                        <h1 class="text-xl">
-                                            <span class="font-bold">@user:</span>
-                                            <span class="text-gray-500">
-                                                I just don’t like it
-                                            </span>
-                                            <span class="text-sm text-gray-400">
-                                                (2021-01-01 00:00:00)
-                                            </span>
-                                        </h1>
-                                    </div>
-                                </li>
+                                <!-- Reason -->
+                                <%- include("-reason-report-template.ejs", locals); %>
+                                <div class="container-reason">
+                                    Loading
+                                </div>
                             </ul>
                         </div>
                     </div>
@@ -95,3 +88,37 @@
     <%- include(urls.footer_navbar.footer(), locals) %>
 </body>
 </html>
+
+<script>
+  var collectionId = <%= req.query.id ?? -1 %>;
+  if (collectionId === -1) {
+    window.location.href = "/";
+  }
+  else {
+      $.ajax({
+          url: "<%- urls.collection_interactions_orchestration.getSpecificCollection(req.query.id) %>",
+          method: "GET",
+          headers: {
+              "x-jwt-token": Cookies.get("x-jwt-token")
+          },
+          success: function (collection) {
+                const container = $(".container-image");
+                container.empty();
+                const reportsLength = collection.reports.length;
+                const {id, name, owner, images} = collection;
+                const imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
+                console.log(id, name, imageThumbnail)
+                newReportCollectionCard(id, reportsLength, owner, name, imageThumbnail, container);
+
+                const reasonContainer = $(".container-reason");
+                reasonContainer.empty();
+                for (let i = 0; i < reportsLength; i++) {
+                    const {reportedBy, reason} = collection.reports[i];
+                    const createdAt = collection.reports[i].dateTime;
+                    // console.log(reportedBy, reason, createdAt);
+                    newReasonCollection(reportedBy, reason, createdAt, reasonContainer);
+                }
+          }
+      });
+  }
+</script>
