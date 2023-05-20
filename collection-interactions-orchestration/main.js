@@ -5,11 +5,13 @@ const {jsonInvalidSyntaxHandlerMiddleware} = require("./modules/jsonInvalidSynta
 const {REPORT_COLLECTIONS_ENDPOINT,
     COMMENT_COLLECTIONS_ENDPOINT,
     LIKE_COLLECTIONS_ENDPOINT,
-    SEARCH_COLLECTIONS_ENDPOINT} = require("./routes/endpoints");
+    SEARCH_COLLECTIONS_ENDPOINT,
+    POPULAR_COLLECTIONS_ENDPOINT} = require("./routes/endpoints");
 const {route: reportCollectionsRoute} = require("./routes/report-collections");
 const {route: commentCollectionsRoute} = require("./routes/comment-collections");
 const {route: likeCollectionsRoute} = require("./routes/like-collections");
 const {route: searchCollectionsRoute} = require("./routes/search-collections");
+const {route: popularCollectionsRoute} = require("./routes/popular-collections");
 const {consulHealthRoute} = require("./routes/consul");
 const {getConsulSingleton} = require("./config/consul");
 
@@ -24,6 +26,7 @@ module.exports.server = async function (test=true) {
     app.use(COMMENT_COLLECTIONS_ENDPOINT, commentCollectionsRoute);
     app.use(LIKE_COLLECTIONS_ENDPOINT, likeCollectionsRoute);
     app.use(SEARCH_COLLECTIONS_ENDPOINT, searchCollectionsRoute);
+    app.use(POPULAR_COLLECTIONS_ENDPOINT, popularCollectionsRoute);
     app.use("/", consulHealthRoute);
 
     app.use(exceptionHandlerMiddleware);
