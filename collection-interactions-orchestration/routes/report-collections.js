@@ -70,10 +70,19 @@ route.get("/:collectionId", async (req, res) => {
     }
     await validateCollection(req.params.collectionId,jwt);
 
-    const responseReportedCollection = await getDetailsReportedCollections(req.params.collectionId);
+    const specificCollection = await validateCollection(req.params.collectionId,jwt);
 
-    res.send(responseReportedCollection);
+    const responseReportedCollections = await getDetailsReportedCollections(req.params.collectionId);
 
+    // Aggregate reports with the collection
+    const aggregatedData = {
+      ...specificCollection,
+      reports: responseReportedCollections.filter(report => report.collectionId === req.params.collectionId)
+    };
+
+    console.log(aggregatedData);
+
+    res.send(aggregatedData);
 });
 
 module.exports.route = route;

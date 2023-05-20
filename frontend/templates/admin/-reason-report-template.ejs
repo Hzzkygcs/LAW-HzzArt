@@ -1,0 +1,31 @@
+<template id="template-reason-report">
+    <li>
+        <div>
+            <h1 class="text-xl">
+                <span class="font-bold">@<span class="reported-by">user</span>:
+                </span>
+                <span class="reason text-gray-500">
+                    I just don’t like it
+                </span>
+                <span class="create-at text-sm text-gray-400">
+                    (2021-01-01 00:00:00)
+                </span>
+            </h1>
+        </div>
+    </li>
+</template>
+
+<script>
+    function newReasonCollection(reportedBy, reason, createAt, parent = null) {
+        const template = $("#template-reason-report");
+        const ret = $(template.html());
+
+        ret.find(".reported-by").text(reportedBy);
+        ret.find(".reason").text(reason);
+        ret.find(".create-at").text(createAt);
+        console.log(reportedBy, reason, createAt);
+        if (parent != null)
+          ret.appendTo(parent);
+        return ret;
+    }
+</script>

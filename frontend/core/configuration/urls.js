@@ -80,6 +80,7 @@ const urls = {
 
     collection_interactions_orchestration: {
         reportedCollectionsGetCollections: () => `${collectionInteractionsOrchestration()}/reported-collections`,
+        getSpecificCollection: (collectionId) => `${collectionInteractionsOrchestration()}/reported-collections/${collectionId}`,
     }
 };
 
