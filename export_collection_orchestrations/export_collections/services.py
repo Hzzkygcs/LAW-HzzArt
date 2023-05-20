@@ -9,6 +9,12 @@ from export_collections.exceptions.InvalidFieldTypeException import InvalidField
 from export_collections.exceptions.NotJsonRequestException import NotJsonRequestException
 from global_exception.exceptions.ResponseAsException import ResponseAsException
 
+# def get_nuel_url(request):
+#     return "http://video-processor:8083"
+
+
+# def get_collection_url(request):
+#     return "http://art-collection-service:8086"
 
 def get_nuel_url():
     return "http://localhost:8083"
@@ -108,3 +114,26 @@ def parse_json_request(req):
         return ret
     except:
         raise NotJsonRequestException()
+    
+def download_get_token(request, token):
+    response = requests.get(
+    url=get_nuel_url() + '/download/' + token,
+    headers={'Content-Type': 'video/mp4'}
+    )
+    return response
+
+
+def status_get_token(request, token):
+    response = requests.get(
+        url=get_nuel_url() + '/check-status/' + token,
+        headers={'Content-Type': 'application/json'}
+    )
+    data = response.json()
+    percentageTotal = data['percentageTotal']
+    percentagePhase = data['percentagePhase']
+    phase = data['phase']
+    tokenName = data['tokenName']
+    totalFrames = data['totalFrames']
+    
+    return percentageTotal,percentagePhase, phase, \
+        tokenName, totalFrames
