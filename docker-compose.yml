@@ -22,11 +22,11 @@ x-environment: &env
   LOGIN_ORCHESTRATION_URL: "http://login-orchestration:8085"
   ART_COLLECTIONS_PORT: 8086
   ART_COLLECTIONS_NAME: "art-collection-service"
-#  SERVICE_REGISTRY_URL: "http://service-registry:9000"
+  ART_COLLECTIONS_URL: "http://art-collection-service:8086"
+
   AUTHENTICATION_SERVICE_URL: "http://authentication-service:8081"
   VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
   COLLECTION_ORCHESTRATION_URL: "http://collection-orchestration:8084"
-  ART_COLLECTIONS_URL: "http://art-collection-service:8086"
   HZZART_NAVIGATOR_SERVER: "https://hzzart-navigator-server.herokuapp.com"
 
 
@@ -132,6 +132,21 @@ services:
       - "./like-comment-service/pip-cache:/pip-cache"
     environment:
       <<: *env
+
+  export-collection-orchestrations:
+    build:
+      context: ./export_collection_orchestrations
+      dockerfile: Dockerfile
+    ports:
+      - "8088:8088"
+    depends_on:
+      - login-orchestration
+      - video-processing-service
+    volumes:
+      - "./export_collection_orchestrations/pip-cache:/pip-cache"
+    environment:
+      <<: *env
+      MONGO_DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/export-collection-orchestration"
 
 
   mongodb:

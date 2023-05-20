@@ -3,24 +3,22 @@ import json
 from typing import Union
 
 import requests
+import os
 from PIL import Image
 
 from export_collections.exceptions.InvalidFieldTypeException import InvalidFieldTypeException
 from export_collections.exceptions.NotJsonRequestException import NotJsonRequestException
 from global_exception.exceptions.ResponseAsException import ResponseAsException
 
-# def get_nuel_url(request):
-#     return "http://video-processor:8083"
-
-
-# def get_collection_url(request):
-#     return "http://art-collection-service:8086"
-
 def get_nuel_url():
+    if 'INSIDE_DOCKER_CONTAINER' in os.environ:
+        return os.environ['VIDEO_PROCESSING_SERVICE_URL']
     return "http://localhost:8083"
 
 
 def get_collection_url():
+    if 'INSIDE_DOCKER_CONTAINER' in os.environ:
+        return os.environ['ART_COLLECTIONS_URL']
     return "http://localhost:8086"
 
 
