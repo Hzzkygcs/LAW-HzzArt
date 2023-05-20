@@ -55,6 +55,7 @@ const urls = {
             saveVideoModal: () => `${urls.collections.components.components()}/-save-video-modal.ejs`,
             commentsModal: () => `${urls.collections.components.components()}/-comments-modal.ejs`,
             reportModal: () => `${urls.collections.components.components()}/-report-modal.ejs`,
+            commentsBox:() => `${urls.collections.components.components()}/-comments-box.ejs`,
         },
         editCollectionsComponents: {
             editCollectionsComponents:
@@ -96,6 +97,7 @@ const urls = {
     },
 
     collection_interactions_orchestration: {
+        getPopularCollections: () => `${collectionInteractionsOrchestration()}/popular-collections`,
         reportedCollectionsGetCollections: () => `${collectionInteractionsOrchestration()}/reported-collections`,
         getSpecificCollection: (collectionId) => `${collectionInteractionsOrchestration()}/reported-collections/${collectionId}`,
         rejectReportCollection: () => `${collectionInteractionsOrchestration()}/reported-collections/reject-report`,

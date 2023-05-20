@@ -1,7 +1,7 @@
 const {getLikeCommentServiceUrl} = require('../../../URLs/get-like-comment-service-url');
 const {makeRequest} = require("../../external-call/make-request");
 
-async function getPopularCollections(search) {
+async function getCollections(search) {
   const url = getLikeCommentServiceUrl('/get-like-rating-collections');
   let response = await makeRequest("get", url, {
     params: {
@@ -11,4 +11,4 @@ async function getPopularCollections(search) {
     return response.data;
 }
 
-module.exports.getPopularCollections = getPopularCollections;
+module.exports.getCollections = getCollections;

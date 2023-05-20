@@ -21,7 +21,10 @@
                     <a class="text-2xl">
                         Duration per image:
                     </a>
-                    <input type="text" id="success" class="w-80 ml-auto bg-white-700 border border-black-500 text-green-900 dark:text-green-400
+                    <input type="number"
+                           id="duration-field"
+                           required
+                           class="w-80 ml-auto bg-white-700 border border-black-500 text-black-900 dark:text-black-900
                                     text-sm rounded-lg focus:ring-green-500 focus:border-green-500
                                     block p-2.5 dark:bg-white-700 dark:border-black-500 align-top text-top">
                 </div>
@@ -29,7 +32,10 @@
                     <a class="text-2xl">
                         Transition duration:
                     </a>
-                    <input type="text" id="success" class="w-80 ml-auto bg-white-700 border border-black-500 text-green-900 dark:text-green-400
+                    <input type="number"
+                           id="transition-field"
+                           required
+                           class="w-80 ml-auto bg-white-700 border border-black-500 text-black-900 dark:text-black-900
                                     text-sm rounded-lg focus:ring-green-500 focus:border-green-500
                                     block p-2.5 dark:bg-white-700 dark:border-black-500 align-top text-top">
                 </div>
@@ -37,18 +43,21 @@
                     <a class="text-2xl">
                         Frame per second:
                     </a>
-                    <input type="text" id="success" class="w-80 ml-auto bg-white-700 border border-black-500 text-green-900 dark:text-green-400
+                    <input type="number"
+                           id="fps-field"
+                           required
+                           class="w-80 ml-auto bg-white-700 border border-black-500 text-black-900 dark:text-black-900
                                     text-sm rounded-lg focus:ring-green-500 focus:border-green-500
                                     block p-2.5 dark:bg-white-700 dark:border-black-500 align-top text-top">
                 </div>
-
+                <div class="create-video-error-msg hidden" style="text-align: center; color: red;">
+                </div>
             </div>
             <!-- Modal footer -->
             <div class="flex items-center p-4 flex-row-reverse border-gray-200 rounded-b dark:border-gray-600">
-                <button
+                <button id="create-video-submit-btn"
                         data-modal-hide="defaultModal"
                         type="button"
-                        onclick="window.location = '<%= urls.video.videoProgress() %>'"
                         class="text-white bg-blue-700 hover:bg-blue-800
                                 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center
                                 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -58,3 +67,36 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    $(document).ready(function () {
+        const collectionId = parseInt(`<%= req.query.id ?? -1 %>`);
+        if (collectionId === -1)
+            window.location.href = "/";
+
+        const createVideoSubmitButton = $("#create-video-submit-btn");
+        const errMsg = $(".create-video-error-msg");
+        createVideoSubmitButton.on('click', async  function () {
+            errMsg.fadeOut(400);
+
+            const duration = $("#duration-field").val();
+            const transition = $("#transition-field").val();
+            const fps = $("#fps-field").val();
+
+            const res = await post(`/export-collection-orchestrations/export-collections/export/${collectionId}`, {
+                'per_image_duration': parseFloat(duration),
+                'transition_duration': parseFloat(transition),
+                'fps': parseInt(fps),
+            });
+            console.log(res);
+            if (res.validationFail){
+                errMsg.fadeIn(500);
+                errMsg.text(res.validationFail.message);
+                return;
+            }
+            window.location = `<%= urls.video.videoProgress() %>?token=${res.response.token}`;
+        });
+    });
+
+</script>

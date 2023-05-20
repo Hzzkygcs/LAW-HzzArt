@@ -1,0 +1,12 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt --cache-dir /pip-cache
+
+COPY . .
+
+
+EXPOSE 8088
+CMD ["sh", "-c", "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8088"]
+

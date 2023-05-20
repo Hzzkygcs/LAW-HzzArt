@@ -1,5 +1,5 @@
 const express = require("express");
-const {getPopularCollections} = require("../modules/util/like-rating-collections/get-popular-collections");
+const {getCollections} = require("../modules/util/like-rating-collections/get-collections");
 const {getNameImgCollections} = require("../modules/util/collections/get-name-img-collections");
 const {checkBanCollections} = require("../modules/util/admin-service/check-ban-collections");
 
@@ -8,7 +8,7 @@ const route = express.Router();
 route.get("/:search", async (req, res) => {
     const combined = {};
     const search = req.params.search;
-    let collections = await getPopularCollections(search);
+    let collections = await getCollections(search);
 
     let nameImgCollections = await getNameImgCollections(collections);
 
