@@ -173,6 +173,7 @@ services:
       MONGO_INITDB_DATABASE: init  # arbitrary value
     volumes:
       - ./mongo-init:/docker-entrypoint-initdb.d/
+      - ./mongo-init/mongod.conf:/etc/mongod.conf
 
   art-collection-service:
     build:

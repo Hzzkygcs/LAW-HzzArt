@@ -90,25 +90,31 @@ WSGI_APPLICATION = "export_collection_orchestrations.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-if 'INSIDE_DOCKER_CONTAINER' not in os.environ:
-    os.environ['MONGO_DATABASE_HOST_URL'] = 'asdfghjkl'
-print("Database: ", required_env("MONGO_DATABASE_HOST_URL"))
+# if 'INSIDE_DOCKER_CONTAINER' not in os.environ:
+#     os.environ['MONGO_DATABASE_HOST_URL'] = 'asdfghjkl'
+# print("Database: ", required_env("MONGO_DATABASE_HOST_URL"))
 
 DATABASES = {
     # still fail
-    # 'default': {
-    #     'ENGINE': 'djongo',
-    #     'NAME': 'mydatabase',
-    #     'CLIENT': {
-    #         'host': required_env("MONGO_DATABASE_HOST_URL"),
-    #     }
-    # }
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'auth-service',
+        'USER': 'main-user',
+        'PASSWORD': '391A0777775C663B07E6B5B7E0886D56',
+        'HOST': '127.0.0.1',
+        'PORT': 27017,
 
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+
+        # 'authSource': 'admin',
+    },
+
+
+    # "default": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": BASE_DIR / "db.sqlite3",
+    # }
 }
+
 
 
 # Password validation
