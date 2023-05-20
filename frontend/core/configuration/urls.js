@@ -47,7 +47,7 @@ const urls = {
     },
 
     adminHomepage: () => "/admin/reported-collections.html",
-    homepage: () => module.exports.urls.collections.myCollectionsPage(),
+    homepage: () => urls.collections.myCollectionsPage(),
 
     collections: {
         // do not delete. it's actually used inside the template
@@ -81,9 +81,10 @@ const urls = {
         myCollectionsGetImage: () => `${urls.collections.artCollectionService()}/collections/image/`,
         myCollectionsSetName: () => `${urls.collections.artCollectionService()}/collections/`,
 
+        editCollectionsPage: () => `${urls.collections.collections()}/edit-collections.html`,
+
         searchCollectionsPage: () => `${urls.collections.collections()}/search-result.html`,
         popularCollectionsPage: () => `${urls.collections.collections()}/popular-collections.html`,
-        editCollectionsPage: () => `${urls.collections.collections()}/edit-collections.html`,
         addImagePage: () => `${urls.collections.collections()}/generator.html`,
         collectionDetailsPage: () => `${urls.collections.collections()}/collection-details.html`,
         userDownloadPage: () => `${urls.collections.collections()}/user-download-page.html`,
