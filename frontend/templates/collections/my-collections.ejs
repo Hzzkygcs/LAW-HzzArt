@@ -49,7 +49,7 @@
         const getMyCollectionsUrl = "<%= urls.collections.myCollectionsGetCollections() %>";
         let collections = await get(getMyCollectionsUrl, {});
         collections = collections.collections;
-        console.log(collections);
+        console.log("col",collections);
         container.empty();
 
         for (const collection of collections) {

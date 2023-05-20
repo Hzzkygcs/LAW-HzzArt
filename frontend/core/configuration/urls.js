@@ -55,6 +55,7 @@ const urls = {
             saveVideoModal: () => `${urls.collections.components.components()}/-save-video-modal.ejs`,
             commentsModal: () => `${urls.collections.components.components()}/-comments-modal.ejs`,
             reportModal: () => `${urls.collections.components.components()}/-report-modal.ejs`,
+            commentsBox:() => `${urls.collections.components.components()}/-comments-box.ejs`,
         },
         editCollectionsComponents: {
             editCollectionsComponents:

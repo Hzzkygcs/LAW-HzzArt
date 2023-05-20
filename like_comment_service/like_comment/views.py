@@ -72,9 +72,9 @@ def comment(req, post_id):
 @require_GET
 def get_comments_of_a_collection(_req, post_id):
     post = Collections.get_or_create(post_id)
-    comment_list = post.comment_set.all().order_by('-comment_id').values()[::1]
+    comment_list = post.comment_set.all().order_by('comment_id').values()[::1]
 
-    return JsonResponse({"response": comment_list}, status=status.HTTP_200_OK)
+    return JsonResponse({"response": list(comment_list)}, status=status.HTTP_200_OK)
 
 
 @require_GET
@@ -90,21 +90,4 @@ def get_popular_collections(_req):
             get_collection_information(collection.post_id)
         )
     return JsonResponse(ret, safe=False, status=status.HTTP_200_OK)
-
-
-
-# @csrf_exempt
-# def create_user(request):
-#     deserialize = json.loads(request.body)
-#     user = Cust(username=deserialize['username'])
-#     user.save()
-#     return JsonResponse({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
-
-# @csrf_exempt
-# def create_post(request, username):
-#     user = Cust.objects.get(username=username)
-#     deserialize = json.loads(request.body)
-#     post = Post(post_desc=deserialize['desc'],post_image_link=deserialize['image'], post_user_name=user)
-#     post.save()
-#     return JsonResponse({"message": "Post created successfully"}, status=status.HTTP_201_CREATED)
 
