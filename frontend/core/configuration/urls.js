@@ -57,6 +57,14 @@ const urls = {
             commentsModal: () => `${urls.collections.components.components()}/-comments-modal.ejs`,
             reportModal: () => `${urls.collections.components.components()}/-report-modal.ejs`,
         },
+        editCollectionsComponents: {
+            editCollectionsComponents:
+                () => `${noLeadingSlash(urls.collections.collections())}/edit-collections-components`,
+            creatingImageCard:
+                () => `${urls.collections.editCollectionsComponents.editCollectionsComponents()}/-creating-the-image-card.ejs`,
+            imageCard:
+                () => `${urls.collections.editCollectionsComponents.editCollectionsComponents()}/-image-card.ejs`,
+        },
 
         collections: () => `/collections`,
 
