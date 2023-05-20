@@ -8,26 +8,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
-<body>
+<body class="grid h-screen" style="grid-template-rows: auto 1fr;">
 <%- include(urls.footer_navbar.navbar(), locals) %>
-<div class="container mx-auto h-screen">
+<div class="container mx-auto">
     <div class="flex-auto pt-10 content-center">
-        <h1 class="text-2xl font-bold text-center">Creating Heaven Collection's slideshow</h1>
+        <h1 class="text-2xl font-bold text-center">Export Collection as Slideshow</h1>
     </div>
     <div class="content-section-container mx-auto w-2/3 h-3/5 flex flex-col justify-center">
         <div class="row">
             <div class="w-full h-4 mb-4 bg-gray-200 rounded-full dark:bg-gray-700 content-center self-center">
-                <div class="h-4 bg-blue-600 rounded-full dark:bg-blue-500" style="width: 76%"></div>
+                <div class="progress-bar h-4 bg-blue-600 rounded-full dark:bg-blue-500" style="width: 0%"></div>
             </div>
-            <p class="text-2xl text-blue-600 font-sans font-medium text-center">76% completed</p>
-            <p class="text-l text-blue-600 font-sans font-medium text-center">generating-frames</p>
+            <p class="text-2xl text-blue-600 font-sans font-medium text-center">
+                <span class="progress-percentage-label">0</span>% completed
+            </p>
+            <p class="phase-state-information text-l text-blue-600 font-sans font-medium text-center">not-started</p>
         </div>
     </div>
     <div class="items-center content-section-container mx-auto flex flex-col w-1/6">
-        <button class="bg-gray-400 text-white font-bold py-2 px-4 rounded-full">Download</button>
+        <button class="download-btn
+                       disabled:bg-slate-300 disabled:text-slate-50
+                       bg-blue-500 text-white font-bold py-2 px-4 rounded-full"
+                disabled="true">
+            Download
+        </button>
     </div>
 </div>
 <%- include(urls.footer_navbar.footer(), locals) %>
 </body>
 </html>
 
+<script>
+    const token = `<%= req.query.token ?? '-' %>`;
+    if (token === '-')
+        window.location.href = '/';
+</script>
+<script>
+
+    const exportCollectionOrchestration = '/export-collection-orchestrations/export-collections';
+
+
+    async function updateStateAndCheckIfItIsDone() {
+        const url = `${exportCollectionOrchestration}/check-status/${token}`;
+        const result = await get(url, {});
+        console.log("check result: ", result);
+
+        updateProgressBar(result.percentageTotal);
+        updatePercentageLabel(result.percentageTotal);
+        updatePhaseInfo(result.phase);
+        if (result.phase === 'done') {
+            enableButton();
+            return true;
+        }
+        return false;
+    }
+
+    (async function () {
+        while (true){
+            if (await updateStateAndCheckIfItIsDone())
+                return;
+            await sleep(150);
+        }
+    })();
+
+    function updateProgressBar(percentage) {
+        $(".progress-bar").css('width', `${parseInt(percentage)}%`);
+    }
+    function updatePercentageLabel(percentage) {
+        $(".progress-percentage-label").text(`${parseInt(percentage)}`);
+    }
+    function updatePhaseInfo(phase) {
+        $(".phase-state-information").text(phase);
+    }
+    function enableButton() {
+        const downloadBtn = $(".download-btn");
+        downloadBtn.attr('disabled', false);
+        downloadBtn.on('click', function () {
+            window.location.href = `${exportCollectionOrchestration}/download/${token}`;
+        });
+    }
+
+</script>
