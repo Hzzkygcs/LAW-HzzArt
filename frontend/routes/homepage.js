@@ -13,6 +13,7 @@ route.get("/", async (req, res) => {
     const temporaryRedirect = 302;
     const loginUser = await validateLoggedIn(req, res);
     console.log("-->",loginUser);
+    res.cookie('userIsAdmin', loginUser.data.admin);
     if (!loginUser)
         return;
     if (loginUser.data.admin) {
