@@ -41,7 +41,6 @@ const urls = {
         admin : () => `/admin`,
         css: () => `${urls.admin.admin()}/css.css`,
         dependencies: () => `${noLeadingSlash(urls.admin.admin())}/-dependencies.ejs`,
-        reportedCollectionsPage: () => `${urls.admin.admin()}/reported-collections.html`,
         detailReportedCollectionPage: () => `${urls.admin.admin()}/detail-report-collection.html`,
         adminDownloadPage: () => `${urls.admin.admin()}/admin-download-page.html`,
     },
@@ -57,15 +56,29 @@ const urls = {
             commentsModal: () => `${urls.collections.components.components()}/-comments-modal.ejs`,
             reportModal: () => `${urls.collections.components.components()}/-report-modal.ejs`,
         },
+        editCollectionsComponents: {
+            editCollectionsComponents:
+                () => `${noLeadingSlash(urls.collections.collections())}/edit-collections-components`,
+            creatingImageCard:
+                () => `${urls.collections.editCollectionsComponents.editCollectionsComponents()}/-creating-the-image-card.ejs`,
+            imageCard:
+                () => `${urls.collections.editCollectionsComponents.editCollectionsComponents()}/-image-card.ejs`,
+            createNewImgBtnCard:
+                () => `${urls.collections.editCollectionsComponents.editCollectionsComponents()}/-add-image-card.ejs`,
+        },
 
         collections: () => `/collections`,
 
         css: () => `${urls.collections.collections()}/css.css`,
         dependencies: () => `${noLeadingSlash(urls.collections.collections())}/-dependencies.ejs`,
 
+
         myCollectionsPage: () => `${urls.collections.collections()}/my-collections.html`,
-        myCollectionsGetCollections: () => `/art-collection-service/collections`,
-        myCollectionsGetImage: () => `/art-collection-service/collections/image/`,
+        // AI Art collection service
+        artCollectionService: () => `/art-collection-service`,
+        myCollectionsGetCollections: () => `${urls.collections.artCollectionService()}/collections`,
+        myCollectionsGetImage: () => `${urls.collections.artCollectionService()}/collections/image/`,
+        myCollectionsSetName: () => `${urls.collections.artCollectionService()}/collections/`,
 
         searchCollectionsPage: () => `${urls.collections.collections()}/search-result.html`,
         popularCollectionsPage: () => `${urls.collections.collections()}/popular-collections.html`,
@@ -81,7 +94,9 @@ const urls = {
     collection_interactions_orchestration: {
         reportedCollectionsGetCollections: () => `${collectionInteractionsOrchestration()}/reported-collections`,
         getSpecificCollection: (collectionId) => `${collectionInteractionsOrchestration()}/reported-collections/${collectionId}`,
-    }
+        sendBanCollection: () => `${collectionInteractionsOrchestration()}/ban-collection`,
+        sendBanAccount: () => `${collectionInteractionsOrchestration()}/ban-account`,
+    },
 };
 
 module.exports.urls = urls;

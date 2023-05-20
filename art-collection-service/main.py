@@ -208,10 +208,6 @@ def delete_image(request: Request, image_id: int, db: Session = Depends(get_db))
 
 @app.get("/collections/image/{image_id}", status_code = 200)
 def get_image(request: Request, image_id: int, db: Session = Depends(get_db)):
-    
-    jwt_token = request.headers.get('x-jwt-token')
-    validate_jwt(jwt_token)
-    
     db_image = db.query(models.Image).filter(models.Image.id == image_id).first()
     if db_image is None:
         raise HTTPException(status_code=404, detail="Image does not exist")

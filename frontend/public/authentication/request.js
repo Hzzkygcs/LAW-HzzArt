@@ -1,6 +1,9 @@
 async function post(url, data, {isJson=true, contentType=null}={}){
     return request("POST", url, data, {isJson: isJson,contentType: contentType})
 }
+async function put(url, data, {isJson=true, contentType=null}={}){
+    return request("PUT", url, data, {isJson: isJson,contentType: contentType})
+}
 async function get(url, data, {contentType=null}={}){
     return request("GET", url, data, {isJson: false,contentType: contentType})
 }
