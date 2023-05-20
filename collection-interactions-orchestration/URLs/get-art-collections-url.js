@@ -3,4 +3,9 @@ function getArtCollectionsUrl(relativePath){
     return baseUrl + relativePath;
 }
 
-module.exports.getArtCollectionsUrl = getArtCollectionsUrl;
+function getArtCollectionsLikeCommentUrl(relativePath){
+    const baseUrl = process.env.LIKE_COMMENT_SERVICE_URL;
+    return baseUrl + relativePath;
+}
+
+module.exports = {getArtCollectionsUrl, getArtCollectionsLikeCommentUrl};

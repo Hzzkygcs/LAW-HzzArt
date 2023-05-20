@@ -1,6 +1,6 @@
 const express = require("express");
 const {getUsernameFromJWT} = require("../modules/util/account/get-username-from-JWT");
-const {getAllCollections} = require("../modules/util/collections/get-all-collections");
+const {getAllCollections,getAllCollectionsWithLikeComments} = require("../modules/util/collections/get-all-collections");
 const route = express.Router();
 
 route.get("/", async (req, res) => {
@@ -8,9 +8,28 @@ route.get("/", async (req, res) => {
 
     await getUsernameFromJWT(jwt);
 
-    let allCollections = await getAllCollections();
+    let posts = await getAllCollectionsWithLikeComments();
 
-    res.send(allCollections);
+    let collections = await getAllCollections(jwt);
+
+    const aggregatedData = collections.collections.map(collection => {
+        const { id, name, owner, images } = collection;
+        const matchingPost = posts.find(post => post.post_id === id);
+        const likes = matchingPost ? matchingPost.post_likes : 0;
+        const comments = matchingPost ? matchingPost.post_comments : 0;
+
+        return {
+            id,
+            name,
+            owner,
+            images,
+            likes,
+            comments
+        };
+    });
+
+    console.log(aggregatedData);
+    res.send(aggregatedData);
 });
 
 module.exports.route = route;

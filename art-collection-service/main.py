@@ -154,6 +154,35 @@ def get_owned_collection(request: Request, db: Session = Depends(get_db)):
     
     return {'collections' : owned_collection}
 
+@app.post("/collections/search")
+def get_collection_by_name(request: Request, promnt: schemas.GetCollectionByName, db: Session = Depends(get_db)):
+    
+    jwt_token = request.headers.get('x-jwt-token')
+    validate_jwt(jwt_token)
+    
+    db_collection = db.query(models.ArtCollection).filter(models.ArtCollection.name == promnt.name).all()
+    
+    collections = []
+    if db_collection is not None:
+        for collection in db_collection:
+            images = []
+            db_images = db.query(models.Image).filter(models.Image.collection_id == collection.id).all()
+            
+            if db_images is not None:
+                for image in db_images:
+                    images.append(image.id)
+            
+            response_data = {
+                'id': collection.id,
+                'name': collection.name,
+                'owner': collection.owner,
+                'images': images
+            }
+            
+            collections.append(response_data)
+    
+    return {'collections' : collections}
+
 @app.get("/collections/{collection_id}")
 def get_collection(request: Request, collection_id: int, db: Session = Depends(get_db)):
     
