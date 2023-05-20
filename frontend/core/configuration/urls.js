@@ -64,6 +64,8 @@ const urls = {
                 () => `${urls.collections.editCollectionsComponents.editCollectionsComponents()}/-creating-the-image-card.ejs`,
             imageCard:
                 () => `${urls.collections.editCollectionsComponents.editCollectionsComponents()}/-image-card.ejs`,
+            createNewImgBtnCard:
+                () => `${urls.collections.editCollectionsComponents.editCollectionsComponents()}/-add-image-card.ejs`,
         },
 
         collections: () => `/collections`,
@@ -71,9 +73,13 @@ const urls = {
         css: () => `${urls.collections.collections()}/css.css`,
         dependencies: () => `${noLeadingSlash(urls.collections.collections())}/-dependencies.ejs`,
 
+
         myCollectionsPage: () => `${urls.collections.collections()}/my-collections.html`,
-        myCollectionsGetCollections: () => `/art-collection-service/collections`,
-        myCollectionsGetImage: () => `/art-collection-service/collections/image/`,
+        // AI Art collection service
+        artCollectionService: () => `/art-collection-service`,
+        myCollectionsGetCollections: () => `${urls.collections.artCollectionService()}/collections`,
+        myCollectionsGetImage: () => `${urls.collections.artCollectionService()}/collections/image/`,
+        myCollectionsSetName: () => `${urls.collections.artCollectionService()}/collections/`,
 
         searchCollectionsPage: () => `${urls.collections.collections()}/search-result.html`,
         popularCollectionsPage: () => `${urls.collections.collections()}/popular-collections.html`,

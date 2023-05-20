@@ -29,10 +29,9 @@
             <i class="fa fa-pencil mx-4" aria-hidden="true"></i>
         </div>
 
+        <%- include(urls.collections.editCollectionsComponents.imageCard(), locals) %>
+        <%- include(urls.collections.editCollectionsComponents.createNewImgBtnCard(), locals) %>
         <div class="collection-image-container grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 w-full">
-            <%- include(urls.collections.editCollectionsComponents.imageCard(), locals) %>
-
-
         </div>
     </div>
 
@@ -44,47 +43,16 @@
         </div>
     </div>
 
-    <%- include(urls.footer_navbar.footer(), locals) %>
+
+        <%- include(urls.footer_navbar.footer(), locals) %>
 </body>
 </html>
 
-<script class="script-handle-collection-name-edit-functionality">
-    $(document).ready(function () {
-        const collectionNameBtn = $(".collection-name-button");
-        const collectionNameField = collectionNameBtn.find(".collection-name");
-        collectionNameBtn.on('click', function () {
-            collectionNameField.selectText();
-        });
-        collectionNameField.on('focusout', function () {
-            console.log("focus out. saving...");
-            saveCollectionName(false);
-        });
-        collectionNameField.keypress(function (e) {
-            if (e.which !== 13)
-                return;
-            console.log("enter. saving...");
-            saveCollectionName();
-            return false;
-        });
-        function saveCollectionName(blur=true) {
-            if (blur)
-                collectionNameField.blur();
-            showChangesSavedToast();
-        }
-        async function showChangesSavedToast() {
-            const changesSavedToastMsg = $(".changes-saved-toast");
-            await changesSavedToastMsg.fadeIn(300);
-            await sleep(1000);
-            await changesSavedToastMsg.fadeOut(700);
-        }
-    });
-</script>
-
-
 <script>
     let collectionId = parseInt(`<%= req.query.id ?? -1 %>`);
+</script>
 
-
+<script>
     $( document ).ready(function() {
         if (collectionId === -1)
             prepareNewCollection();
@@ -108,17 +76,60 @@
 
         let collection = await get(getSpecificCollectionUrl, {});
         const imagesId = collection.images;
+        const collectionImageContainer = $(".collection-image-container");
+        $(collectionImageContainer).empty();
 
         for (const imageId of imagesId){
             spawnNewImageCard(
                 joinUrl('<%= urls.collections.myCollectionsGetImage() %>', `${imageId}`),
-                $(".collection-image-container")
+                collectionImageContainer
             );
         }
         setCollectionName(collection.name);
+        spawnAddImageCardBtn(collectionImageContainer);
     }
 
     function setCollectionName(value) {
         $(".collection-name").text(value);
     }
+</script>
+
+
+<script class="script-handle-collection-name-edit-functionality">
+    $(document).ready(function () {
+        const collectionNameBtn = $(".collection-name-button");
+        const collectionNameField = collectionNameBtn.find(".collection-name");
+        collectionNameBtn.on('click', function () {
+            collectionNameField.selectText();
+        });
+        collectionNameField.on('focusout', function () {
+            console.log("focus out. saving...");
+            saveCollectionName($(this).text(), false);
+        });
+        collectionNameField.keypress(function (e) {
+            if (e.which !== 13)
+                return;
+            console.log("enter. saving...");
+            saveCollectionName($(this).text());
+            return false;
+        });
+        async function saveCollectionName(newName, blur=true) {
+            if (blur)
+                collectionNameField.blur();
+            const url = joinUrl(
+                `<%= urls.collections.myCollectionsSetName() %>`,
+                `${collectionId}`
+            );
+            await put(url, {
+                "name": newName,
+            })
+            showChangesSavedToast();
+        }
+        async function showChangesSavedToast() {
+            const changesSavedToastMsg = $(".changes-saved-toast");
+            await changesSavedToastMsg.fadeIn(300);
+            await sleep(1000);
+            await changesSavedToastMsg.fadeOut(700);
+        }
+    });
 </script>
