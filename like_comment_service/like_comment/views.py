@@ -29,9 +29,7 @@ def get_multiple_collection_information_view(req):
 
     ret = []
     for collection_id in collection_ids:
-        ret.append(
-            get_collection_information(collection_id)
-        )
+        ret.append(get_collection_information(collection_id))
     return JsonResponse(ret, safe=False, status=status.HTTP_200_OK)
 
 
@@ -46,11 +44,9 @@ def like_or_dislike(req, post_id):
 
     if like_obj is None:  # like
         Like.objects.create(username=username, collection=collection)
-        return JsonResponse({'message': 'Post Liked', 'liked': True}, status=status.HTTP_200_OK)
-
-    # dislike
-    like_obj.delete()
-    return JsonResponse({'message': 'Post Unliked', 'liked': False}, status=status.HTTP_200_OK)
+    else:
+        like_obj.delete()
+    return JsonResponse(get_collection_information(post_id, username), status=status.HTTP_200_OK)
 
 
 @csrf_exempt
@@ -65,15 +61,14 @@ def comment(req, post_id):
     created_comment = Comment(collection=collection, username=username,
                               comment_text=json_data['comment'])
     created_comment.save()
-    return JsonResponse({'message': 'Comment added successfully'}, status=status.HTTP_200_OK)
+    comment_list = get_comments_of_a_collection(post_id)
+    return JsonResponse({'response': comment_list}, status=status.HTTP_200_OK)
 
 
 @csrf_exempt
 @require_GET
 def get_comments_of_a_collection(_req, post_id):
-    post = Collections.get_or_create(post_id)
-    comment_list = post.comment_set.all().order_by('-comment_id').values()[::1]
-
+    comment_list = get_comments_of_a_collection(post_id)
     return JsonResponse({"response": comment_list}, status=status.HTTP_200_OK)
 
 
