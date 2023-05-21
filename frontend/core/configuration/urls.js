@@ -96,10 +96,15 @@ const urls = {
         collectionDetailsPage: () => `${urls.collections.collections()}/collection-details.html`,
     },
     video: {
-      videoProgress:   () => '/video/video-progress.html',
+        component: {},
+        videoProgress:   () => '/video/video-progress.html',
+        getAllVideoProgressOfAnUser:   () => '/export-collection-orchestrations/export-collections/check/user',
+        getEntireVideoProgress:   () => '/export-collection-orchestrations/export-collections/check',
+        multipleDownloadProgressJs: () => '/multiple-download-progress/multiple-download-progress.js',
     },
 
     collection_interactions_orchestration: {
+        getMyCollections: () => `${collectionInteractionsOrchestration()}/my-collections`,
         getPopularCollections: () => `${collectionInteractionsOrchestration()}/popular-collections`,
         reportedCollectionsGetCollections: () => `${collectionInteractionsOrchestration()}/reported-collections`,
         getSpecificCollection: (collectionId) => `${collectionInteractionsOrchestration()}/reported-collections/${collectionId}`,
