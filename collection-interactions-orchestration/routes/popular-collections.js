@@ -1,6 +1,7 @@
 const express = require("express");
 const {getUsernameFromJWT} = require("../modules/util/account/get-username-from-JWT");
 const {getAllCollections,getAllCollectionsWithLikeComments} = require("../modules/util/collections/get-all-collections");
+const {checkBanCollections} = require("../modules/util/admin-service/check-ban-collections");
 const route = express.Router();
 
 route.get("/", async (req, res) => {
@@ -10,9 +11,13 @@ route.get("/", async (req, res) => {
 
     let posts = await getAllCollectionsWithLikeComments();
 
-    let collections = await getAllCollections(jwt);
+    let allCollections = await getAllCollections(jwt);
 
-    const aggregatedData = collections.collections.map(collection => {
+    let bannedCollections = await checkBanCollections();
+
+    const updatedCollections = allCollections.collections.filter(collection => !bannedCollections.includes(collection.id));
+
+    const aggregatedData = updatedCollections.map(collection => {
         const { id, name, owner, images } = collection;
         const matchingPost = posts.find(post => post.post_id === id);
         const likes = matchingPost ? matchingPost.post_likes : 0;
