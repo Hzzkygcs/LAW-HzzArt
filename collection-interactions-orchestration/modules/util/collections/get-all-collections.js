@@ -17,4 +17,23 @@ async function getAllCollectionsWithLikeComments() {
     return response.data;
 }
 
-module.exports = {getAllCollections,getAllCollectionsWithLikeComments};
+async function getCurrentUserCollections(token) {
+  const url = getArtCollectionsUrl('/collections');
+  let response = await makeRequest("get",
+    url,
+    {},
+    {"x-jwt-token": token}
+  );
+  return response.data;
+}
+
+async function getCurrentUserCollectionsWithLikeComments(collectionIds,token) {
+  const url = getArtCollectionsLikeCommentUrl('/like-comment/get-posts/');
+  let response = await makeRequest("post", url,
+      {collection_ids: collectionIds},
+          {"x-jwt-token": token}
+  );
+    return response.data;
+}
+
+module.exports = {getAllCollections,getAllCollectionsWithLikeComments,getCurrentUserCollections,getCurrentUserCollectionsWithLikeComments};
