@@ -70,6 +70,14 @@ def get_response_from_multiple_exporttoken(all_export_tokens):
     result = do_concurrently(get_token_result, [
         (arg,) for arg in all_export_tokens
     ])
+    result = remove_none_from_list(result)
     return JsonResponse(result, safe=False, status=status.HTTP_200_OK)
 
+
+def remove_none_from_list(lst):
+    ret = []
+    for item in lst:
+        if item is not None:
+            ret.append(item)
+    return ret
 
