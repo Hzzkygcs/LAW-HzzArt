@@ -77,6 +77,7 @@ const urls = {
         myCollectionsPage: () => `${urls.collections.collections()}/my-collections.html`,
         // AI Art collection service
         artCollectionService: () => `/art-collection-service`,
+        myCollectionsCreateCollections: () => `${urls.collections.artCollectionService()}/collections`,
         myCollectionsGetCollections: () => `${urls.collections.artCollectionService()}/collections`,
         myCollectionsGetImage: () => `${urls.collections.artCollectionService()}/collections/image/`,
         myCollectionsSetName: () => `${urls.collections.artCollectionService()}/collections/`,
