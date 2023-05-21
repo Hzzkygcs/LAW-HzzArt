@@ -49,6 +49,7 @@ function handleServiceResponseException(error, _req, res, next) {
     }
 
     const body = Object.assign({}, error.reason);
+    body.reason = body.reason ?? {};
     body.reason.serviceName = error.serviceName;
 
     res.status(error.statusCode)

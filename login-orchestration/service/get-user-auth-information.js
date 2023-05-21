@@ -8,7 +8,7 @@ async function getUserAuthInformation(username, password) {
     let getUserResponse;
     try {
         getUserResponse = await axios({
-            url: getAuthenticationServiceUrl('/auth/validate-login'),
+            url: await getAuthenticationServiceUrl('/auth/validate-login'),
             method: 'post',
             data: {
                 username: username,

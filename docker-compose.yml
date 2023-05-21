@@ -142,9 +142,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8085:8085"
-    depends_on:
-      - authentication-service
-      - admin-service
+#    depends_on:
+#      - authentication-service
+#      - admin-service
     environment:
       <<: *env
       JWT_SECRET_KEY: "jv3Vh7b0upzBgZ8ocoOASSTjk0ypkBxO6NHqA5RIHFWEN5U5Vd"
