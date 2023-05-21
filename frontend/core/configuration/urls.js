@@ -81,7 +81,11 @@ const urls = {
         myCollectionsGetCollections: () => `${urls.collections.artCollectionService()}/collections`,
         myCollectionsGetImage: () => `${urls.collections.artCollectionService()}/collections/image/`,
         myCollectionsDeleteImage: () => `${urls.collections.artCollectionService()}/collections/delete-image/`,
+        myCollectionsAddImage: () => `${urls.collections.artCollectionService()}/collections/`,
         myCollectionsSetName: () => `${urls.collections.artCollectionService()}/collections/`,
+
+        generateImages: () => `${urls.collections.artCollectionService()}/collections/generate`,
+        getGeneratedImages: () => `${urls.collections.artCollectionService()}/collections/generated-images/`,
 
         likeCommentService: () => `/like-comment-service`,
 

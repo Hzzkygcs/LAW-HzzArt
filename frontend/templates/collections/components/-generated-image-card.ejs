@@ -1,0 +1,47 @@
+<template class="image-template">
+
+    <div class="relative mx-auto w-full">
+        <a
+                class="relative inline-block duration-300 ease-in-out transition-transform transform w-full">
+            <div class="relative rounded-lg bg-white">
+                <img class="generated-image
+                            rounded-lg h-full w-full object-cover"
+                        src=""
+                        alt=""
+                />
+                <button class="add-button group absolute top-1 right-2">
+                    <svg fill="none" stroke="white" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="plus-sym w-8 h-8 group-hover:stroke-blue-500">
+                        <path stroke-linecap="round" 
+                        stroke-linejoin="round" 
+                        d="M12 6v12m6-6H6"></path>
+                    </svg>
+                </button>
+            </div>
+        </a>
+    </div>
+
+</template>
+
+<script>
+    function spawnNewImageCard(collectionId, b64Image, parent = null) {
+        const url_add_to_collection = joinUrl(
+            `<%= urls.collections.myCollectionsAddImage() %>`, `${collectionId}`, 'add'
+        );
+        const ret = $($(".image-template").html());
+        const imageUrl = 'data:image/png;base64,' + b64Image
+
+        ret.find(".generated-image").attr('src', imageUrl);
+        ret.find(".add-button").on('click', async function () {
+            await post(url_add_to_collection, {
+                "images": [`${b64Image}`]
+            });
+            ret.remove();
+            alert('Image added to collection')
+            console.log('Image successfully added')
+        });
+
+        if (parent != null)
+            $(parent).append(ret);
+        return ret;
+    }
+</script>
