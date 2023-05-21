@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
 const {define_routes} = require("../config/routes");
 const {exceptionHandlerMiddleware} = require("../modules/global-route-exceptions-handler/middlewares/exceptionHandlerMiddleware");
+const {getConsulSingleton} = require("./consul");
 
 
 module.exports.config = function (app) {
@@ -32,5 +33,8 @@ module.exports.config = function (app) {
     if (PORT == null){
         throw new Error("env PORT IS NOT SET");
     }
-    return app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+    return app.listen(PORT, () => {
+        console.log(`Listening on port ${PORT}`);
+        getConsulSingleton(PORT, process.env.AUTHENTICATION_SERVICE_NAME);
+    });
 }

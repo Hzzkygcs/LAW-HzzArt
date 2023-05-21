@@ -1,6 +1,8 @@
 import io
 import json
 import os
+import urllib
+from random import choice
 from typing import Union
 
 import requests
@@ -13,14 +15,48 @@ from global_exception.exceptions.ResponseAsException import ResponseAsException
 
 def get_video_processing_url():
     if 'INSIDE_DOCKER_CONTAINER' in os.environ:
-        return os.environ['VIDEO_PROCESSING_SERVICE_URL']
-    return "http://localhost:8083"
+        return choice([
+            os.environ['VIDEO_PROCESSING_SERVICE_URL'],
+            os.environ['VIDEO_PROCESSING_SERVICE_URL_2'],
+        ])
+    ret = choice(("http://localhost:8083", "http://localhost:7073"))
+    print(ret)
+    return ret
 
 
 def get_collection_url():
     if 'INSIDE_DOCKER_CONTAINER' in os.environ:
         return os.environ['ART_COLLECTIONS_URL']
     return "http://localhost:8086"
+
+
+def get_login_orchestration_url():
+    if 'INSIDE_DOCKER_CONTAINER' in os.environ:
+        return os.environ['LOGIN_ORCHESTRATION_URL']
+    return "http://localhost:8085"
+
+
+def get_username(req):
+    # Retrieve the JWT token from the request headers
+    jwt_token = req.META.get('HTTP_X_JWT_TOKEN')
+
+    # Send the token to the login orchestration service
+    url = urllib.parse.urljoin(get_login_orchestration_url(), 'login/validate-login')
+    data = {
+        os.environ['JWT_TOKEN_HEADER_NAME']: jwt_token
+    }
+    print(url, data)
+    resp = requests.post(url, json=data)
+    if resp.status_code != 200:
+        print("Received from login orchestration: ", resp.content)
+        raise ResponseAsException(resp.content, resp.status_code)
+
+    data = resp.json()
+    username = data['username']
+    return username
+
+
+
 
 
 
@@ -80,8 +116,9 @@ def call_video_processing_service(per_image_duration: Union[int, float],
                                   fps: int, images: list[bytes]):
     files = prepare_list_of_bytes_to_be_sent_in_http_request(images)
 
+    video_processing_url = get_video_processing_url()
     response = requests.post(
-        url=get_video_processing_url() + '/submit-video',
+        url=video_processing_url + '/submit-video',
         data={
             "per_image_duration": str(per_image_duration),
             "transition_duration": str(transition_duration),
@@ -92,7 +129,7 @@ def call_video_processing_service(per_image_duration: Union[int, float],
     if response.status_code != 200:
         print("Received from video-processing-service: ", response.content)
         raise ResponseAsException(response.content, response.status_code)
-    return response
+    return video_processing_url, response
 
 
 def any_format_to_png(webp_bytes: bytes) -> bytes:
@@ -114,19 +151,21 @@ def parse_json_request(req):
     except:
         raise NotJsonRequestException()
     
-def download_get_token(request, token):
+def download_get_token(video_processing_url, token):
     response = requests.get(
-    url=get_video_processing_url() + '/download/' + token,
-    headers={'Content-Type': 'video/mp4'}
+        url=video_processing_url + '/download/' + token,
+        headers={'Content-Type': 'video/mp4'}
     )
     return response
 
 
-def status_get_token(request, token):
+def status_get_token(video_processing_url, token):
     response = requests.get(
-        url=get_video_processing_url() + '/check-status/' + token,
+        url=video_processing_url + '/check-status/' + token,
         headers={'Content-Type': 'application/json'}
     )
+    if response.status_code != 200:
+        raise ResponseAsException(response.content, status_code=response.status_code)
     data = response.json()
     percentageTotal = data['percentageTotal']
     percentagePhase = data['percentagePhase']

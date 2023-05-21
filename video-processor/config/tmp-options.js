@@ -1,4 +1,5 @@
 const path = require('path');
+const {getInstanceNumberId} = require("./consul");
 
 
 module.exports.defaultTmpOptions = function () {
@@ -6,6 +7,6 @@ module.exports.defaultTmpOptions = function () {
 
     return {
         tmpdir: path.join(process.cwd(), 'temp'),
-        prefix: "token"
+        prefix: `instance-${getInstanceNumberId()}-token`
     };
 }

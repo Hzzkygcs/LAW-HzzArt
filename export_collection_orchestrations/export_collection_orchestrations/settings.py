@@ -90,9 +90,7 @@ WSGI_APPLICATION = "export_collection_orchestrations.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-if 'INSIDE_DOCKER_CONTAINER' not in os.environ:
-    os.environ['MONGO_DATABASE_HOST_URL'] = 'asdfghjkl'
-print("Database: ", required_env("MONGO_DATABASE_HOST_URL"))
+
 
 DATABASES = {
     # still fail
@@ -109,7 +107,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': '60LD48iYfhQcXVD0',
-        'HOST': 'db.mmcrfkueqosgtjjyfhgz.supabase.co',
+        'HOST': 'db.ahmayzjnvlmvdhpaxisv.supabase.co',
         'PORT': '5432',
         'OPTIONS': {
             'options': '-c search_path=likecomment,public'

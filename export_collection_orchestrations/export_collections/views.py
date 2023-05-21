@@ -6,18 +6,22 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 from rest_framework import status
 
+from .models import ExportToken
 from .services import extract_export_collection_request_data, get_collection_as_dict, call_video_processing_service, \
     download_get_token, \
-    status_get_token
+    status_get_token, get_username
 
 
 @csrf_exempt
 @require_POST
 def export(request, collection_id):
+    username = get_username(request)
+
     per_image_duration, transition_duration, fps = extract_export_collection_request_data(request)
     images = get_collection_as_dict(request, collection_id)
-    resp = call_video_processing_service(per_image_duration, transition_duration, fps, images)
+    url, resp = call_video_processing_service(per_image_duration, transition_duration, fps, images)
     token = resp.json()
+    ExportToken.create_with_expired_date(username, url, token['token'])
     return JsonResponse({"response": token}, status=status.HTTP_200_OK)
 
 
@@ -25,7 +29,8 @@ def export(request, collection_id):
 @csrf_exempt
 @require_GET
 def download(request, token):
-    video_content = download_get_token(request, token)
+    video_processing_url = ExportToken.get_url_of_a_token(token)
+    video_content = download_get_token(video_processing_url, token)
     if video_content.status_code == 200 :
         response = HttpResponse(video_content, content_type=mimetypes.guess_type('video.mp4')[0])
         response['Content-Disposition'] = 'attachment; filename="video.mp4"'
@@ -36,7 +41,8 @@ def download(request, token):
 @csrf_exempt
 @require_GET
 def cek_status(request, token):
-    response = status_get_token(request, token)
+    video_processing_url = ExportToken.get_url_of_a_token(token)
+    response = status_get_token(video_processing_url, token)
     percentageTotal, percentagePhase, phase, tokenName, totalFrames = response
     data = {
         "percentageTotal": percentageTotal,
