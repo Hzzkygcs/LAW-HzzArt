@@ -65,9 +65,9 @@
             <div class="flex bg-red-900 h-20 bottom-0">
                 <div class="bg-neutral-800 flex w-96  items-center justify-center ...">
                     <!-- Modal toggle -->
-                    <a href="#" data-modal-target="reportModal" data-modal-toggle="reportModal" class="w-100 flex items-center font-medium text-white-800 block text-white hover:bg-red-400 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-2 py-1 text-center">
+                    <a data-modal-target="reportModal" data-modal-toggle="reportModal" class="w-100 flex items-center font-medium text-white-800 block text-white hover:bg-red-400 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-2 py-1 text-center">
                         <div class="mt-1 inline-flex items-center">
-                            <h2 class="font-bold text-2xl text-white show-on-hover" title="New York">
+                            <h2 class="font-bold text-2xl text-white" title="New York">
                                 REPORT
                             </h2>
                             <svg class="ml-2 w-6 h-6 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 480 512" stroke-width="1.5" stroke="currentColor">
@@ -78,8 +78,8 @@
                 </div>
 
                 <div class="bg-neutral-800 w-4/6 flex items-center justify-center ...">
-                    <h2 class="font-bold text-3xl text-white line-clamp-1 mr-2" title="New York ">
-                        Statue of Liberty
+                    <h2 id="collection-name" class="font-bold text-3xl text-white line-clamp-1 mr-2" title="New York ">
+                        Detail of Collection
                     </h2>
                     <!-- Modal toggle -->
                     <a href="#" data-modal-target="downloadModal" data-modal-toggle="downloadModal" class="w-14 flex items-center font-medium text-white-800 block text-white
@@ -110,10 +110,7 @@
                         <span id="total-comment" class="text-2xl"></span>
                     </a>
                 </div>
-
-
                 <%- include(urls.collections.components.saveVideoModal(), locals) %>
-                <!-- TODO: Rename Missleading -->
                 <%- include(urls.collections.components.reportModal(), locals) %>
                 <%- include(urls.collections.components.commentsModal(), locals) %>
             </div>
@@ -124,19 +121,16 @@
             position: static!important;
         }
 
-        .show-on-hover {
-            opacity: 0;
-            transition: opacity 0.2s ease-in-out;
-        }
-
-        a:hover .show-on-hover {
-            opacity: 1;
-        }
-
-
     </style>
 
     <%- include(urls.footer_navbar.footer(), locals) %>
 </body>
 </html>
 
+<script>
+    (async function (){
+        const collection = await get("/art-collection-service/collections/" + collectionId, {});
+        console.log(collection);
+        document.getElementById("collection-name").innerHTML = collection.name;
+    })();
+</script>

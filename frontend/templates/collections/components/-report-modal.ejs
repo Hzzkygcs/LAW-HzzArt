@@ -9,38 +9,77 @@
             </button>
             <div class="px-6 py-6 lg:px-8">
                 <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Report</h3>
-                <form class="space-y-6" onsubmit="submitForm(event)">
                     <div>
                         <textarea id="reasonTextArea" placeholder="Reason" class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500" required></textarea>
                     </div>
-                    <div class="flex items-center flex-row-reverse border-gray-200 rounded-b dark:border-gray-600">
-                    <button type="submit" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                        Report
-                    </button>
+                    <div class="pt-5 flex items-center flex-row-reverse border-gray-200 rounded-b dark:border-gray-600" onclick="submitForm()">
+						<button type="submit" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+							Report
+						</button>
                     </div>
-                </form>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Alert modal -->
+<div id="alertModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full h-screen flex items-center justify-center">
+    <div class="relative max-w-md mx-auto">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-900">
+            <div class="px-6 py-6 lg:px-8">
+                <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Alert</h3>
+                <div class="modal-body text-white"></div>
+                <div class="pt-5 flex items-center flex-row-reverse border-gray-200 rounded-b dark:border-gray-600">
+                    <button type="button" class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800" onclick="hideAlertModal()">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
   let _collectionId = `<%= req.query.id ?? -1 %>`;
-    function submitForm(event) {
+    function submitForm() {
       if (_collectionId === '-1') {
         window.location.href = "/";
-      }
-      else {
-          $(document).ready(async function () {
-              const sendReportCollectionsUrl = "<%- urls.collection_interactions_orchestration.reportedCollectionsGetCollections() %>";
-              var reason = document.getElementById("reasonTextArea").value;
-              let response = await post(sendReportCollectionsUrl, {
-                  reason: reason,
-                  collectionId: _collectionId
-              });
-              console.log("Reason:", reason, "CollectionId:", _collectionId);
-                console.log("Response:", response);
+      } else {
+        $(document).ready(async function () {
+          const sendReportCollectionsUrl = "<%- urls.collection_interactions_orchestration.reportedCollectionsGetCollections() %>";
+          let reason = document.getElementById("reasonTextArea").value;
+
+          let response = await post(sendReportCollectionsUrl, {
+            reason: reason,
+            collectionId: _collectionId
           });
+
+          if (response.validationFail != null) {
+            showAlert(`FAILED! Collection with ID ${response.validationFail.reason.collectionId} is already reported.`);
+          } else {
+            showAlert('SUCCESS! Your report has been sent to the admins for review.');
+            window.location.href = "/collections/collection-details.html?id=" + _collectionId; // Update the URL with the _collectionId
+          }
+
+          return false;
+        });
       }
     }
+
+
+    function showAlert(message) {
+        $(document).ready(function () {
+            $("#alertModal .modal-body").html(message);
+            $("#alertModal").removeClass("hidden");
+        });
+    }
+
+    function hideAlertModal() {
+        $(document).ready(function () {
+            $("#alertModal").addClass("hidden");
+
+        });
+    }
 </script>
+

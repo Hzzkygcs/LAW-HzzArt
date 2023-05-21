@@ -1,6 +1,6 @@
 <template class="add-image-card-template">
     <div class="relative w-full rounded-xl">
-        <a href="<%= urls.collections.addImagePage() %>?id=<%=req.query.id??-1%>">
+        <a href="<%= urls.collections.addImagePage() %>">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1/4 h-full mx-auto hover:stroke-blue-700">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -9,8 +9,11 @@
 </template>
 
 <script>
-    function spawnAddImageCardBtn(parent) {
+    function spawnAddImageCardBtn(parent,id) {
         const ret = $($(".add-image-card-template").html());
+        ret.find("a").attr(
+            "href",
+            ret.find("a").attr("href") + "?id=" + id);
         if (parent != null)
             parent.append(ret);
         return ret;
