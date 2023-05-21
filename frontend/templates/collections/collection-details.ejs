@@ -78,8 +78,8 @@
                 </div>
 
                 <div class="bg-neutral-800 w-4/6 flex items-center justify-center ...">
-                    <h2 class="font-bold text-3xl text-white line-clamp-1 mr-2" title="New York ">
-                        Statue of Liberty
+                    <h2 id="collection-name" class="font-bold text-3xl text-white line-clamp-1 mr-2" title="New York ">
+                        Detail of Collection
                     </h2>
                     <!-- Modal toggle -->
                     <a href="#" data-modal-target="downloadModal" data-modal-toggle="downloadModal" class="w-14 flex items-center font-medium text-white-800 block text-white
@@ -110,10 +110,7 @@
                         <span id="total-comment" class="text-2xl"></span>
                     </a>
                 </div>
-
-
                 <%- include(urls.collections.components.saveVideoModal(), locals) %>
-                <!-- TODO: Rename Missleading -->
                 <%- include(urls.collections.components.reportModal(), locals) %>
                 <%- include(urls.collections.components.commentsModal(), locals) %>
             </div>
@@ -130,3 +127,10 @@
 </body>
 </html>
 
+<script>
+    (async function (){
+        const collection = await get("/art-collection-service/collections/" + collectionId, {});
+        console.log(collection);
+        document.getElementById("collection-name").innerHTML = collection.name;
+    })();
+</script>

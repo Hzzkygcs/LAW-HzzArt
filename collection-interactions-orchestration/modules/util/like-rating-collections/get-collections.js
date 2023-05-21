@@ -1,13 +1,15 @@
-const {getLikeCommentServiceUrl} = require('../../../URLs/get-like-comment-service-url');
+const {getArtCollectionsUrl} = require('../../../URLs/get-art-collections-url');
 const {makeRequest} = require("../../external-call/make-request");
 
-async function getCollections(search) {
-  const url = getLikeCommentServiceUrl('/get-like-rating-collections');
-  let response = await makeRequest("get", url, {
-    params: {
-        "search": search
-    }
-  })
+async function getCollections(search,token) {
+  const url = getArtCollectionsUrl('/collections/search');
+  let response = await makeRequest("post", url,
+      {
+        "name": search
+  },
+      {
+          "x-jwt-token": token
+      })
     return response.data;
 }
 

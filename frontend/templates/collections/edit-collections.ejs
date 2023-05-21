@@ -83,7 +83,7 @@
         collectionNameField.attr("contenteditable", true);
         setCollectionName(initialName);
         const collectionImageContainer = $(".collection-image-container");
-        spawnAddImageCardBtn(collectionImageContainer);
+        spawnAddImageCardBtn(collectionImageContainer,collectionId);
     }
     async function loadCollection() {
         const getSpecificCollectionUrl = joinUrl(
@@ -104,7 +104,7 @@
             );
         }
         setCollectionName(collection.name);
-        spawnAddImageCardBtn(collectionImageContainer);
+        spawnAddImageCardBtn(collectionImageContainer,collectionId);
     }
 
     function setCollectionName(value) {
