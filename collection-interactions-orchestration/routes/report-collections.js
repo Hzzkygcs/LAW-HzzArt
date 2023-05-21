@@ -53,8 +53,7 @@ route.post("/reject-report", async (req, res) => {
 
 route.get("/", async (req, res) => {
     const jwt = req.get(process.env.JWT_TOKEN_HEADER_NAME);
-    console.log("jwt");
-    console.log(jwt);
+    console.log("jwt",jwt);
     let response = await getUsernameFromJWT(jwt);
 
     if (!response.admin) {
@@ -90,7 +89,6 @@ route.get("/", async (req, res) => {
 });
 
 route.get("/:collectionId", async (req, res) => {
-    console.log("req.params.collectionId");
     const jwt = req.get(process.env.JWT_TOKEN_HEADER_NAME);
     let response = await getUsernameFromJWT(jwt);
 

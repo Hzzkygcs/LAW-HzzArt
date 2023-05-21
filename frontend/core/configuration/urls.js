@@ -77,12 +77,10 @@ const urls = {
         myCollectionsPage: () => `${urls.collections.collections()}/my-collections.html`,
         // AI Art collection service
         artCollectionService: () => `/art-collection-service`,
-        myCollectionsGetCollections: () => `${urls.collections.artCollectionService()}/collections`,
         myCollectionsGetImage: () => `${urls.collections.artCollectionService()}/collections/image/`,
         myCollectionsSetName: () => `${urls.collections.artCollectionService()}/collections/`,
 
         likeCommentService: () => `/like-comment-service`,
-        getLikeCommentCollections: () => `${urls.collections.likeCommentService()}/like-comment/get-posts/`,
 
         editCollectionsPage: () => `${urls.collections.collections()}/edit-collections.html`,
 
