@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const {jsonInvalidSyntaxHandlerMiddleware} = require("./modules/jsonInvalidSyntaxHandlerMiddleware");
 const {USERNAME_VALID_ENDPOINT, REGISTER_ENDPOINT, VALIDATE_LOGIN_ENDPOINT} = require("./routes/endpoints");
 const {route: usernameValidRoute} = require("./routes/get-user");
-const {getConsulSingleton} = require("./config/consul");
+const {getConsulSingleton, getAllHealthyServiceHostName} = require("./config/consul");
 const {consulHealthRoute} = require("./routes/consul");
 
 
@@ -35,9 +35,11 @@ module.exports.server = async function (test=true) {
         }
 
 
-        return app.listen(PORT, () => {
+        return app.listen(PORT, async () => {
             console.log(`Listening on port ${PORT}`);
-            getConsulSingleton(PORT, process.env.AUTHENTICATION_SERVICE_NAME);
+            await getConsulSingleton(PORT, process.env.AUTHENTICATION_SERVICE_NAME);
+            const members = await getAllHealthyServiceHostName('auth-service');
+            console.log(members);
         });
     }
     return app.listen(() => console.log(`Listening on any port`));

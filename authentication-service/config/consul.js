@@ -48,8 +48,25 @@ async function getConsulClient(thisServicePort, thisServiceName) {
     });
     return consul;
 }
-
 module.exports.getConsulClient = getConsulClient;
+
+
+async function getAnyHealthyServiceHostName() {  // TODO
+}
+
+async function getAllHealthyServiceHostName(serviceName) {
+    const consul = await getConsulSingleton();
+    const members = await consul.health.service({ service: 'authentication-service', passing: true });
+    const ret = [];
+    for (const member of members) {
+        const {Service} = member;
+        const {Address} = Service;
+        ret.push(Address);
+    }
+    return ret;
+}
+module.exports.getAllHealthyServiceHostName = getAllHealthyServiceHostName;
+
 
 
 function getInstanceId(serviceName, ipAddress) {
