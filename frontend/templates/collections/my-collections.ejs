@@ -46,35 +46,16 @@
     $(document).ready(async function () {
         const container = $(".container-of-all-collections");
 
-        const getMyCollectionsUrl = "<%= urls.collections.myCollectionsGetCollections() %>";
+        const getMyCollectionsUrl = "<%= urls.collection_interactions_orchestration.getMyCollections() %>";
         let collections = await get(getMyCollectionsUrl, {});
-        collections = collections.collections;
-
-        const collectionIds = extractCollectionId(collections);
-        const likeCommentInformations = await post(joinUrl(
-            `<%= urls.collections.getLikeCommentCollections() %>`,
-        ), {
-            collection_ids: collectionIds
-        });
-
         container.empty();
-        for (let i = 0; i < collections.length; i++) {
-            const {id, name, images} = collections[i];
-            const {post_likes, post_comments} = likeCommentInformations[i];
-
+        for (const collection of collections) {
+            const {id, likes, comments, name, images} = collection;
             const imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
-            console.log(id, name, imageThumbnail)
+            console.log(id, name, imageThumbnail,"qa")
 
-            newCollectionCard(id, post_likes, post_comments, name, imageThumbnail, null, container, true);
+            newCollectionCard(id, likes, comments, name, imageThumbnail, null, container, true);
         }
     });
-
-    function extractCollectionId(collections) {
-        const ret = [];
-        for (const collection of collections) {
-            ret.push(collection.id);
-        }
-        return ret;
-    }
 
 </script>

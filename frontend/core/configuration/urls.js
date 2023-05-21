@@ -99,6 +99,7 @@ const urls = {
     },
 
     collection_interactions_orchestration: {
+        getMyCollections: () => `${collectionInteractionsOrchestration()}/my-collections`,
         getPopularCollections: () => `${collectionInteractionsOrchestration()}/popular-collections`,
         reportedCollectionsGetCollections: () => `${collectionInteractionsOrchestration()}/reported-collections`,
         getSpecificCollection: (collectionId) => `${collectionInteractionsOrchestration()}/reported-collections/${collectionId}`,
