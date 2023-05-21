@@ -1,4 +1,4 @@
-import traceback
+import os
 from threading import Thread
 
 from global_exception.exceptions.ResponseAsException import ResponseAsException
@@ -35,8 +35,13 @@ def do_concurrently(function, list_of_args: list[tuple]):
                     get_return_value_func(index, curr_args)
                 except ResponseAsException as e:
                     print("Error ResponseAsException: ", e.status_code, e.response_body)
+                except ConnectionError as e:
+                    if 'INSIDE_DOCKER_CONTAINER' not in os.environ:
+                        print(e)
+                    else:
+                        raise e
                 except Exception as e:
-                    traceback.print_exception(e)
+                    print(e)
                     raise e
             return func
 
