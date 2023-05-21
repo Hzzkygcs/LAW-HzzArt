@@ -8,8 +8,9 @@ from rest_framework import status
 
 from .concurrent import do_concurrently
 from .models import ExportToken
-from .services import extract_export_collection_request_data, get_collection_as_dict, call_video_processing_service, \
-    download_get_token, status_get_token, get_username
+from .services import extract_export_collection_request_data, get_collection_images_as_dict_with_collections_name, \
+    call_video_processing_service, \
+    download_get_token, status_get_token, get_username, get_token_status_and_additional_info
 
 
 @csrf_exempt
@@ -18,10 +19,10 @@ def export(request, collection_id):
     username = get_username(request)
 
     per_image_duration, transition_duration, fps = extract_export_collection_request_data(request)
-    images = get_collection_as_dict(request, collection_id)
+    collection_name, images = get_collection_images_as_dict_with_collections_name(request, collection_id)
     url, resp = call_video_processing_service(per_image_duration, transition_duration, fps, images)
     token = resp.json()
-    ExportToken.create_with_expired_date(username, url, token['token'])
+    ExportToken.create_with_expired_date(username, url, token['token'], collection_name)
     return JsonResponse({"response": token}, status=status.HTTP_200_OK)
 
 
@@ -43,14 +44,6 @@ def download(request, token):
 def cek_status(request, token):
     video_processing_url = ExportToken.get_url_of_a_token(token)
     response = status_get_token(video_processing_url, token)
-    # percentageTotal, percentagePhase, phase, tokenName, totalFrames = response
-    # data = {
-    #     "percentageTotal": percentageTotal,
-    #     "percentagePhase": percentagePhase,
-    #     "phase": phase,
-    #     "tokenName": tokenName,
-    #     "totalFrames": totalFrames
-    # }
  
     return JsonResponse(response, status=status.HTTP_200_OK)
 
@@ -72,9 +65,11 @@ def cek_entire_downloads(request):
 
 def get_response_from_multiple_exporttoken(all_export_tokens):
     def get_token_result(token: ExportToken):
-        return status_get_token(token.video_processing_url, token.token)
+        return get_token_status_and_additional_info(token.video_processing_url, token)
 
     result = do_concurrently(get_token_result, [
         (arg,) for arg in all_export_tokens
     ])
     return JsonResponse(result, safe=False, status=status.HTTP_200_OK)
+
+

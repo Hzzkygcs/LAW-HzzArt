@@ -21,18 +21,20 @@ def get_export_collection_instance_id():
     return EXPORT_COLLECTION_INSTANCE_ID
 
 
-
 class ExportToken(models.Model):
     token = models.CharField(max_length=200)
     video_processing_url = models.CharField(max_length=200)
     username = models.CharField(max_length=200)
+    collection_name = models.CharField(max_length=200)
     exp_date = models.DateTimeField(auto_now_add=False, db_index=True)
     export_instance_id = models.IntegerField(default=get_export_collection_instance_id)
 
     @classmethod
-    def create_with_expired_date(cls, username, url, token):
+    def create_with_expired_date(cls, username, url, token, collection_name):
         exp_date = timezone.now() + timedelta(hours=2)
-        return cls.objects.create(token=token, video_processing_url=url, username=username, exp_date=exp_date)
+        return cls.objects.create(token=token, video_processing_url=url,
+                                  username=username, exp_date=exp_date,
+                                  collection_name=collection_name)
 
     @classmethod
     def get_url_of_a_token(cls, token):
