@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Image</title>
+
+    <%- include(urls.collections.dependencies(), locals) %>
+    <%- include(urls.global_dependencies(), locals) %>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <%- include(urls.footer_navbar.navbar(), locals) %>
+    <div class="collections-outter-container">
+        <div class="flex flex-row items-center pt-5 pb-7">
+
+            <div class="pr-3">
+                <h1 class="text-2xl font-bold"> Choose Image to Add to Collection </h1>  
+            </div>
+
+        </div>
+
+        <%- include("components/-generated-image-card.ejs", locals) %>
+        <div class="container-of-all-images
+                    grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 w-full">
+            Please Wait
+        </div>
+
+    </div>
+
+    <%- include(urls.footer_navbar.footer(), locals) %>
+</body>
+</html>
+
+<script>
+    const collection_id = parseInt(`<%=req.query.id??-1%>`);
+    const generate_token = `<%=req.query.token??-1%>`;
+    const url_generated_image = `<%= urls.collections.addImageToCollectionPage() %>`;
+    const url_get_generated_image = joinUrl(
+        `<%= urls.collections.getGeneratedImages() %>`, `${generate_token}`
+    );
+
+    if (collection_id === -1) {
+        window.location.href = `/`;
+    }
+
+    $(document).ready(async function() {
+        const generate_button = $(".generate-button");
+
+        let generate_status;
+        let get_response;
+        do {
+            get_response = await get(url_get_generated_image, {});
+            generate_status = get_response.status;
+            await sleep(2000);
+        } 
+        while (generate_status === 'In Progress');
+
+        const b64_images = get_response.value;
+        const image_container = $(".container-of-all-images");
+        image_container.empty()
+        for (const image of b64_images) {
+            spawnNewImageCard(
+                collection_id,
+                image,
+                image_container
+            );
+        };
+    });
+</script>

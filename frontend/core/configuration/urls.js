@@ -81,7 +81,11 @@ const urls = {
         myCollectionsGetCollections: () => `${urls.collections.artCollectionService()}/collections`,
         myCollectionsGetImage: () => `${urls.collections.artCollectionService()}/collections/image/`,
         myCollectionsDeleteImage: () => `${urls.collections.artCollectionService()}/collections/delete-image/`,
+        myCollectionsAddImage: () => `${urls.collections.artCollectionService()}/collections/`,
         myCollectionsSetName: () => `${urls.collections.artCollectionService()}/collections/`,
+
+        generateImages: () => `${urls.collections.artCollectionService()}/collections/generate`,
+        getGeneratedImages: () => `${urls.collections.artCollectionService()}/collections/generated-images/`,
 
         likeCommentService: () => `/like-comment-service`,
 
@@ -90,6 +94,7 @@ const urls = {
         searchCollectionsPage: () => `${urls.collections.collections()}/search-result.html`,
         popularCollectionsPage: () => `${urls.collections.collections()}/popular-collections.html`,
         addImagePage: () => `${urls.collections.collections()}/generator.html`,
+        addImageToCollectionPage: () => `${urls.collections.collections()}/generated-image.html`,
         userDownloadPage: () => `${urls.collections.collections()}/user-download-page.html`,
 
         collectionDetailsJs: () => `${urls.collections.collections()}/collection-details.js`,
