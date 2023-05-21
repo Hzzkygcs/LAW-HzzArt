@@ -50,6 +50,14 @@
 
 <script>
     let collectionId = parseInt(`<%= req.query.id ?? -1 %>`);
+
+    function validateCollectionId() {
+        if (collectionId === -1){
+            alert("The system is currently working on creating the collection. Please wait");
+            return false;
+        }
+        return true;
+    }
 </script>
 
 <script>
@@ -59,13 +67,23 @@
         else
             loadCollection();
 
-        $(".delete-button").on("click", function(event){
-            event.preventDefault()
-        });
+
     });
 
-    function prepareNewCollection() {
-        setCollectionName("my-collection");
+    async function prepareNewCollection() {
+        const collectionNameField = $(".collection-name");
+        collectionNameField.attr("contenteditable", false);
+
+        const createCollectionUrl = '<%= urls.collections.myCollectionsCreateCollections() %>';
+
+        const initialName = "my-collection";
+        const response = await post(createCollectionUrl, {name: initialName});
+        collectionId = response.id;
+
+        collectionNameField.attr("contenteditable", true);
+        setCollectionName(initialName);
+        const collectionImageContainer = $(".collection-image-container");
+        spawnAddImageCardBtn(collectionImageContainer);
     }
     async function loadCollection() {
         const getSpecificCollectionUrl = joinUrl(
@@ -73,14 +91,14 @@
             `${collectionId}`,
         );
 
-
         let collection = await get(getSpecificCollectionUrl, {});
         const imagesId = collection.images;
         const collectionImageContainer = $(".collection-image-container");
-        $(collectionImageContainer).empty();
+        collectionImageContainer.empty();
 
         for (const imageId of imagesId){
             spawnNewImageCard(
+                imageId,
                 joinUrl('<%= urls.collections.myCollectionsGetImage() %>', `${imageId}`),
                 collectionImageContainer
             );
@@ -100,6 +118,8 @@
         const collectionNameBtn = $(".collection-name-button");
         const collectionNameField = collectionNameBtn.find(".collection-name");
         collectionNameBtn.on('click', function () {
+            if (!validateCollectionId())
+                return false;
             collectionNameField.selectText();
         });
         collectionNameField.on('focusout', function () {
