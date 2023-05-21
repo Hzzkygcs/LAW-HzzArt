@@ -50,9 +50,9 @@
     const url_generated_image_page = `<%= urls.collections.addImageToCollectionPage() %>`;
     const url_generator = `<%= urls.collections.generateImages() %>`
 
-    // if (collection_id === -1) {
-    //     window.location.href = `/`;
-    // }
+    if (collection_id === -1) {
+        window.location.href = `/`;
+    }
 
     $(document).ready(function() {
         const generate_button = $(".generate-button");

@@ -40,9 +40,9 @@
         `<%= urls.collections.getGeneratedImages() %>`, `${generate_token}`
     );
 
-    // if (collection_id === -1) {
-    //    window.location.href = `/`;
-    // }
+    if (collection_id === -1) {
+        window.location.href = `/`;
+    }
 
     $(document).ready(async function() {
         const generate_button = $(".generate-button");
