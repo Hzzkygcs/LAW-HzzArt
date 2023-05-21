@@ -80,6 +80,7 @@ const urls = {
         myCollectionsCreateCollections: () => `${urls.collections.artCollectionService()}/collections`,
         myCollectionsGetCollections: () => `${urls.collections.artCollectionService()}/collections`,
         myCollectionsGetImage: () => `${urls.collections.artCollectionService()}/collections/image/`,
+        myCollectionsDeleteImage: () => `${urls.collections.artCollectionService()}/collections/delete-image/`,
         myCollectionsSetName: () => `${urls.collections.artCollectionService()}/collections/`,
 
         likeCommentService: () => `/like-comment-service`,

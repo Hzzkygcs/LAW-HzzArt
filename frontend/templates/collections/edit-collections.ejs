@@ -98,6 +98,7 @@
 
         for (const imageId of imagesId){
             spawnNewImageCard(
+                imageId,
                 joinUrl('<%= urls.collections.myCollectionsGetImage() %>', `${imageId}`),
                 collectionImageContainer
             );
