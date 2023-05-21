@@ -40,14 +40,14 @@ function spawnNewDownloadRow(username, collectionName, token, progress) {
 
     el.find(".collection-name").text(collectionName);
     el.find(".token-td").text(token);
+    el.find("a.token-td").attr('href', getDownloadPage(token));
 
     const progressInt = parseInt(progress);
     const progressBar = el.find(".progress-bar");
     progressBar.text(`${progressInt}%`);
     progressBar.css('width', `${progressInt}%`);
-    el.on('click', function () {
-        window.location.href = getDownloadPage(token);
-    });
-    console.log(el)
+    // el.on('click', function () {
+    //     window.location.href = getDownloadPage(token);
+    // });
     return el;
 }
