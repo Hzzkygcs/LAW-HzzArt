@@ -65,7 +65,7 @@
             const imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
             console.log(id, name, imageThumbnail)
 
-            newCollectionCard(id, post_likes, post_comments, name, imageThumbnail, container, true);
+            newCollectionCard(id, post_likes, post_comments, name, imageThumbnail, null, container, true);
         }
     });
 

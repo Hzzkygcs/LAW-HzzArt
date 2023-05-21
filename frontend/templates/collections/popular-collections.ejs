@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Collections</title>
+    <title>Popular Collections</title>
 
     <%- include(urls.collections.dependencies(), locals) %>
     <%- include(urls.global_dependencies(), locals) %>
@@ -22,10 +22,33 @@
 
 
         <%- include("-card-collections.ejs", locals) %>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
+        <div class="container-of-all-collections
+                    grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
+            Loading
         </div>
 
     </div>
     <%- include(urls.footer_navbar.footer(), locals) %>
 </body>
 </html>
+
+<script>
+    $(document).ready(async function() {
+        const container = $(".container-of-all-collections");
+
+        const getPopularCollectionsUrl = "<%- urls.collection_interactions_orchestration.getPopularCollections() %>";
+
+        let collections = await get(getPopularCollectionsUrl,{});
+
+        container.empty();
+
+        for (const collection of collections) {
+            const {id,name,owner,images,likes,comments} = collection;
+            const imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
+            console.log(id, name, imageThumbnail)
+
+            newCollectionCard(id, likes, comments, name, imageThumbnail, owner, container, false);
+        }
+
+    });
+</script>
