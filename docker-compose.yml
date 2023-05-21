@@ -18,6 +18,8 @@ x-environment: &env
   ADMIN_SERVICE_URL: "http://admin-service:8082"
 
   VIDEO_PROCESSING_SERVICE_PORT: 8083
+  VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
+
   COLLECTION_INTERACTIONS_ORCHESTRATION_PORT: 8084
   COLLECTION_INTERACTIONS_ORCHESTRATION_NAME: "collection-orchestration"
 
@@ -38,9 +40,9 @@ x-environment: &env
   EXPORT_COLLECTION_ORCHESTRATIONS_URL: "http://export-collection-orchestrations:8088"
 
   AUTHENTICATION_SERVICE_URL: "http://authentication-service:8081"
-  VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
   COLLECTION_ORCHESTRATION_URL: "http://collection-orchestration:8084"
   HZZART_NAVIGATOR_SERVER: "https://hzzart-navigator-server.herokuapp.com"
+
 
 
 
@@ -99,7 +101,22 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8083:8083"
-    environment: *env
+    environment:
+      <<: *env
+      MY_PORT: 8083
+    volumes:
+      - "./video-processor:/app-codes"
+      - "/app-codes/node_modules"
+
+  video-processing-service-2:
+    build:
+      context: ./video-processor
+      dockerfile: Dockerfile
+    ports:
+      - "7073:8083"
+    environment:
+      <<: *env
+      MY_PORT: 7073
     volumes:
       - "./video-processor:/app-codes"
       - "/app-codes/node_modules"
