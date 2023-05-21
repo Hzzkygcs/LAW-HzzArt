@@ -14,7 +14,7 @@ def get_login_orchestration_url():
     return os.environ['LOGIN_ORCHESTRATION_URL']
 
 
-def get_username(req):
+def get_username(req, login_required=True):
     # Retrieve the JWT token from the request headers
     jwt_token = req.META.get('HTTP_X_JWT_TOKEN')
 
@@ -26,6 +26,8 @@ def get_username(req):
     print(url, data)
     resp = requests.post(url, json=data)
     if resp.status_code != 200:
+        if not login_required:
+            return None
         print("Received from login orchestration: ", resp.content)
         raise ResponseAsException(resp.content, resp.status_code)
 
