@@ -1,16 +1,17 @@
 import io
 import json
+import os
 from typing import Union
 
 import requests
-import os
 from PIL import Image
 
 from export_collections.exceptions.InvalidFieldTypeException import InvalidFieldTypeException
 from export_collections.exceptions.NotJsonRequestException import NotJsonRequestException
 from global_exception.exceptions.ResponseAsException import ResponseAsException
 
-def get_nuel_url():
+
+def get_video_processing_url():
     if 'INSIDE_DOCKER_CONTAINER' in os.environ:
         return os.environ['VIDEO_PROCESSING_SERVICE_URL']
     return "http://localhost:8083"
@@ -80,7 +81,7 @@ def call_video_processing_service(per_image_duration: Union[int, float],
     files = prepare_list_of_bytes_to_be_sent_in_http_request(images)
 
     response = requests.post(
-        url=get_nuel_url() + '/submit-video',
+        url=get_video_processing_url() + '/submit-video',
         data={
             "per_image_duration": str(per_image_duration),
             "transition_duration": str(transition_duration),
@@ -115,7 +116,7 @@ def parse_json_request(req):
     
 def download_get_token(request, token):
     response = requests.get(
-    url=get_nuel_url() + '/download/' + token,
+    url=get_video_processing_url() + '/download/' + token,
     headers={'Content-Type': 'video/mp4'}
     )
     return response
@@ -123,7 +124,7 @@ def download_get_token(request, token):
 
 def status_get_token(request, token):
     response = requests.get(
-        url=get_nuel_url() + '/check-status/' + token,
+        url=get_video_processing_url() + '/check-status/' + token,
         headers={'Content-Type': 'application/json'}
     )
     data = response.json()
