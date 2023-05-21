@@ -43,8 +43,8 @@
             const {id, name, owner, images, reportedCount} = collection;
             const imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
             console.log(id, name, imageThumbnail)
-
-            newReportCollectionCard(id, reportedCount, owner, name, imageThumbnail, container);
+            const urls = `<%= urls.admin.detailReportedCollectionPage() %>`
+            newReportCollectionCard(urls, id, reportedCount, owner, name, imageThumbnail, container);
         }
 
     });

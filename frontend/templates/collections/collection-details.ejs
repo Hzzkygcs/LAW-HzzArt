@@ -64,19 +64,17 @@
             </div>
             <div class="flex bg-red-900 h-20 bottom-0">
                 <div class="bg-neutral-800 flex w-96  items-center justify-center ...">
-                    <h2 class="ml-3 font-bold text-center text-2xl text-white line-clamp-1" title="New York ">
-                        report
-                    </h2>
                     <!-- Modal toggle -->
-                    <div class="mt-1 inline-flex items-center">
-                        <a href="#" data-modal-target="defaultModal" data-modal-toggle="defaultModal" class="w-14 flex items-center font-medium text-white-800 block text-white
-                        hover:bg-gray-400 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-2 py-2.5 text-center
-                        ">
+                    <a href="#" data-modal-target="reportModal" data-modal-toggle="reportModal" class="w-100 flex items-center font-medium text-white-800 block text-white hover:bg-red-400 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-2 py-1 text-center">
+                        <div class="mt-1 inline-flex items-center">
+                            <h2 class="font-bold text-2xl text-white show-on-hover" title="New York">
+                                REPORT
+                            </h2>
                             <svg class="ml-2 w-6 h-6 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 480 512" stroke-width="1.5" stroke="currentColor">
                                 <path d="M48 24C48 10.7 37.3 0 24 0S0 10.7 0 24V64 350.5 400v88c0 13.3 10.7 24 24 24s24-10.7 24-24V388l80.3-20.1c41.1-10.3 84.6-5.5 122.5 13.4c44.2 22.1 95.5 24.8 141.7 7.4l34.7-13c12.5-4.7 20.8-16.6 20.8-30V66.1c0-23-24.2-38-44.8-27.7l-9.6 4.8c-46.3 23.2-100.8 23.2-147.1 0c-35.1-17.6-75.4-22-113.5-12.5L48 52V24zm0 77.5l96.6-24.2c27-6.7 55.5-3.6 80.4 8.8c54.9 27.4 118.7 29.7 175 6.8V334.7l-24.4 9.1c-33.7 12.6-71.2 10.7-103.4-5.4c-48.2-24.1-103.3-30.1-155.6-17.1L48 338.5v-237z"></path>
                             </svg>
-                        </a>
-                    </div>
+                        </div>
+                    </a>
                 </div>
 
                 <div class="bg-neutral-800 w-4/6 flex items-center justify-center ...">
@@ -125,6 +123,17 @@
         nav#navbar{
             position: static!important;
         }
+
+        .show-on-hover {
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        a:hover .show-on-hover {
+            opacity: 1;
+        }
+
+
     </style>
 
     <%- include(urls.footer_navbar.footer(), locals) %>
