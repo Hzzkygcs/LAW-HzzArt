@@ -52,7 +52,7 @@
         for (const collection of collections) {
             const {id, likes, comments, name, images} = collection;
             const imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
-            console.log(id, name, imageThumbnail,"qa")
+            console.log(id, name, imageThumbnail)
 
             newCollectionCard(id, likes, comments, name, imageThumbnail, null, container, true);
         }
