@@ -61,7 +61,7 @@ async function getAnyHealthyServiceHostName(serviceName, fallback, trailingSlash
     try{
         result = await getAllHealthyServiceUrl(serviceName);
     }catch (e) {
-        console.trace(e);
+        console.log(e.message);  // consul err
         result = [];
     }
     console.log(`All healthy service for ${serviceName}: ${JSON.stringify(result)}`)
