@@ -58,6 +58,13 @@
                    font-bold text-center text-base md:text-lg text-gray-800 line-clamp-1" title="New York">
             Statue of Liberty
           </h2>
+          <h4 class="collection-owner-by text-center text-sm text-gray-600 line-clamp-1" title="New York">
+            owner:
+            <span class="collection-owner
+                font-bold">
+              John Doe
+            </span>
+          </h4>
         </div>
       </div>
     </a>
@@ -87,7 +94,7 @@
 
 <script>
   function newCollectionCard(collectionId, numOfLike, numOfComments, name,
-                             photoUrl, parent=null, showEditBtn=false) {
+                             photoUrl, collectionOwner=null, parent=null, showEditBtn=false) {
     const template = $("#template-card-collections");
     const ret = $(template.html());
     ret.attr("id", `collection-${collectionId}`);
@@ -96,12 +103,17 @@
     else
       ret.find(".edit-btn").on("click", (e) => gotoEditPageCollectionCard(e, collectionId));
 
+    if(collectionOwner != null)
+      ret.find(".collection-owner").text(collectionOwner);
+    else
+        ret.find(".collection-owner-by").addClass("hidden");
     const hrefElement = ret.find(".click-url");
     hrefElement.attr('href', hrefElement.attr('href') + collectionId.toString());
     ret.find(".num-of-likes").text(numOfLike.toString());
     ret.find(".num-of-comments").text(numOfComments.toString());
     ret.find(".collection-name").text(name);
     ret.find(".collection-photo").attr("src", photoUrl);
+
 
     if (parent != null)
       ret.appendTo(parent);
