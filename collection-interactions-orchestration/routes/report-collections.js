@@ -22,6 +22,7 @@ route.post("/", async (req, res) => {
     );
     res.send(responseAdminManagement);
 });
+
 route.post("/ban-collection", async (req, res) => {
     const jwt = req.get(process.env.JWT_TOKEN_HEADER_NAME);
     await getUsernameFromJWT(jwt);
