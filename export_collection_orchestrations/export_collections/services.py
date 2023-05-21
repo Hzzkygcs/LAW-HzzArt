@@ -15,7 +15,10 @@ from global_exception.exceptions.ResponseAsException import ResponseAsException
 
 def get_video_processing_url():
     if 'INSIDE_DOCKER_CONTAINER' in os.environ:
-        return os.environ['VIDEO_PROCESSING_SERVICE_URL']
+        return choice([
+            os.environ['VIDEO_PROCESSING_SERVICE_URL'],
+            os.environ['VIDEO_PROCESSING_SERVICE_URL_2'],
+        ])
     ret = choice(("http://localhost:8083", "http://localhost:7073"))
     print(ret)
     return ret

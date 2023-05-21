@@ -19,6 +19,7 @@ x-environment: &env
 
   VIDEO_PROCESSING_SERVICE_PORT: 8083
   VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
+  VIDEO_PROCESSING_SERVICE_URL_2: "http://video-processing-service:8083"
 
   COLLECTION_INTERACTIONS_ORCHESTRATION_PORT: 8084
   COLLECTION_INTERACTIONS_ORCHESTRATION_NAME: "collection-orchestration"
@@ -159,7 +160,7 @@ services:
     depends_on:
       - login-orchestration
     volumes:
-      - "./like-comment-service/pip-cache:/pip-cache"
+      - "./like_comment_service/pip-cache:/pip-cache"
     environment:
       <<: *env
 
