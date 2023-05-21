@@ -24,7 +24,7 @@ route.post("/", async (req, res) => {
         userWithTheUsername.isBan = false;
     }
 
-    await ReportedCollection.deleteOne({owner: req.body.username});
+    await ReportedCollection.deleteMany({owner: req.body.username});
     await userWithTheUsername.save();
     res.send(userWithTheUsername.getObjectRepresentation());
 });

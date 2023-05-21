@@ -17,7 +17,10 @@
             <!-- Left Side -->
             <div class="w-full md:w-3/12 md:mx-2">
                 <!-- Report Card -->
-                <div class="bg-white p-3 border-gray-700">
+                <div href="" class="click-url
+                        not-draggable relative inline-block duration-300 ease-in-out
+                        transition-transform transform hover:-translate-y-2 w-full
+                        bg-white p-3 border-gray-700">
                     <%- include("-reported-card.ejs", locals ); %>
                     <div class="container-image overflow-hidden">
                         Loading...
@@ -90,22 +93,23 @@
 </html>
 
 <script>
-  var collectionId = <%= req.query.id ?? -1 %>;
-  var ownerCollection;
-  if (collectionId === -1) {
+  let _collectionId = `<%= req.query.id ?? -1 %>`;
+  let _ownerCollection;
+  if (_collectionId === '-1') {
     window.location.href = "/";
   }
   else {
       (async function (){
-            const collection = await get("<%- urls.collection_interactions_orchestration.getSpecificCollection(req.query.id) %>",{});
+            const collection = await get(`<%- urls.collection_interactions_orchestration.getSpecificCollection(req.query.id) %>`,{});
             const container = $(".container-image");
             container.empty();
             const reportsLength = collection.reports.length;
             const {id, name, owner, images} = collection;
-            ownerCollection = owner;
+            _ownerCollection = owner;
             const imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
             console.log(id, name, imageThumbnail)
-            newReportCollectionCard(id, reportsLength, owner, name, imageThumbnail, container);
+            const urls = `<%= urls.collections.collectionDetailsPage() %>`;
+            newReportCollectionCard(urls, id, reportsLength, owner, name, imageThumbnail, container);
 
             const reasonContainer = $(".container-reason");
             reasonContainer.empty();
@@ -119,30 +123,30 @@
     }
 
     $(".reject-button").click(async function () {
-      console.log("reject button clicked: ", collectionId);
+      console.log("reject button clicked: ", _collectionId);
       const response = await post(
-          "<%- urls.collection_interactions_orchestration.rejectReportCollection() %>", {
-          collectionId: collectionId.toString()
+          `<%- urls.collection_interactions_orchestration.rejectReportCollection() %>`, {
+          collectionId: _collectionId.toString()
       });
       console.log(response);
       window.location.href = "/";
     });
 
     $(".ban-collection").click(async function () {
-        console.log("ban collection button clicked: ", collectionId);
+        console.log("ban collection button clicked: ", _collectionId);
         const response = await post(
-            "<%- urls.collection_interactions_orchestration.sendBanCollection() %>", {
-            collectionId: collectionId.toString()
+            `<%- urls.collection_interactions_orchestration.sendBanCollection() %>`, {
+            collectionId: _collectionId.toString()
         });
         console.log(response);
         window.location.href = "/";
     });
 
     $(".ban-account-owner").click(async function () {
-        console.log("ban account owner button clicked: ", ownerCollection);
+        console.log("ban account owner button clicked: ", _ownerCollection);
         const response = await post(
-            "<%- urls.collection_interactions_orchestration.sendBanAccountOwner() %>", {
-            username: ownerCollection
+            `<%- urls.collection_interactions_orchestration.sendBanAccountOwner() %>`, {
+            username: _ownerCollection
         });
         console.log(response);
         window.location.href = "/";

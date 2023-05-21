@@ -77,12 +77,13 @@ const urls = {
         myCollectionsPage: () => `${urls.collections.collections()}/my-collections.html`,
         // AI Art collection service
         artCollectionService: () => `/art-collection-service`,
+        myCollectionsCreateCollections: () => `${urls.collections.artCollectionService()}/collections`,
         myCollectionsGetCollections: () => `${urls.collections.artCollectionService()}/collections`,
         myCollectionsGetImage: () => `${urls.collections.artCollectionService()}/collections/image/`,
+        myCollectionsDeleteImage: () => `${urls.collections.artCollectionService()}/collections/delete-image/`,
         myCollectionsSetName: () => `${urls.collections.artCollectionService()}/collections/`,
 
         likeCommentService: () => `/like-comment-service`,
-        getLikeCommentCollections: () => `${urls.collections.likeCommentService()}/like-comment/get-posts/`,
 
         editCollectionsPage: () => `${urls.collections.collections()}/edit-collections.html`,
 
@@ -90,14 +91,21 @@ const urls = {
         popularCollectionsPage: () => `${urls.collections.collections()}/popular-collections.html`,
         addImagePage: () => `${urls.collections.collections()}/generator.html`,
         addImageToCollectionPage: () => `${urls.collections.collections()}/generated-image.html`,
-        collectionDetailsPage: () => `${urls.collections.collections()}/collection-details.html`,
         userDownloadPage: () => `${urls.collections.collections()}/user-download-page.html`,
+
+        collectionDetailsJs: () => `${urls.collections.collections()}/collection-details.js`,
+        collectionDetailsPage: () => `${urls.collections.collections()}/collection-details.html`,
     },
     video: {
-      videoProgress:   () => '/video/video-progress.html',
+        component: {},
+        videoProgress:   () => '/video/video-progress.html',
+        getAllVideoProgressOfAnUser:   () => '/export-collection-orchestrations/export-collections/check/user',
+        getEntireVideoProgress:   () => '/export-collection-orchestrations/export-collections/check',
+        multipleDownloadProgressJs: () => '/multiple-download-progress/multiple-download-progress.js',
     },
 
     collection_interactions_orchestration: {
+        getMyCollections: () => `${collectionInteractionsOrchestration()}/my-collections`,
         getPopularCollections: () => `${collectionInteractionsOrchestration()}/popular-collections`,
         reportedCollectionsGetCollections: () => `${collectionInteractionsOrchestration()}/reported-collections`,
         getSpecificCollection: (collectionId) => `${collectionInteractionsOrchestration()}/reported-collections/${collectionId}`,

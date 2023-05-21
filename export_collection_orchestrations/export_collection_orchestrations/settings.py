@@ -10,9 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
+from pathlib import Path
 
 import djongo
-from pathlib import Path
 
 from export_collection_orchestrations.exceptions.UnconfiguredEnvironment import UnconfiguredEnvironment
 
@@ -90,9 +90,7 @@ WSGI_APPLICATION = "export_collection_orchestrations.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-if 'INSIDE_DOCKER_CONTAINER' not in os.environ:
-    os.environ['MONGO_DATABASE_HOST_URL'] = 'asdfghjkl'
-print("Database: ", required_env("MONGO_DATABASE_HOST_URL"))
+
 
 DATABASES = {
     # still fail
@@ -104,10 +102,22 @@ DATABASES = {
     #     }
     # }
 
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': '60LD48iYfhQcXVD0',
+        'HOST': 'db.ahmayzjnvlmvdhpaxisv.supabase.co',
+        'PORT': '5432',
+        'OPTIONS': {
+            'options': '-c search_path=likecomment,public'
+        },
+    },
+
+    # "default": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": BASE_DIR / "db.sqlite3",
+    # }
 }
 
 

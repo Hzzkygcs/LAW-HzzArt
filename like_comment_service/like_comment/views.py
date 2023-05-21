@@ -15,13 +15,15 @@ from .services import get_collection_information, parse_json_request, get_userna
 # Create your views here.
 @csrf_exempt
 @require_GET
-def get_collection_information_view(_req, collection_id):
-    data = get_collection_information(collection_id)
+def get_collection_information_view(req, collection_id):
+    username_optional = get_username(req, False)
+    data = get_collection_information(collection_id, username=username_optional)
     return JsonResponse(data, status=status.HTTP_200_OK)
 
 @csrf_exempt
 @require_POST
 def get_multiple_collection_information_view(req):
+    username_optional = get_username(req, False)
     json_data = parse_json_request(req)
     InvalidFieldTypeException.assert_correct_type('collection_ids', json_data, list)
 
@@ -29,7 +31,7 @@ def get_multiple_collection_information_view(req):
 
     ret = []
     for collection_id in collection_ids:
-        ret.append(get_collection_information(collection_id))
+        ret.append(get_collection_information(collection_id, username=username_optional))
     return JsonResponse(ret, safe=False, status=status.HTTP_200_OK)
 
 
@@ -64,14 +66,11 @@ def comment(req, post_id):
     comment_list = get_collection_comments(post_id)
     return JsonResponse({'response': comment_list}, status=status.HTTP_200_OK)
 
-
 @csrf_exempt
 @require_GET
-def get_comments_of_a_collection(_req, post_id):
-    post = Collections.get_or_create(post_id)
-    comment_list = post.comment_set.all().order_by('comment_id').values()[::1]
-
-    return JsonResponse({"response": list(comment_list)}, status=status.HTTP_200_OK)
+def get_comments_of_a_collection_view(_req, post_id):
+    comment_list = get_collection_comments(post_id)
+    return JsonResponse({"response": comment_list}, status=status.HTTP_200_OK)
 
 
 @require_GET

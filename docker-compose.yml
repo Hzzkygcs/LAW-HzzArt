@@ -9,25 +9,41 @@ x-environment: &env
   FRONTEND_SERVICE_PORT: 8080
   FRONTEND_SERVICE_NAME: "frontend-service"
   FRONTEND_SERVICE_URL: "http://frontend-service:8080"
+
   AUTHENTICATION_SERVICE_PORT: 8081
   AUTHENTICATION_SERVICE_NAME: "authentication-service"
+
   ADMIN_SERVICE_PORT: 8082
   ADMIN_SERVICE_NAME: "admin-service"
   ADMIN_SERVICE_URL: "http://admin-service:8082"
+
   VIDEO_PROCESSING_SERVICE_PORT: 8083
+  VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
+  VIDEO_PROCESSING_SERVICE_URL_2: "http://video-processing-service-2:7073"
+
   COLLECTION_INTERACTIONS_ORCHESTRATION_PORT: 8084
   COLLECTION_INTERACTIONS_ORCHESTRATION_NAME: "collection-orchestration"
+
   LOGIN_ORCHESTRATION_PORT: 8085
   LOGIN_ORCHESTRATION_NAME: "login-orchestration"
   LOGIN_ORCHESTRATION_URL: "http://login-orchestration:8085"
+
   ART_COLLECTIONS_PORT: 8086
   ART_COLLECTIONS_NAME: "art-collection-service"
   ART_COLLECTIONS_URL: "http://art-collection-service:8086"
 
+  LIKE_COMMENT_SERVICE_PORT: 8087
+  LIKE_COMMENT_SERVICE_NAME: "like-comment-service"
+  LIKE_COMMENT_SERVICE_URL: "http://like-comment-service:8087"
+
+  EXPORT_COLLECTION_ORCHESTRATIONS_PORT: 8088
+  EXPORT_COLLECTION_ORCHESTRATIONS_NAME: "export-collection-orchestrations"
+  EXPORT_COLLECTION_ORCHESTRATIONS_URL: "http://export-collection-orchestrations:8088"
+
   AUTHENTICATION_SERVICE_URL: "http://authentication-service:8081"
-  VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
   COLLECTION_ORCHESTRATION_URL: "http://collection-orchestration:8084"
   HZZART_NAVIGATOR_SERVER: "https://hzzart-navigator-server.herokuapp.com"
+
 
 
 
@@ -86,7 +102,22 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8083:8083"
-    environment: *env
+    environment:
+      <<: *env
+      MY_PORT: 8083
+    volumes:
+      - "./video-processor:/app-codes"
+      - "/app-codes/node_modules"
+
+  video-processing-service-2:
+    build:
+      context: ./video-processor
+      dockerfile: Dockerfile
+    ports:
+      - "7073:7073"
+    environment:
+      <<: *env
+      VIDEO_PROCESSING_SERVICE_PORT: 7073
     volumes:
       - "./video-processor:/app-codes"
       - "/app-codes/node_modules"
@@ -129,7 +160,7 @@ services:
     depends_on:
       - login-orchestration
     volumes:
-      - "./like-comment-service/pip-cache:/pip-cache"
+      - "./like_comment_service/pip-cache:/pip-cache"
     environment:
       <<: *env
 

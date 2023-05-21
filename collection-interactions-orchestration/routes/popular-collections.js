@@ -1,6 +1,8 @@
 const express = require("express");
 const {getUsernameFromJWT} = require("../modules/util/account/get-username-from-JWT");
-const {getAllCollections} = require("../modules/util/collections/get-all-collections");
+const {getAllCollections,getAllCollectionsWithLikeComments} = require("../modules/util/collections/get-all-collections");
+const {checkBanCollections} = require("../modules/util/admin-service/check-ban-collections");
+const {checkBanAccounts} = require("../modules/util/admin-service/check-ban-account");
 const route = express.Router();
 
 route.get("/", async (req, res) => {
@@ -8,9 +10,44 @@ route.get("/", async (req, res) => {
 
     await getUsernameFromJWT(jwt);
 
-    let allCollections = await getAllCollections();
+    let posts = await getAllCollectionsWithLikeComments();
+    let allCollections = await getAllCollections(jwt);
 
-    res.send(allCollections);
+    let bannedCollections = await checkBanCollections();
+    let bannedAccounts = await checkBanAccounts();
+    console.log("bannedAccounts");
+    console.log(bannedAccounts);
+    let updatedCollections = allCollections.collections.filter(collection => !bannedCollections.includes(collection.id));
+    console.log("updatedCollections");
+    console.log(updatedCollections);
+
+    updatedCollections = updatedCollections.filter(account => !bannedAccounts.includes(account.owner));
+
+    const aggregatedData = updatedCollections.map(collection => {
+        const { id, name, owner, images } = collection;
+        const matchingPost = posts.find(post => post.post_id === id);
+        const likes = matchingPost ? matchingPost.post_likes : 0;
+        const comments = matchingPost ? matchingPost.post_comments : 0;
+
+        return {
+            id,
+            name,
+            owner,
+            images,
+            likes,
+            comments
+        };
+    });
+
+    const aggregatedDataSorted = aggregatedData.sort((a, b) => {
+        if (a.likes !== b.likes) {
+            return b.likes - a.likes; // Sort by likes in descending order
+        } else {
+            return b.comments - a.comments; // Sort by comments in descending order if likes are the same
+        }
+    });
+    console.log(aggregatedDataSorted);
+    res.send(aggregatedDataSorted);
 });
 
 module.exports.route = route;

@@ -26,9 +26,16 @@
 </template>
 
 <script>
-    function spawnNewImageCard(imageUrl, parent = null) {
+    function spawnNewImageCard(imageId, imageUrl, parent = null) {
+        const deleteImageUrl = joinUrl(
+            `<%= urls.collections.myCollectionsDeleteImage() %>`, `${imageId}`
+        );
         const ret = $($(".collection-image-template").html());
         ret.find(".collection-image").attr('src', imageUrl);
+        ret.find(".delete-button").on('click', async function () {
+            await delete_request(deleteImageUrl, {});
+            ret.remove();
+        });
 
         if (parent != null)
             $(parent).append(ret);

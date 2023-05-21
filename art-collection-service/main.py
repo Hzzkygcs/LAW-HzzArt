@@ -136,36 +136,16 @@ def get_owned_collection(request: Request, db: Session = Depends(get_db)):
     username = get_username(response)
     
     db_collection = db.query(models.ArtCollection).filter(models.ArtCollection.owner == username).all()
-    owned_collection = []
-    
-    if db_collection is not None:
-        for collection in db_collection:
-            images = []
-            db_images = db.query(models.Image).filter(models.Image.collection_id == collection.id).all()
-            
-            if db_images is not None:
-                for image in db_images:
-                    images.append(image.id)
-            
-            response_data = {
-                'id': collection.id,
-                'name': collection.name,
-                'owner': collection.owner,
-                'images': images
-            }
-            
-            owned_collection.append(response_data)
-    
-    return {'collections' : owned_collection}
+    return getJsonableCollections(db, db_collection)
+
 
 @app.post("/collections/search")
-def get_collection_by_name(request: Request, promnt: schemas.GetCollectionByName, db: Session = Depends(get_db)):
-    
-    jwt_token = request.headers.get('x-jwt-token')
-    validate_jwt(jwt_token)
-    
-    db_collection = db.query(models.ArtCollection).filter(models.ArtCollection.name == promnt.name).all()
-    
+def get_collection_by_name(request: Request, prompt: schemas.GetCollectionByName, db: Session = Depends(get_db)):
+    db_collection = db.query(models.ArtCollection).filter(models.ArtCollection.name.contains(prompt.name)).all()
+    return getJsonableCollections(db, db_collection)
+
+
+def getJsonableCollections(db, db_collection):
     collections = []
     if db_collection is not None:
         for collection in db_collection:
@@ -185,7 +165,7 @@ def get_collection_by_name(request: Request, promnt: schemas.GetCollectionByName
             
             collections.append(response_data)
     
-    return {'collections' : collections}
+    return {'collections': collections}
 
 @app.get("/collections/{collection_id}")
 def get_collection(request: Request, collection_id: int, db: Session = Depends(get_db)):
@@ -238,7 +218,8 @@ def edit_collection(request: Request, collection_id: int, collection: schemas.Cr
 def add_image_to_collection(request: Request, collection_id: int, arts: schemas.AddImageToCollectionRequest, db: Session = Depends(get_db)):
     
     jwt_token = request.headers.get('x-jwt-token')
-    validate_jwt(jwt_token)
+    response = validate_jwt(jwt_token)
+    username = get_username(response)
     
     db_collection = db.query(models.ArtCollection).filter(models.ArtCollection.id == collection_id).first()
     if db_collection is None:
@@ -279,6 +260,10 @@ def get_image(request: Request, image_id: int, db: Session = Depends(get_db)):
     
     image_decode_bytes = base64.b64decode(db_image.url)
     return Response(content=image_decode_bytes, media_type="image/png")
+
+@app.get("/health", status_code = 200)
+def health_consul(request: Request, image_id: int, db: Session = Depends(get_db)):
+    return Response(content="ok")
 
 
 def run_in_new_thread(func, args: tuple):

@@ -7,6 +7,9 @@ async function put(url, data, {isJson=true, contentType=null}={}){
 async function get(url, data, {contentType=null}={}){
     return request("GET", url, data, {isJson: false,contentType: contentType})
 }
+async function delete_request(url, data, {contentType=null}={}){
+    return request("DELETE", url, data, {isJson: false,contentType: contentType})
+}
 
 
 

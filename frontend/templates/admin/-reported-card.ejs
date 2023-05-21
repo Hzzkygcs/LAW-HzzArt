@@ -1,16 +1,15 @@
 <template id="template-card-collections">
   <div class="relative mx-auto w-full">
-    <a href="<%= urls.admin.detailReportedCollectionPage() %>"
+    <a href=""
        class="click-url
         relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
       <div class="shadow p-4 rounded-lg bg-white">
         <div class="flex justify-center relative rounded-lg overflow-hidden h-52">
           <div class="transition-transform duration-500 transform ease-in-out hover:scale-110 w-full">
             <div class="absolute inset-0 bg-black opacity-10"></div>
-            <img class="collection-photo"
-                 alt=""
-                 class="rounded-t-lg h-60 w-full object-cover"
-            />
+            <img alt=""
+                 class="collection-photo rounded-t-lg h-60 w-full object-cover"
+             src=""/>
           </div>
           <div class="absolute flex justify-center bottom-0 mb-1">
             <div class="flex bg-white px-4 py-1 space-x-5 rounded-lg overflow-hidden shadow">
@@ -44,9 +43,7 @@
 </template>
 
 <script>
-  var collectionId = <%= req.query.id ?? -1 %>;
-
-  function newReportCollectionCard(collectionId, numOfReport, owner, name, photoUrl, parent=null) {
+  function newReportCollectionCard(urls, collectionId, numOfReport, owner, name, photoUrl, parent=null) {
     if (collectionId == null || collectionId < 0)
       return alert("collectionId Not Provided");
 
@@ -55,7 +52,7 @@
     ret.attr("id", `collection-${collectionId}`);
 
     const hrefElement = ret.find(".click-url");
-    hrefElement.attr('href', hrefElement.attr('href') +'?id='+ collectionId.toString());
+    hrefElement.attr('href', urls +'?id='+ collectionId.toString());
     ret.find(".num-of-report").text(numOfReport.toString());
     ret.find(".collection-name").text(name);
     ret.find(".collection-owner").text(owner);
