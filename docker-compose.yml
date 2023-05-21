@@ -129,9 +129,9 @@ services:
         dockerfile: Dockerfile
     ports:
         - "8084:8084"
-    depends_on:
-      - admin-service
-      - login-orchestration
+#    depends_on:
+#      - admin-service
+#      - login-orchestration
 #      - art-collections
     environment:
       <<: *env

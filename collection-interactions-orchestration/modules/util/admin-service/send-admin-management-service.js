@@ -2,7 +2,7 @@ const {getAdminManagerUrl} = require("../../../URLs/get-admin-manager-url");
 const {makeRequest} = require("../../external-call/make-request");
 
 async function sendAdminManagementService(collectionId, reportedBy, ownerCollection, reason) {
-    const url = getAdminManagerUrl("/admin/reported-collection");
+    const url = await getAdminManagerUrl("/admin/reported-collection");
     let response = await makeRequest("post",
         url,
         {

@@ -2,7 +2,7 @@ const {getAdminManagerUrl} = require("../../../URLs/get-admin-manager-url");
 const {makeRequest} = require("../../external-call/make-request");
 
 async function sendBanAccount(username) {
-    const url = getAdminManagerUrl("/admin/ban-account");
+    const url = await getAdminManagerUrl("/admin/ban-account");
     let response = await makeRequest("post",
         url,
         {
@@ -17,7 +17,7 @@ async function sendBanAccount(username) {
 }
 
 async function reportAcceptReject(collectionId,isBan) {
-    const url = getAdminManagerUrl("/admin/ban-collection");
+    const url = await getAdminManagerUrl("/admin/ban-collection");
     let response = await makeRequest("post",
         url,
         {
