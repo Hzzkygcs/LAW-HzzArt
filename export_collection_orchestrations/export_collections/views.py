@@ -1,16 +1,13 @@
-from django.shortcuts import render
-from django.http import response, HttpResponse, JsonResponse, request, StreamingHttpResponse
+import json
 import mimetypes
-from .exceptions.InvalidFieldTypeException import InvalidFieldTypeException
-from .models import *
-import json, requests
-from rest_framework import status
+
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
-import io
+from rest_framework import status
 
-from .services import extract_export_collection_request_data, get_collection_as_dict, get_nuel_url, \
-    prepare_list_of_bytes_to_be_sent_in_http_request, call_video_processing_service, download_get_token, \
+from .services import extract_export_collection_request_data, get_collection_as_dict, call_video_processing_service, \
+    download_get_token, \
     status_get_token
 
 
