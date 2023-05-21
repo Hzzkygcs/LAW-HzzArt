@@ -1,5 +1,4 @@
 FROM node:18
-RUN apt-get -y install rsyslog
 
 LABEL authors="valordra"
 

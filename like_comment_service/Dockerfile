@@ -1,5 +1,4 @@
 FROM python:3.9-slim
-RUN apt-get -y install rsyslog
 
 WORKDIR /app
 COPY requirements.txt .

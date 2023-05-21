@@ -1,6 +1,6 @@
 # FROM jrottenberg/ffmpeg
 FROM node:18
-RUN apt-get -y install rsyslog
+
 
 RUN ["mkdir", "/install"]
 
