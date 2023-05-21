@@ -19,7 +19,7 @@ x-environment: &env
 
   VIDEO_PROCESSING_SERVICE_PORT: 8083
   VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
-  VIDEO_PROCESSING_SERVICE_URL_2: "http://video-processing-service:8083"
+  VIDEO_PROCESSING_SERVICE_URL_2: "http://video-processing-service-2:7073"
 
   COLLECTION_INTERACTIONS_ORCHESTRATION_PORT: 8084
   COLLECTION_INTERACTIONS_ORCHESTRATION_NAME: "collection-orchestration"
@@ -114,10 +114,10 @@ services:
       context: ./video-processor
       dockerfile: Dockerfile
     ports:
-      - "7073:8083"
+      - "7073:7073"
     environment:
       <<: *env
-      MY_PORT: 7073
+      VIDEO_PROCESSING_SERVICE_PORT: 7073
     volumes:
       - "./video-processor:/app-codes"
       - "/app-codes/node_modules"

@@ -42,11 +42,13 @@ class ExportToken(models.Model):
         return obj.video_processing_url
 
     @classmethod
-    def get_all_not_expired(cls):
-        return cls.objects.filter(exp_date__gt=Now())
+    def get_all_not_expired_tokens(cls):
+        return cls.objects.filter(exp_date__gt=Now()).order_by('-exp_date')
 
     @classmethod
     def get_all_tokens_of_a_user_thats_not_expired(cls, username):
-        return cls.objects.filter(exp_date__gt=Now(), username=username)
+        return cls.objects.filter(exp_date__gt=Now(), username=username).order_by('-exp_date')
+
+
 
 

@@ -9,6 +9,7 @@ import requests
 from PIL import Image
 
 from export_collections.exceptions.InvalidFieldTypeException import InvalidFieldTypeException
+from export_collections.exceptions.NotAnAdminException import NotAnAdminException
 from export_collections.exceptions.NotJsonRequestException import NotJsonRequestException
 from global_exception.exceptions.ResponseAsException import ResponseAsException
 
@@ -36,7 +37,7 @@ def get_login_orchestration_url():
     return "http://localhost:8085"
 
 
-def get_username(req):
+def get_username(req, assert_admin=False):
     # Retrieve the JWT token from the request headers
     jwt_token = req.META.get('HTTP_X_JWT_TOKEN')
 
@@ -53,6 +54,8 @@ def get_username(req):
 
     data = resp.json()
     username = data['username']
+    if assert_admin and not data['admin']:
+        raise NotAnAdminException(username)
     return username
 
 
@@ -166,12 +169,14 @@ def status_get_token(video_processing_url, token):
     )
     if response.status_code != 200:
         raise ResponseAsException(response.content, status_code=response.status_code)
+
     data = response.json()
-    percentageTotal = data['percentageTotal']
-    percentagePhase = data['percentagePhase']
-    phase = data['phase']
-    tokenName = data['tokenName']
-    totalFrames = data['totalFrames']
+    return data
+    # percentageTotal = data['percentageTotal']
+    # percentagePhase = data['percentagePhase']
+    # phase = data['phase']
+    # tokenName = data['tokenName']
+    # totalFrames = data['totalFrames']
     
-    return percentageTotal,percentagePhase, phase, \
-        tokenName, totalFrames
+    # return percentageTotal,percentagePhase, phase, \
+    #     tokenName, totalFrames
