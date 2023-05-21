@@ -46,26 +46,58 @@ async function getConsulClient(thisServicePort, thisServiceName) {
             timeout: '5s',
         },
     });
+    console.log("Registered to Consul successfully");
     return consul;
 }
 module.exports.getConsulClient = getConsulClient;
 
 
-async function getAnyHealthyServiceHostName() {  // TODO
-}
 
-async function getAllHealthyServiceHostName(serviceName) {
+async function getAnyHealthyServiceHostName(serviceName, fallback, trailingSlash=false) {  // TODO
+    let result;
+    try{
+        result = await getAllHealthyServiceUrl(serviceName);
+    }catch (e) {
+        console.trace(e);
+        result = [];
+    }
+    console.log(`All healthy service for ${serviceName}: ${JSON.stringify(result)}`)
+
+    let randomChoosen = fallback;
+    if (result.length !== 0)
+        randomChoosen = result[Math.floor(Math.random() * result.length)];
+
+    if (trailingSlash && !randomChoosen.endsWith('/'))
+        randomChoosen += '/';
+    if (!trailingSlash && randomChoosen.endsWith('/'))
+        randomChoosen = randomChoosen.substring(0, randomChoosen.length-1);
+
+    return randomChoosen;
+}
+module.exports.getAnyHealthyServiceHostName = getAnyHealthyServiceHostName;
+
+async function getAllHealthyServiceUrl(serviceName) {
     const consul = await getConsulSingleton();
-    const members = await consul.health.service({ service: 'authentication-service', passing: true });
+    if (consul == null)
+        return [];
+    const valid = /^[a-zA-Z\-0-9]+$/.test(serviceName);
+    if (!valid){
+        for (let i = 0; i < 5; i++) {
+            console.log(`INVALID SERVICE NAME getAllHealthyServiceUrl(${serviceName})`);
+        }
+        return [];
+    }
+
+    const members = await consul.health.service({ service: serviceName, passing: true });
     const ret = [];
     for (const member of members) {
         const {Service} = member;
-        const {Address} = Service;
-        ret.push(Address);
+        const {Address, Port} = Service;
+        ret.push(`http://${Address}:${Port}`);
     }
     return ret;
 }
-module.exports.getAllHealthyServiceHostName = getAllHealthyServiceHostName;
+module.exports.getAllHealthyServiceHostName = getAllHealthyServiceUrl;
 
 
 
