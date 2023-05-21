@@ -89,6 +89,7 @@ const urls = {
         searchCollectionsPage: () => `${urls.collections.collections()}/search-result.html`,
         popularCollectionsPage: () => `${urls.collections.collections()}/popular-collections.html`,
         addImagePage: () => `${urls.collections.collections()}/generator.html`,
+        addImageToCollectionPage: () => `${urls.collections.collections()}/generated-image.html`,
         collectionDetailsPage: () => `${urls.collections.collections()}/collection-details.html`,
         userDownloadPage: () => `${urls.collections.collections()}/user-download-page.html`,
     },

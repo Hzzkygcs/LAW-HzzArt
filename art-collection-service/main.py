@@ -76,7 +76,11 @@ def get_generated_image(request: Request, token: str, db: Session = Depends(get_
     elif images == 404:
         raise HTTPException(status_code=404, detail="Token does not exist")
     
-    return {"value": images}
+    return {
+        "token": token,
+        "status": "Finished",
+        "value": images
+        }
 
 
 @app.post("/collections", status_code = 201)
