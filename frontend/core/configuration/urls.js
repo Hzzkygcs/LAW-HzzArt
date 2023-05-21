@@ -83,7 +83,6 @@ const urls = {
         myCollectionsSetName: () => `${urls.collections.artCollectionService()}/collections/`,
 
         likeCommentService: () => `/like-comment-service`,
-        getLikeCommentCollections: () => `${urls.collections.likeCommentService()}/like-comment/get-posts/`,
 
         editCollectionsPage: () => `${urls.collections.collections()}/edit-collections.html`,
 
