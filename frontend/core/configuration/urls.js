@@ -89,8 +89,10 @@ const urls = {
         searchCollectionsPage: () => `${urls.collections.collections()}/search-result.html`,
         popularCollectionsPage: () => `${urls.collections.collections()}/popular-collections.html`,
         addImagePage: () => `${urls.collections.collections()}/generator.html`,
-        collectionDetailsPage: () => `${urls.collections.collections()}/collection-details.html`,
         userDownloadPage: () => `${urls.collections.collections()}/user-download-page.html`,
+
+        collectionDetailsJs: () => `${urls.collections.collections()}/collection-details.js`,
+        collectionDetailsPage: () => `${urls.collections.collections()}/collection-details.html`,
     },
     video: {
       videoProgress:   () => '/video/video-progress.html',
