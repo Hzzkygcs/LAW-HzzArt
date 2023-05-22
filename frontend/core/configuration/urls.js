@@ -116,7 +116,6 @@ const urls = {
         getSearchCollections: () => `${collectionInteractionsOrchestration()}/search-collections`,
         reportedCollectionsGetCollections: () => `${collectionInteractionsOrchestration()}/reported-collections`,
         getSpecificCollection: (collectionId) => `${collectionInteractionsOrchestration()}/reported-collections/${collectionId}`,
-        searchCollections: () => `${collectionInteractionsOrchestration()}/search-collections`,
         rejectReportCollection: () => `${collectionInteractionsOrchestration()}/reported-collections/reject-report`,
         sendBanCollection: () => `${collectionInteractionsOrchestration()}/reported-collections/ban-collection`,
         sendBanAccountOwner: () => `${collectionInteractionsOrchestration()}/reported-collections/ban-account`,
