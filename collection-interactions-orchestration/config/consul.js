@@ -54,7 +54,7 @@ module.exports.getConsulClient = getConsulClient;
 
 
 function getInstanceId(serviceName, ipAddress) {
-    return `${serviceName}-${ipAddress}-${getRandomInt(999)}`
+    return `${serviceName}-${ipAddress}-${process.env.HOSTNAME}`
 }
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
