@@ -120,6 +120,10 @@ const urls = {
         sendBanCollection: () => `${collectionInteractionsOrchestration()}/reported-collections/ban-collection`,
         sendBanAccountOwner: () => `${collectionInteractionsOrchestration()}/reported-collections/ban-account`,
     },
+    default_image:{
+        image_url: () => 'https://png.pngtree.com/png-vector/20190820/ourmid/pngtree-no-image-vector-illustration-isolated-png-image_1694547.jpg'
+
+    }
 };
 
 module.exports.urls = urls;
