@@ -56,8 +56,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    depends_on:
-      - mongodb
+#    depends_on:
+#      - mongodb
     environment:
       <<: *env
     ports:
@@ -81,8 +81,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
-    depends_on:
-      - mongodb
+#    depends_on:
+#      - mongodb
     environment:
       <<: *env
       DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/auth-service"
@@ -93,8 +93,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8082:8082"
-    depends_on:
-      - mongodb
+#    depends_on:
+#      - mongodb
 
     environment:
       <<: *env
