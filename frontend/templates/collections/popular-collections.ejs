@@ -44,8 +44,10 @@
 
         for (const collection of collections) {
             const {id,name,owner,images,likes,comments} = collection;
-            const imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
-            console.log(id, name, imageThumbnail)
+            let imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
+            if(images.length === 0)
+                imageThumbnail = "<%= urls.default_image.image_url() %>";
+            console.log(id, name, imageThumbnail);
 
             newCollectionCard(id, likes, comments, name, imageThumbnail, owner, container, false);
         }

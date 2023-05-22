@@ -45,6 +45,7 @@
             if(images.length === 0)
                 imageThumbnail = "<%= urls.default_image.image_url() %>";
             console.log(id, name, imageThumbnail);
+
             const urls = `<%= urls.admin.detailReportedCollectionPage() %>`
             newReportCollectionCard(urls, id, reportedCount, owner, name, imageThumbnail, container);
         }

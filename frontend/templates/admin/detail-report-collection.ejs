@@ -106,8 +106,11 @@
             const reportsLength = collection.reports.length;
             const {id, name, owner, images} = collection;
             _ownerCollection = owner;
-            const imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
-            console.log(id, name, imageThumbnail)
+            let imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
+            if(images.length === 0)
+                imageThumbnail = "<%= urls.default_image.image_url() %>";
+            console.log(id, name, imageThumbnail);
+
             const urls = `<%= urls.collections.collectionDetailsPage() %>`;
             newReportCollectionCard(urls, id, reportsLength, owner, name, imageThumbnail, container);
 
