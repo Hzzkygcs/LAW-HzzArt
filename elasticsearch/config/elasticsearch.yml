@@ -17,7 +17,7 @@ xpack.license.self_generated.type: basic
 xpack.security.enabled: true
 
 ## - ssl
-xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.enabled: false
 xpack.security.transport.ssl.verification_mode: certificate
 xpack.security.transport.ssl.key: certs/elasticsearch.key
 xpack.security.transport.ssl.certificate: certs/elasticsearch.crt
