@@ -1,18 +1,21 @@
+import base64
+import json
 import threading
 
+import requests
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
-from database import SessionLocal, engine
-import asyncio
-import json
-import requests
-import utils
+
+import models
+import schemas
 import token_storage
-import models, schemas
-import base64
+import utils
+from consul_config.consul_services import initialize_consul
+from database import SessionLocal
 
 app = FastAPI()
+initialize_consul()
 
 # Dependency to get a database session
 def get_db():
