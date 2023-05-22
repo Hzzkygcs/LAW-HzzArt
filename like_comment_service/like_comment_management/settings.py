@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "like_comment",
     'global_exception',
+    'health',
 ]
 
 MIDDLEWARE = [

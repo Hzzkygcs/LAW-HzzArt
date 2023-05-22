@@ -17,7 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+import health.urls
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('like-comment/', include('like_comment.urls')),
+    path('', include(health.urls)),
 ]

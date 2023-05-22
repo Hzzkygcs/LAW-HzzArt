@@ -1,17 +1,20 @@
 import json
 import os
-import urllib
+import urllib.parse
 from os.path import join
 
 import requests
 
+from consul_config.consul_services import get_healthy_service_host_url
 from global_exception.exceptions.ResponseAsException import ResponseAsException
 from like_comment.exceptions.NotJsonRequestException import NotJsonRequestException
 from like_comment.models import Collections, Like
 
 
 def get_login_orchestration_url():
-    return os.environ['LOGIN_ORCHESTRATION_URL']
+    service_name = os.environ['LOGIN_ORCHESTRATION_NAME']
+    if_not_found = os.environ['LOGIN_ORCHESTRATION_URL']
+    return get_healthy_service_host_url(service_name, if_not_found)
 
 
 def get_username(req, login_required=True):
