@@ -243,11 +243,16 @@ def add_image_to_collection(request: Request, collection_id: int, arts: schemas.
 def delete_image(request: Request, image_id: int, db: Session = Depends(get_db)):
     
     jwt_token = request.headers.get('x-jwt-token')
-    validate_jwt(jwt_token)
+    response = validate_jwt(jwt_token)
+    username = get_username(response)
     
     db_image = db.query(models.Image).filter(models.Image.id == image_id).first()
     if db_image is None:
         raise HTTPException(status_code=404, detail="Image does not exist")
+    
+    db_collection = db.query(models.ArtCollection).filter(models.ArtCollection.id == db_image.collection_id).first()
+    if db_collection.owner != username:
+        raise HTTPException(status_code=403, detail="This image does not belong to you")
     
     db.delete(db_image)
     db.commit()
