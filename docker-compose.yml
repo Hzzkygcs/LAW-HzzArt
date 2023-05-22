@@ -1,222 +1,150 @@
-version: '3'
+version: '3.5'
 
-x-environment: &env
-  SERVICE_REGISTRY_TOKEN: "ABCDEFG"
-  ADMIN_SERVICE_TOKEN: "a90xIy6XopQkp8WNuaOFqRrg2XB6BfAYNdPJqKuIRmM0q5jyJj"
-  JWT_TOKEN_HEADER_NAME: "x-jwt-token"
-  INSIDE_DOCKER_CONTAINER: 1
+# To Join any other app setup using another network, change name and set external = true
+networks:
+  default:
+    name: elastic
+    external: false
 
-  FRONTEND_SERVICE_PORT: 8080
-  FRONTEND_SERVICE_NAME: "frontend-service"
-  FRONTEND_SERVICE_URL: "http://frontend-service:8080"
+# will contain all elasticsearch data.
+volumes:
+  elasticsearch-data:
 
-  AUTHENTICATION_SERVICE_PORT: 8081
-  AUTHENTICATION_SERVICE_NAME: "authentication-service"
-
-  ADMIN_SERVICE_PORT: 8082
-  ADMIN_SERVICE_NAME: "admin-service"
-  ADMIN_SERVICE_URL: "http://admin-service:8082"
-
-  VIDEO_PROCESSING_SERVICE_PORT: 8083
-  VIDEO_PROCESSING_SERVICE_NAME: "video-processing-service"
-  VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
-  VIDEO_PROCESSING_SERVICE_URL_2: "http://video-processing-service-2:7073"
-
-  COLLECTION_INTERACTIONS_ORCHESTRATION_PORT: 8084
-  COLLECTION_INTERACTIONS_ORCHESTRATION_NAME: "collection-orchestration"
-
-  LOGIN_ORCHESTRATION_PORT: 8085
-  LOGIN_ORCHESTRATION_NAME: "login-orchestration"
-  LOGIN_ORCHESTRATION_URL: "http://login-orchestration:8085"
-
-  ART_COLLECTIONS_PORT: 8086
-  ART_COLLECTIONS_NAME: "art-collection-service"
-  ART_COLLECTIONS_URL: "http://art-collection-service:8086"
-
-  LIKE_COMMENT_SERVICE_PORT: 8087
-  LIKE_COMMENT_SERVICE_NAME: "like-comment-service"
-  LIKE_COMMENT_SERVICE_URL: "http://like-comment-service:8087"
-
-  EXPORT_COLLECTION_ORCHESTRATIONS_PORT: 8088
-  EXPORT_COLLECTION_ORCHESTRATIONS_NAME: "export-collection-orchestrations"
-  EXPORT_COLLECTION_ORCHESTRATIONS_URL: "http://export-collection-orchestrations:8088"
-
-  AUTHENTICATION_SERVICE_URL: "http://authentication-service:8081"
-  COLLECTION_ORCHESTRATION_URL: "http://collection-orchestration:8084"
-  HZZART_NAVIGATOR_SERVER: "https://hzzart-navigator-server.herokuapp.com"
-
-
-
+secrets:
+  elasticsearch.keystore:
+    file: ./secrets/keystore/elasticsearch.keystore
+  elasticsearch.service_tokens:
+    file: ./secrets/service_tokens
+  elastic.ca:
+    file: ./secrets/certs/ca/ca.crt
+  elasticsearch.certificate:
+    file: ./secrets/certs/elasticsearch/elasticsearch.crt
+  elasticsearch.key:
+    file: ./secrets/certs/elasticsearch/elasticsearch.key
+  kibana.certificate:
+    file: ./secrets/certs/kibana/kibana.crt
+  kibana.key:
+    file: ./secrets/certs/kibana/kibana.key
+  apm-server.certificate:
+    file: ./secrets/certs/apm-server/apm-server.crt
+  apm-server.key:
+    file: ./secrets/certs/apm-server/apm-server.key
 
 services:
-  frontend-service:
+  elasticsearch:
+    image: elastdocker/elasticsearch:${ELK_VERSION}
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    depends_on:
-      - mongodb
+      context: elasticsearch/
+      args:
+        ELK_VERSION: ${ELK_VERSION}
+    restart: unless-stopped
     environment:
-      <<: *env
-    ports:
-      - "8080:8080"
+      ELASTIC_USERNAME: ${ELASTIC_USERNAME}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      ELASTIC_CLUSTER_NAME: ${ELASTIC_CLUSTER_NAME}
+      ELASTIC_NODE_NAME: ${ELASTIC_NODE_NAME}
+      ELASTIC_INIT_MASTER_NODE: ${ELASTIC_INIT_MASTER_NODE}
+      ELASTIC_DISCOVERY_SEEDS: ${ELASTIC_DISCOVERY_SEEDS}
+      ES_JAVA_OPTS: "-Xmx${ELASTICSEARCH_HEAP} -Xms${ELASTICSEARCH_HEAP} -Des.enforce.bootstrap.checks=true -Dlog4j2.formatMsgNoLookups=true"
+      bootstrap.memory_lock: "true"
     volumes:
-      - "./frontend:/code-frontend-service"
-      - "/code-frontend-service/node_modules"
-
-  nginx:
-    image: nginx:latest
+      - elasticsearch-data:/usr/share/elasticsearch/data
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./elasticsearch/config/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
+    secrets:
+      - source: elasticsearch.keystore
+        target: /usr/share/elasticsearch/config/elasticsearch.keystore
+      - source: elasticsearch.service_tokens
+        target: /usr/share/elasticsearch/config/service_tokens
+      - source: elastic.ca
+        target: /usr/share/elasticsearch/config/certs/ca.crt
+      - source: elasticsearch.certificate
+        target: /usr/share/elasticsearch/config/certs/elasticsearch.crt
+      - source: elasticsearch.key
+        target: /usr/share/elasticsearch/config/certs/elasticsearch.key
     ports:
-      - "80:80"
-    volumes:
-      - type: bind
-        source: ./nginx/nginx.conf
-        target: /etc/nginx/nginx.conf
+      - "9200:9200"
+      - "9300:9300"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 200000
+        hard: 200000
+    healthcheck:
+      test: ["CMD", "sh", "-c", "curl -sf --insecure https://$ELASTIC_USERNAME:$ELASTIC_PASSWORD@localhost:9200/_cat/health | grep -ioE 'green|yellow' || echo 'not green/yellow cluster status'"]
 
-  authentication-service:
+  logstash:
+    image: elastdocker/logstash:${ELK_VERSION}
     build:
-      context: ./authentication-service
-      dockerfile: Dockerfile
-    ports:
-      - "8081:8081"
-    depends_on:
-      - mongodb
-    environment:
-      <<: *env
-      DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/auth-service"
-
-  admin-service:
-    build:
-      context: ./admin-service
-      dockerfile: Dockerfile
-    ports:
-      - "8082:8082"
-    depends_on:
-      - mongodb
-
-    environment:
-      <<: *env
-      DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/admin-service"
-
-  video-processing-service:
-    build:
-      context: ./video-processor
-      dockerfile: Dockerfile
-    ports:
-      - "8083:8083"
-    environment:
-      <<: *env
-      MY_PORT: 8083
+      context: logstash/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    restart: unless-stopped
     volumes:
-      - "./video-processor:/app-codes"
-      - "/app-codes/node_modules"
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    secrets:
+      - source: elastic.ca
+        target: /certs/ca.crt
+    environment:
+      ELASTIC_USERNAME: ${ELASTIC_USERNAME}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      ELASTICSEARCH_HOST_PORT: https://${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}
+      LS_JAVA_OPTS: "-Xmx${LOGSTASH_HEAP} -Xms${LOGSTASH_HEAP} -Dlog4j2.formatMsgNoLookups=true"
+    ports:
+      - "5044:5044"
+      - "9600:9600"
+    healthcheck:
+      test: ["CMD", "curl", "-s" ,"-XGET", "http://127.0.0.1:9600"]
 
-  video-processing-service-2:
+  kibana:
+    image: elastdocker/kibana:${ELK_VERSION}
     build:
-      context: ./video-processor
-      dockerfile: Dockerfile
-    ports:
-      - "7073:7073"
-    environment:
-      <<: *env
-      VIDEO_PROCESSING_SERVICE_PORT: 7073
+      context: kibana/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    restart: unless-stopped
     volumes:
-      - "./video-processor:/app-codes"
-      - "/app-codes/node_modules"
+      - ./kibana/config/:/usr/share/kibana/config:ro
+    environment:
+      ELASTIC_USERNAME: ${ELASTIC_USERNAME}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      ELASTICSEARCH_HOST_PORT: https://${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}
+    env_file:
+      - ./secrets/.env.kibana.token
+    secrets:
+      - source: elastic.ca
+        target: /certs/ca.crt
+      - source: kibana.certificate
+        target: /certs/kibana.crt
+      - source: kibana.key
+        target: /certs/kibana.key
+    ports:
+      - "5601:5601"
 
-  collection-interactions-orchestration:
+  apm-server:
+    image: elastdocker/apm-server:${ELK_VERSION}
     build:
-        context: ./collection-interactions-orchestration
-        dockerfile: Dockerfile
+      context: apm-server/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    restart: unless-stopped
     ports:
-        - "8084:8084"
-#    depends_on:
-#      - admin-service
-#      - login-orchestration
-#      - art-collections
-    environment:
-      <<: *env
-
-  login-orchestration:
-    build:
-      context: ./login-orchestration
-      dockerfile: Dockerfile
-    ports:
-      - "8085:8085"
-#    depends_on:
-#      - authentication-service
-#      - admin-service
-    environment:
-      <<: *env
-      JWT_SECRET_KEY: "jv3Vh7b0upzBgZ8ocoOASSTjk0ypkBxO6NHqA5RIHFWEN5U5Vd"
+      - "8200:8200"
     volumes:
-      - "./login-orchestration:/code-login-orchestration"
-      - "/code-login-orchestration/node_modules"
-
-  like-comment-service:
-    build:
-      context: ./like_comment_service
-      dockerfile: Dockerfile
-    ports:
-      - "8087:8087"
-    depends_on:
-      - login-orchestration
-    volumes:
-      - "./like_comment_service/pip-cache:/pip-cache"
+      - ./apm-server/config/apm-server.yml:/usr/share/apm-server/apm-server.yml:ro
     environment:
-      <<: *env
-
-  export-collection-orchestrations:
-    build:
-      context: ./export_collection_orchestrations
-      dockerfile: Dockerfile
-    ports:
-      - "8088:8088"
-    depends_on:
-      - login-orchestration
-      - video-processing-service
-    volumes:
-      - "./export_collection_orchestrations/pip-cache:/pip-cache"
-    environment:
-      <<: *env
-      MONGO_DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/export-collection-orchestration"
-
-
-  mongodb:
-    image: mongo
-    ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: K9A1qfhb1pWZV186eJasTE9kgrHLMTRzaaHnSjQ8RzVNvlashE
-      MONGO_INITDB_ROOT_DATABASE: ${MONGO_ROOT_DB:-mongodb}
-      MONGO_INITDB_DATABASE: init  # arbitrary value
-    volumes:
-      - ./mongo-init:/docker-entrypoint-initdb.d/
-
-  art-collection-service:
-    build:
-      context: ./art-collection-service
-      dockerfile: Dockerfile
-    ports:
-      - "8086:8086"
-    depends_on:
-      - postgres
-    volumes:
-      - "./art-collection-service/pip-cache:/pip-cache"
-    environment:
-      <<: *env
-      DATABASE_HOST_URL: "postgresql://postgres:t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq@postgres:5432/ai-art-collections"
-
-  postgres:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq
-      POSTGRES_DB: ai-art-collections
-    ports:
-      - "7000:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
-
-volumes:
-  db_data:
+      ELASTIC_USERNAME: ${ELASTIC_USERNAME}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      ELASTICSEARCH_HOST_PORT: https://${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}
+      ELASTIC_APM_SECRET_TOKEN: ${ELASTIC_APM_SECRET_TOKEN}
+    secrets:
+      - source: elastic.ca
+        target: /certs/ca.crt
+      - source: apm-server.certificate
+        target: /certs/apm-server.crt
+      - source: apm-server.key
+        target: /certs/apm-server.key
