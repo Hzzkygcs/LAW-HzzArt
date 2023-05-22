@@ -1,0 +1,242 @@
+version: '3'
+
+x-environment: &env
+  SERVICE_REGISTRY_TOKEN: "ABCDEFG"
+  ADMIN_SERVICE_TOKEN: "a90xIy6XopQkp8WNuaOFqRrg2XB6BfAYNdPJqKuIRmM0q5jyJj"
+  JWT_TOKEN_HEADER_NAME: "x-jwt-token"
+  INSIDE_DOCKER_CONTAINER: 1
+
+  FRONTEND_SERVICE_PORT: 8080
+  FRONTEND_SERVICE_NAME: "frontend-service"
+  FRONTEND_SERVICE_URL: "http://frontend-service:8080"
+
+  AUTHENTICATION_SERVICE_PORT: 8081
+  AUTHENTICATION_SERVICE_NAME: "authentication-service"
+
+  ADMIN_SERVICE_PORT: 8082
+  ADMIN_SERVICE_NAME: "admin-service"
+  ADMIN_SERVICE_URL: "http://admin-service:8082"
+
+  VIDEO_PROCESSING_SERVICE_PORT: 8083
+  VIDEO_PROCESSING_SERVICE_NAME: "video-processing-service"
+  VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
+  VIDEO_PROCESSING_SERVICE_URL_2: "http://video-processing-service-2:7073"
+
+  COLLECTION_INTERACTIONS_ORCHESTRATION_PORT: 8084
+  COLLECTION_INTERACTIONS_ORCHESTRATION_NAME: "collection-orchestration"
+
+  LOGIN_ORCHESTRATION_PORT: 8085
+  LOGIN_ORCHESTRATION_NAME: "login-orchestration"
+  LOGIN_ORCHESTRATION_URL: "http://login-orchestration:8085"
+
+  ART_COLLECTIONS_PORT: 8086
+  ART_COLLECTIONS_NAME: "art-collection-service"
+  ART_COLLECTIONS_URL: "http://art-collection-service:8086"
+
+  LIKE_COMMENT_SERVICE_PORT: 8087
+  LIKE_COMMENT_SERVICE_NAME: "like-comment-service"
+  LIKE_COMMENT_SERVICE_URL: "http://like-comment-service:8087"
+
+  EXPORT_COLLECTION_ORCHESTRATIONS_PORT: 8088
+  EXPORT_COLLECTION_ORCHESTRATIONS_NAME: "export-collection-orchestrations"
+  EXPORT_COLLECTION_ORCHESTRATIONS_URL: "http://export-collection-orchestrations:8088"
+
+  AUTHENTICATION_SERVICE_URL: "http://authentication-service:8081"
+  COLLECTION_ORCHESTRATION_URL: "http://collection-orchestration:8084"
+  HZZART_NAVIGATOR_SERVER: "https://hzzart-navigator-server.herokuapp.com"
+
+
+services:
+  frontend-service:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - mongodb
+    environment:
+      <<: *env
+    ports:
+      - "8080:8080"
+    volumes:
+      - "./frontend:/code-frontend-service"
+      - "/code-frontend-service/node_modules"
+    logging: &filebeat-logging
+      driver: "json-file"
+      options:
+        max-file: "5"
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - type: bind
+        source: ./nginx/nginx.conf
+        target: /etc/nginx/nginx.conf
+
+  authentication-service:
+    build:
+      context: ./authentication-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongodb
+    environment:
+      <<: *env
+      DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/auth-service"
+    logging:
+      *filebeat-logging
+
+  admin-service:
+    build:
+      context: ./admin-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mongodb
+    environment:
+      <<: *env
+      DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/admin-service"
+    logging:
+      *filebeat-logging
+
+  video-processing-service:
+    build:
+      context: ./video-processor
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      <<: *env
+      MY_PORT: 8083
+    volumes:
+      - "./video-processor:/app-codes"
+      - "/app-codes/node_modules"
+    logging:
+      *filebeat-logging
+
+  video-processing-service-2:
+    build:
+      context: ./video-processor
+      dockerfile: Dockerfile
+    ports:
+      - "7073:7073"
+    environment:
+      <<: *env
+      VIDEO_PROCESSING_SERVICE_PORT: 7073
+    volumes:
+      - "./video-processor:/app-codes"
+      - "/app-codes/node_modules"
+    logging:
+      *filebeat-logging
+
+  collection-interactions-orchestration:
+    build:
+        context: ./collection-interactions-orchestration
+        dockerfile: Dockerfile
+    ports:
+        - "8084:8084"
+#    depends_on:
+#      - admin-service
+#      - login-orchestration
+#      - art-collections
+    environment:
+      <<: *env
+    logging:
+      *filebeat-logging
+
+  login-orchestration:
+    build:
+      context: ./login-orchestration
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8085"
+#    depends_on:
+#      - authentication-service
+#      - admin-service
+    environment:
+      <<: *env
+      JWT_SECRET_KEY: "jv3Vh7b0upzBgZ8ocoOASSTjk0ypkBxO6NHqA5RIHFWEN5U5Vd"
+    volumes:
+      - "./login-orchestration:/code-login-orchestration"
+      - "/code-login-orchestration/node_modules"
+    logging:
+      *filebeat-logging
+
+  like-comment-service:
+    build:
+      context: ./like_comment_service
+      dockerfile: Dockerfile
+    ports:
+      - "8087:8087"
+    depends_on:
+      - login-orchestration
+    volumes:
+      - "./like_comment_service/pip-cache:/pip-cache"
+    environment:
+      <<: *env
+    logging:
+      *filebeat-logging
+
+  export-collection-orchestrations:
+    build:
+      context: ./export_collection_orchestrations
+      dockerfile: Dockerfile
+    ports:
+      - "8088:8088"
+    depends_on:
+      - login-orchestration
+      - video-processing-service
+    volumes:
+      - "./export_collection_orchestrations/pip-cache:/pip-cache"
+    environment:
+      <<: *env
+      MONGO_DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/export-collection-orchestration"
+    logging:
+      *filebeat-logging
+
+
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: K9A1qfhb1pWZV186eJasTE9kgrHLMTRzaaHnSjQ8RzVNvlashE
+      MONGO_INITDB_ROOT_DATABASE: ${MONGO_ROOT_DB:-mongodb}
+      MONGO_INITDB_DATABASE: init  # arbitrary value
+    volumes:
+      - ./mongo-init:/docker-entrypoint-initdb.d/
+
+
+  art-collection-service:
+    build:
+      context: ./art-collection-service
+      dockerfile: Dockerfile
+    ports:
+      - "8086:8086"
+    depends_on:
+      - postgres
+    volumes:
+      - "./art-collection-service/pip-cache:/pip-cache"
+    environment:
+      <<: *env
+      DATABASE_HOST_URL: "postgresql://postgres:t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq@postgres:5432/ai-art-collections"
+    logging:
+      *filebeat-logging
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq
+      POSTGRES_DB: ai-art-collections
+    ports:
+      - "7000:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
