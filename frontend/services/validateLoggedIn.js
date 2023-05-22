@@ -16,7 +16,7 @@ async function validateLoggedIn(req, res) {
 module.exports.validateLoggedIn = validateLoggedIn;
 
 async function validateJwtToLoginOrchestration(res, jwtToken) {
-    const url = `${loginOrchestration()}/login/validate-login`;
+    const url = `${await loginOrchestration()}/login/validate-login`;
     console.log(url);
     try{
         return await axios({
