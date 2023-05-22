@@ -56,7 +56,14 @@
           });
 
           if (response.validationFail != null) {
-            showAlert(`FAILED! Collection with ID ${response.validationFail.reason.collectionId} is already reported.`);
+              let reason = response.validationFail.reason;
+              console.log(reason);
+              if (reason.error_code === 'CannotReportSelfException')
+                  showAlert(`FAILED! You cannot report your own collection.`)
+              else if (reason.error_code === 'CollectionAlreadyReportedException')
+                  showAlert(`FAILED! This collection with ID ${response.validationFail.reason.collectionId} is already reported.`);
+              else
+                  showAlert(`FAILED! ${reason.error_code}`);
           } else {
             showAlert('SUCCESS! Your report has been sent to the admins for review.');
             window.location.href = "/collections/collection-details.html?id=" + _collectionId; // Update the URL with the _collectionId
