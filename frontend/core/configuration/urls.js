@@ -87,6 +87,8 @@ const urls = {
         generateImages: () => `${urls.collections.artCollectionService()}/collections/generate`,
         getGeneratedImages: () => `${urls.collections.artCollectionService()}/collections/generated-images/`,
 
+        getSearchCollections: () => `${urls.collections.artCollectionService()}/collections/search`,
+
         likeCommentService: () => `/like-comment-service`,
 
         editCollectionsPage: () => `${urls.collections.collections()}/edit-collections.html`,
@@ -111,6 +113,7 @@ const urls = {
     collection_interactions_orchestration: {
         getMyCollections: () => `${collectionInteractionsOrchestration()}/my-collections`,
         getPopularCollections: () => `${collectionInteractionsOrchestration()}/popular-collections`,
+        getSearchCollections: () => `${collectionInteractionsOrchestration()}/search-collections`,
         reportedCollectionsGetCollections: () => `${collectionInteractionsOrchestration()}/reported-collections`,
         getSpecificCollection: (collectionId) => `${collectionInteractionsOrchestration()}/reported-collections/${collectionId}`,
         rejectReportCollection: () => `${collectionInteractionsOrchestration()}/reported-collections/reject-report`,

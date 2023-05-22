@@ -15,18 +15,60 @@
         <div class="flex flex-row items-center pt-5 pb-7">
 
             <div class="pr-3">
-                <h1 class="text-2xl font-bold">Search Results</h1>  
+                <h1 class="text-2xl font-bold">Search Result</h1>  
+            </div>
+
+            <div class="">
+                <a href="<%= urls.collections.editCollectionsPage() %>" class="block text-gray-900 rounded-full md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:hover:text-blue-700 md:dark:hover:bg-transparent dark:border-gray-700 font-bold rounded-full transition duration-200">
+                    <svg width="23" height="23" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </a>
             </div>
 
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
-            <%- include("-card-collections.ejs", locals) %>
-            <%- include("-card-collections.ejs", locals) %>
-            <%- include("-card-collections.ejs", locals) %>
+        <%- include("-card-collections.ejs", locals) %>
+        <div class="container-of-all-collections
+                    grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
+            Loading
         </div>
 
     </div>
+
     <%- include(urls.footer_navbar.footer(), locals) %>
 </body>
 </html>
+
+
+
+<script>
+    const input_name = `<%=req.query.input??-1%>`;
+
+    $(document).ready(async function () {
+        const container = $(".container-of-all-collections");
+        const decoded_input = decodeURI(input_name);
+
+        const getMyCollectionsUrl = "<%= urls.collection_interactions_orchestration.getSearchCollections() %>";
+        let collections = await post(getMyCollectionsUrl, {
+                                "search": `${decoded_input}`
+                            });
+        console.log(collections);
+        container.empty();
+
+        if (collections.length < 0) {
+            container.add('Empty')
+        }
+        else {
+            for (const collection of collections) {
+                const {id, name, owner, images, likes, comments} = collection;
+                const imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
+                console.log(id, name, imageThumbnail)
+    
+                newCollectionCard(id, likes, comments, name, imageThumbnail, owner, container, false);
+            }
+        }
+        
+    });
+
+</script>
