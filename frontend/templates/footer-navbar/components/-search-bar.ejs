@@ -41,12 +41,14 @@
     $(document).ready(() => {
         const searchBar = $('.search-navbar-input');
 
-        searchBar.on('keyup', (e) => {
-            if (e.code === 'Enter') {
-                const url = "<%=urls.collections.searchCollectionsPage() %>";
-
-                window.location.href = url;
-            }
+        searchBar.on('keyup', async (e) => {
+          if (e.code === 'Enter') {
+            const url = "<%=urls.collections.searchCollectionsPage() %>";
+            const getSearchUrl = "<%=urls.collection_interactions_orchestration.searchCollections() %>";
+            const searchResponse = await post(getSearchUrl, {search: searchBar.val()});
+            console.log(searchResponse);
+            // window.location.href = url;
+          }
         });
     });
 </script>
