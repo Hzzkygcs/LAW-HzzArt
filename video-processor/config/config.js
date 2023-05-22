@@ -35,6 +35,6 @@ module.exports.config = function (app) {
     }
     return app.listen(PORT, () => {
         console.log(`Listening on port ${PORT}`);
-        getConsulSingleton(PORT, process.env.AUTHENTICATION_SERVICE_NAME);
+        getConsulSingleton(PORT, process.env.VIDEO_PROCESSING_SERVICE_NAME);
     });
 }
