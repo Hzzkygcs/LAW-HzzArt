@@ -8,6 +8,7 @@ from typing import Union
 import requests
 from PIL import Image
 
+from consul_config.consul_services import get_healthy_service_host_url
 from export_collections.exceptions.InvalidFieldTypeException import InvalidFieldTypeException
 from export_collections.exceptions.NotAnAdminException import NotAnAdminException
 from export_collections.exceptions.NotJsonRequestException import NotJsonRequestException
@@ -16,26 +17,30 @@ from global_exception.exceptions.ResponseAsException import ResponseAsException
 
 
 def get_video_processing_url():
+    ret = choice(("http://localhost:8083", "http://localhost:7073"))
     if 'INSIDE_DOCKER_CONTAINER' in os.environ:
-        return choice([
+        ret = choice([
             os.environ['VIDEO_PROCESSING_SERVICE_URL'],
             os.environ['VIDEO_PROCESSING_SERVICE_URL_2'],
         ])
-    ret = choice(("http://localhost:8083", "http://localhost:7073"))
-    print(ret)
+    ret = get_healthy_service_host_url(os.environ['VIDEO_PROCESSING_SERVICE_NAME'], ret)
     return ret
 
 
 def get_collection_url():
+    ret = "http://localhost:8086"
     if 'INSIDE_DOCKER_CONTAINER' in os.environ:
-        return os.environ['ART_COLLECTIONS_URL']
-    return "http://localhost:8086"
+        ret = os.environ['ART_COLLECTIONS_URL']
+    ret = get_healthy_service_host_url(os.environ['ART_COLLECTIONS_NAME'], ret)
+    return ret
 
 
 def get_login_orchestration_url():
+    ret = "http://localhost:8085"
     if 'INSIDE_DOCKER_CONTAINER' in os.environ:
-        return os.environ['LOGIN_ORCHESTRATION_URL']
-    return "http://localhost:8085"
+        ret = os.environ['LOGIN_ORCHESTRATION_URL']
+    ret = get_healthy_service_host_url(os.environ['LOGIN_ORCHESTRATION_NAME'], ret)
+    return ret
 
 
 def get_username(req, assert_admin=False):

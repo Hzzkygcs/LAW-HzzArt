@@ -9,6 +9,7 @@ const {USERNAME_VALID_ENDPOINT, REGISTER_ENDPOINT, VALIDATE_LOGIN_ENDPOINT} = re
 const {route: usernameValidRoute} = require("./routes/get-user");
 const {getConsulSingleton, getAllHealthyServiceHostName} = require("./config/consul");
 const {consulHealthRoute} = require("./routes/consul");
+const {getMongoUrlAlongWithCredentials} = require("./config/get-mongo-url");
 
 
 
@@ -48,15 +49,16 @@ module.exports.server = async function (test=true) {
 let testMongo = null;
 
 async function connectToMongodb(test){
-    let mongooseUrl = process.env.DATABASE_HOST_URL;
+    let mongooseUrl;
     if (test && testMongo==null){
         const {MongoMemoryServer} = require("mongodb-memory-server");
         testMongo = await MongoMemoryServer.create();
     }
     if (test){
         mongooseUrl = testMongo.getUri();
+    }else{
+        mongooseUrl = await getMongoUrlAlongWithCredentials();
     }
-    if (mongooseUrl == null){throw new Error("DATABASE_HOST_URL IS NOT SET");}
 
     try{
         await mongoose.connect(mongooseUrl);
