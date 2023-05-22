@@ -24,8 +24,8 @@ module.exports.submitVideo = async function (submittedFiles, tokenAsPath, fps,
     const durationInSecond = await generateFolderOfImageFrames(
         submittedFiles, tokenAsPath, fps, slideDuration, transitionDuration);
 
-    await combineImagesToVideo(tokenAsPath, durationInSecond, tokenAsPath, "video.mp4", fps);
-    videoProgressRepository.setProgress(tokenName, 100, ProgressPhaseEnums.DONE);
+    const outputFileName = await combineImagesToVideo(tokenAsPath, durationInSecond, tokenAsPath, "video.mp4", fps);
+    videoProgressRepository.setProgress(tokenName, 100, ProgressPhaseEnums.DONE, outputFileName);
 
     await cleanUpUploadsFiles(submittedFiles);
     await cleanUpImagesInAFolder(tokenAsPath);
