@@ -131,7 +131,7 @@ def get_consul_server_ipaddr_and_port():
 
 
 def getInstanceId(serviceName, ipAddress):
-    return f"{serviceName}-{ipAddress}-{os.env.get('HOSTNAME', None)}"
+    return f"{serviceName}-{ipAddress}-{os.environ.get('HOSTNAME', None)}"
 
 
 if __name__ == "__main__":
