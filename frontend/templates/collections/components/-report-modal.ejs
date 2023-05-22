@@ -62,6 +62,8 @@
                   showAlert(`FAILED! You cannot report your own collection.`)
               else if (reason.error_code === 'CollectionAlreadyReportedException')
                   showAlert(`FAILED! This collection with ID ${response.validationFail.reason.collectionId} is already reported.`);
+              else if (reason.error_code === 'ValidationError')
+                  showAlert(`FAILED! ${reason.message}.`)
               else
                   showAlert(`FAILED! ${reason.error_code}`);
           } else {
