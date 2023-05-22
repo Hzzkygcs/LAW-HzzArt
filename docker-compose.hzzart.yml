@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 
 x-environment: &env
   SERVICE_REGISTRY_TOKEN: "ABCDEFG"
