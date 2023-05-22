@@ -2,7 +2,7 @@ const {getArtCollectionsUrl} = require('../../../URLs/get-art-collections-url');
 const {makeRequest} = require("../../external-call/make-request");
 
 async function getCollections(search,token) {
-  const url = getArtCollectionsUrl('/collections/search');
+  const url = await getArtCollectionsUrl('/collections/search');
   let response = await makeRequest("post", url,
       {
         "name": search
