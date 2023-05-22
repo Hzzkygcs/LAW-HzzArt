@@ -21,10 +21,11 @@ route.get("/download/:tokenName", async function (req, res) {
     const {token} = validate({
         token: req.params.tokenName
     });
-    videoProgressRepository.validateFinished(token);
+    const progress = videoProgressRepository.validateFinished(token);
 
-    const videoPath = path.join(process.cwd(), "temp", token, "video.mp4")
-    const stat = await fs.stat(videoPath)
+    let videoPath = progress.outputFileName;
+
+    const stat = await fs.stat(videoPath);
     const fileSize = stat.size
     const head = {
         'Content-Length': fileSize,

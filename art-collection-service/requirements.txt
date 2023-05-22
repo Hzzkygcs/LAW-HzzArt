@@ -31,4 +31,4 @@ typing_extensions==4.5.0
 urllib3==1.26.15
 uvicorn==0.21.1
 yarl==1.8.2
-
+python-consul==1.1.0

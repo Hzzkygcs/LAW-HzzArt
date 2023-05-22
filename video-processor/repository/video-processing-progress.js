@@ -2,6 +2,7 @@ const {logProgress} = require("../services/log-progress");
 const {token} = require("morgan");
 const {TokenNotFoundException} = require("../modules/exceptions/TokenNotFoundException");
 const {VideoNotFinishedYetException} = require("../modules/exceptions/VideoNotDoneYetException");
+const {InternalServerErrorException} = require("../modules/exceptions/InternalServerErrorException");
 
 const ProgressPhaseEnums = {
     NOT_STARTED: "not-started",
@@ -21,8 +22,8 @@ class VideoProcessingProgress{
     register(tokenName){
         this.videoProgress[tokenName] = new Progress(tokenName);
     }
-    setProgress(tokenName, percentage, phase){
-        this.videoProgress[tokenName].setProgress(percentage, phase);
+    setProgress(tokenName, percentage, phase, outputFileName=null){
+        this.videoProgress[tokenName].setProgress(percentage, phase, outputFileName);
     }
 
     setTotalNumberOfFrames(tokenName, totalFrames){
@@ -49,6 +50,7 @@ class VideoProcessingProgress{
         const progress = this.getProgress(tokenName);
         if (progress.phase !== ProgressPhaseEnums.DONE)
             throw new VideoNotFinishedYetException(tokenName, progress);
+        return progress;
     }
 }
 module.exports.videoProgressRepository = new VideoProcessingProgress();
@@ -57,6 +59,7 @@ module.exports.videoProgressRepository = new VideoProcessingProgress();
 class Progress{
     percentageTotal = 0;
     percentagePhase = 0;
+    outputFileName=null;
 
     phase = ProgressPhaseEnums.NOT_STARTED;
     tokenName=null;
@@ -67,7 +70,15 @@ class Progress{
         this.setProgress(0);
     }
 
-    setProgress(percentage, phase=null){  // potential to be refactored
+    setProgress(percentage, phase=null, outputFileName=null){  // potential to be refactored
+        if (this.phase === ProgressPhaseEnums.DONE && phase !== ProgressPhaseEnums.DONE){
+            console.log("TRYING TO REWRITE DONE STATUS TO NOT DONE\nTRYING TO REWRITE DONE STATUS TO NOT DONE");
+            return;
+        }
+        if (this.phase === ProgressPhaseEnums.DONE){
+            console.log("CANNOT UNDO DONE PROGRESS");
+            return;
+        }
         this.phase = phase ?? this.phase;
 
         if (this.phase === ProgressPhaseEnums.NOT_STARTED)
@@ -83,6 +94,15 @@ class Progress{
             console.assert(phase === ProgressPhaseEnums.DONE);
         }
         this.percentagePhase = percentage;
+        this.outputFileName = outputFileName;
+
+        if (this.percentageTotal > 100)
+            this.percentageTotal = 100;
+        if (this.percentagePhase > 100)
+            this.percentagePhase = 100;
+        if (this.phase === ProgressPhaseEnums.DONE && outputFileName === null) {
+            throw new InternalServerErrorException("outputFileName is null when the video is done!")
+        }
 
         logProgress(
             this.tokenName, this.phase,
