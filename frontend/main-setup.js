@@ -4,6 +4,7 @@ const {defaultRoute} = require("./routes/default");
 const {homepageRoute} = require("./routes/homepage");
 const cookieParser = require("cookie-parser");
 const {adminRoute} = require("./routes/admin");
+const {consulHealthRoute} = require("./routes/consul");
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.disable('view cache');
 app.use(cookieParser());
 
 
-
+app.use('/', consulHealthRoute);
 app.use(adminRoute);
 app.use(homepageRoute);
 app.use(defaultRoute);
