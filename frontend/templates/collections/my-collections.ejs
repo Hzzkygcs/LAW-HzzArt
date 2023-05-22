@@ -31,7 +31,18 @@
         <%- include("-card-collections.ejs", locals) %>
         <div class="container-of-all-collections
                     grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
-            Loading
+            <div class="flex items-center justify-center w-full h-full">
+                <div class="flex justify-center items-center space-x-1 text-sm text-gray-700">
+                    <div
+                      class="ml-auto inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                      role="status">
+                    </div>
+                    <div class="pl-4">
+                        <h1 class="text-2xl">Loading...</h1>
+                        <h3 class="progress-text"></h3>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -51,8 +62,10 @@
         container.empty();
         for (const collection of collections) {
             const {id, likes, comments, name, images} = collection;
-            const imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
-            console.log(id, name, imageThumbnail)
+            let imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
+            if(images.length === 0)
+                imageThumbnail = "<%= urls.default_image.image_url() %>";
+            console.log(id, name, imageThumbnail);
 
             newCollectionCard(id, likes, comments, name, imageThumbnail, null, container, true);
         }

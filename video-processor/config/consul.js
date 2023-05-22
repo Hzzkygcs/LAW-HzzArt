@@ -46,6 +46,7 @@ async function getConsulClient(thisServicePort, thisServiceName) {
             timeout: '5s',
         },
     });
+    console.log("Registered to Consul successfully");
     return consul;
 }
 

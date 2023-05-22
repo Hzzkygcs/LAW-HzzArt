@@ -2,7 +2,7 @@ const {getArtCollectionsUrl,getArtCollectionsLikeCommentUrl} = require('../../..
 const {makeRequest} = require("../../external-call/make-request");
 
 async function getAllCollections(token) {
-  const url = getArtCollectionsUrl('/collections-all');
+  const url = await getArtCollectionsUrl('/collections-all');
   let response = await makeRequest("get",
     url,
     {},
@@ -12,13 +12,13 @@ async function getAllCollections(token) {
 }
 
 async function getAllCollectionsWithLikeComments() {
-  const url = getArtCollectionsLikeCommentUrl('/like-comment/sort-collection/');
+  const url = await getArtCollectionsLikeCommentUrl('/like-comment/sort-collection/');
   let response = await makeRequest("get", url, {}, {});
     return response.data;
 }
 
 async function getCurrentUserCollections(token) {
-  const url = getArtCollectionsUrl('/collections');
+  const url = await getArtCollectionsUrl('/collections');
   let response = await makeRequest("get",
     url,
     {},
@@ -28,7 +28,7 @@ async function getCurrentUserCollections(token) {
 }
 
 async function getCurrentUserCollectionsWithLikeComments(collectionIds,token) {
-  const url = getArtCollectionsLikeCommentUrl('/like-comment/get-posts/');
+  const url = await getArtCollectionsLikeCommentUrl('/like-comment/get-posts/');
   let response = await makeRequest("post", url,
       {collection_ids: collectionIds},
           {"x-jwt-token": token}

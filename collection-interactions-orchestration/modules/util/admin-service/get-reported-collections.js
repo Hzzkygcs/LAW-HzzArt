@@ -2,7 +2,7 @@ const {getAdminManagerUrl} = require("../../../URLs/get-admin-manager-url");
 const {makeRequest} = require("../../external-call/make-request");
 
 async function getReportedCollections() {
-    const url = getAdminManagerUrl("/admin/reported-collection");
+    const url = await getAdminManagerUrl("/admin/reported-collection");
     let response = await makeRequest("get",
         url,
         {},
@@ -14,7 +14,7 @@ async function getReportedCollections() {
 }
 
 async function getDetailsReportedCollections(collectionId) {
-    const url = getAdminManagerUrl("/admin/reported-collection/" + collectionId);
+    const url = await getAdminManagerUrl("/admin/reported-collection/" + collectionId);
     let response = await makeRequest("get",
         url,
         {},

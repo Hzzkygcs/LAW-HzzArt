@@ -44,8 +44,12 @@
         searchBar.on('keyup', (e) => {
             if (e.code === 'Enter') {
                 const url = "<%=urls.collections.searchCollectionsPage() %>";
+                const input = searchBar.val();
 
-                window.location.href = url;
+                if (input) {
+                  const encoded_input = encodeURI(input);
+                  window.location.href = url + `?input=${encoded_input}`;
+                }
             }
         });
     });

@@ -1,6 +1,5 @@
 $(document).ready(async function () {
     const getImages = await get("/art-collection-service/collections/" + collectionId, {});
-    console.log(getImages);
     const images = getImages.images;
 
 

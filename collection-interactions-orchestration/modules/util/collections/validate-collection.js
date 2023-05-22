@@ -2,7 +2,7 @@ const {getArtCollectionsUrl} = require("../../../URLs/get-art-collections-url");
 const {makeRequest} = require("../../external-call/make-request");
 
 async function validateCollection(idCollection,token){
-    const url = getArtCollectionsUrl("/collections/");
+    const url = await getArtCollectionsUrl("/collections/");
     const header = {
             "x-jwt-token": token,
         };

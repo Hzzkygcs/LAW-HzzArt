@@ -6,9 +6,10 @@ async function getUserRoleAndBanStatus(username) {
     console.log("Login Service: Checking if user is banned...");
     let response;
     let currentService = 'Admin Management Service';
+    const adminServiceUrl = await getAdminServiceUrl('/admin/check-account/' + username);
     try {
         response = await axios({
-            url: getAdminServiceUrl('/admin/check-account/' + username),
+            url: adminServiceUrl,
             method: 'get'
         })
     } catch (error) {

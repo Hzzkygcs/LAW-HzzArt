@@ -18,6 +18,7 @@ x-environment: &env
   ADMIN_SERVICE_URL: "http://admin-service:8082"
 
   VIDEO_PROCESSING_SERVICE_PORT: 8083
+  VIDEO_PROCESSING_SERVICE_NAME: "video-processing-service"
   VIDEO_PROCESSING_SERVICE_URL: "http://video-processing-service:8083"
   VIDEO_PROCESSING_SERVICE_URL_2: "http://video-processing-service-2:7073"
 
@@ -128,9 +129,9 @@ services:
         dockerfile: Dockerfile
     ports:
         - "8084:8084"
-    depends_on:
-      - admin-service
-      - login-orchestration
+#    depends_on:
+#      - admin-service
+#      - login-orchestration
 #      - art-collections
     environment:
       <<: *env
@@ -141,9 +142,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8085:8085"
-    depends_on:
-      - authentication-service
-      - admin-service
+#    depends_on:
+#      - authentication-service
+#      - admin-service
     environment:
       <<: *env
       JWT_SECRET_KEY: "jv3Vh7b0upzBgZ8ocoOASSTjk0ypkBxO6NHqA5RIHFWEN5U5Vd"
@@ -208,7 +209,6 @@ services:
 
   postgres:
     image: postgres:latest
-    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq

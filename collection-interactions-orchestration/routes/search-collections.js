@@ -1,31 +1,45 @@
 const express = require("express");
 const {getCollections} = require("../modules/util/like-rating-collections/get-collections");
-const {getNameImgCollections} = require("../modules/util/collections/get-name-img-collections");
 const {checkBanCollections} = require("../modules/util/admin-service/check-ban-collections");
+const {getAllCollectionsWithLikeComments} = require("../modules/util/collections/get-all-collections");
+const {checkBanAccounts} = require("../modules/util/admin-service/check-ban-account");
+const {getUsernameFromJWT} = require("../modules/util/account/get-username-from-JWT");
 
 const route = express.Router();
 
-route.get("/:search", async (req, res) => {
-    const combined = {};
-    const search = req.params.search;
-    let collections = await getCollections(search);
+route.post("/", async (req, res) => {
+    const jwt = req.get(process.env.JWT_TOKEN_HEADER_NAME);
 
-    let nameImgCollections = await getNameImgCollections(collections);
+    await getUsernameFromJWT(jwt);
+    let posts = await getAllCollectionsWithLikeComments();
+    let searchCollections = await getCollections(req.body.search, jwt);
+    console.log("searchCollections");
+    console.log(searchCollections);
 
-    let checkCollection = await checkBanCollections(collections);
+    let bannedCollections = await checkBanCollections();
+    let bannedAccounts = await checkBanAccounts();
 
-    nameImgCollections.forEach((collection) => {
-        const matchingCollections = checkCollection.filter(
-          (check) => check.collectionId === collection.collectionId && check.isBan === false
-        );
-        if (matchingCollections.length > 0) {
-          combined[collection.collectionId] = {
-            collectionName: collection.collectionName,
-            imageUrls: collection.imageUrls,
-          };
-        }
+    let updatedCollections = searchCollections.collections.filter(collection => !bannedCollections.includes(collection.id));
+    updatedCollections = updatedCollections.filter(account => !bannedAccounts.includes(account.owner));
+
+    const aggregatedData = updatedCollections.map(collection => {
+        const { id, name, owner, images } = collection;
+        const matchingPost = posts.find(post => post.post_id === id);
+        const likes = matchingPost ? matchingPost.post_likes : 0;
+        const comments = matchingPost ? matchingPost.post_comments : 0;
+
+        return {
+            id,
+            name,
+            owner,
+            images,
+            likes,
+            comments
+        };
     });
-    res.json(combined);
+    console.log("aggregatedData");
+    console.log(aggregatedData);
+    res.send(aggregatedData);
 });
 
 module.exports.route = route;

@@ -13,20 +13,63 @@
     <%- include(urls.footer_navbar.navbar(), locals) %>
     <div class="collections-outter-container">
         <div class="flex flex-row items-center pt-5 pb-7">
-
             <div class="pr-3">
-                <h1 class="text-2xl font-bold">Search Results</h1>  
+                <h1 class="text-2xl font-bold">Search Result</h1>  
             </div>
-
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
-            <%- include("-card-collections.ejs", locals) %>
-            <%- include("-card-collections.ejs", locals) %>
-            <%- include("-card-collections.ejs", locals) %>
+        <%- include("-card-collections.ejs", locals) %>
+        <div class="container-of-all-collections
+                    grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
+            <div class="flex items-center justify-center w-full h-full">
+                <div class="flex justify-center items-center space-x-1 text-sm text-gray-700">
+                    <div
+                      class="ml-auto inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                      role="status">
+                    </div>
+                    <div class="pl-4">
+                        <h1 class="text-2xl">Loading...</h1>
+                        <h3 class="progress-text"></h3>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
+
     <%- include(urls.footer_navbar.footer(), locals) %>
 </body>
 </html>
+
+
+
+<script>
+    const input_name = `<%=req.query.input??-1%>`;
+
+    $(document).ready(async function () {
+        const container = $(".container-of-all-collections");
+        const decoded_input = decodeURI(input_name);
+
+        const getMyCollectionsUrl = "<%= urls.collection_interactions_orchestration.getSearchCollections() %>";
+        let collections = await post(getMyCollectionsUrl, {
+                                "search": `${decoded_input}`
+                            });
+        console.log(collections);
+        container.empty();
+
+        if (collections.length < 1) {
+            container.text("No search results found.");
+        }
+        else {
+            for (const collection of collections) {
+                const {id, name, owner, images, likes, comments} = collection;
+                let imageThumbnail = (images.length > 0)? `<%= urls.collections.myCollectionsGetImage() %>${images[0]}`:"";
+                if(images.length === 0)
+                    imageThumbnail = "<%= urls.default_image.image_url() %>";
+                console.log(id, name, imageThumbnail);
+
+            newCollectionCard(id, likes, comments, name, imageThumbnail, owner, container, false);
+        }
+        }
+    });
+</script>

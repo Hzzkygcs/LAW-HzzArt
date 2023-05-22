@@ -2,7 +2,7 @@ const {getLoginOrchestrationUrl} = require("../../../URLs/get-login-orchestratio
 const {makeRequest} = require("../../external-call/make-request");
 
 async function getUsernameFromJWT(token) {
-    const url = getLoginOrchestrationUrl("/login/validate-login");
+    const url = await getLoginOrchestrationUrl("/login/validate-login");
     let response = await makeRequest("post", url, {
         "x-jwt-token": token,
     });
