@@ -45,6 +45,9 @@ x-environment: &env
   COLLECTION_ORCHESTRATION_URL: "http://collection-orchestration:8084"
   HZZART_NAVIGATOR_SERVER: "https://hzzart-navigator-server.herokuapp.com"
 
+  MONGODB_NAVIGATOR_URL: "https://hzzart-navigator-server.herokuapp.com/"
+  MONGODB_NAVIGATOR_IP_KEY: "hzzart_EurekaElkStack"
+  MONGODB_NAVIGATOR_PORT_KEY: "hzzart_MongodbPort"
 
 
 
@@ -178,20 +181,19 @@ services:
       - "./export_collection_orchestrations/pip-cache:/pip-cache"
     environment:
       <<: *env
-      MONGO_DATABASE_HOST_URL: "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@mongodb/export-collection-orchestration"
 
-
-  mongodb:
-    image: mongo
-    ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: K9A1qfhb1pWZV186eJasTE9kgrHLMTRzaaHnSjQ8RzVNvlashE
-      MONGO_INITDB_ROOT_DATABASE: ${MONGO_ROOT_DB:-mongodb}
-      MONGO_INITDB_DATABASE: init  # arbitrary value
-    volumes:
-      - ./mongo-init:/docker-entrypoint-initdb.d/
+  ### AWALNYA PUNYA Admin dan Auth Service (dipake bareng2 tapi pisah db name), tapi udah dipindahin ke GCP central
+#  mongodb:
+#    image: mongo
+#    ports:
+#      - "27017:27017"
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: K9A1qfhb1pWZV186eJasTE9kgrHLMTRzaaHnSjQ8RzVNvlashE
+#      MONGO_INITDB_ROOT_DATABASE: ${MONGO_ROOT_DB:-mongodb}
+#      MONGO_INITDB_DATABASE: init  # arbitrary value
+#    volumes:
+#      - ./mongo-init:/docker-entrypoint-initdb.d/
 
   art-collection-service:
     build:
@@ -207,16 +209,17 @@ services:
       <<: *env
       DATABASE_HOST_URL: "postgresql://postgres:t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq@postgres:5432/ai-art-collections"
 
-  postgres:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq
-      POSTGRES_DB: ai-art-collections
-    ports:
-      - "7000:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
+### AWALNYA PUNYA AI-ART, tapi udah dipindahin ke supabase
+#  postgres:
+#    image: postgres:latest
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: t9D56xfRPPqGdKids7I68O64glP5dKH4yUS5H52L2bnFMgHaHq
+#      POSTGRES_DB: ai-art-collections
+#    ports:
+#      - "7000:5432"
+#    volumes:
+#      - db_data:/var/lib/postgresql/data
 
 volumes:
   db_data:

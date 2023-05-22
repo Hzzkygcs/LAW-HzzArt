@@ -17,6 +17,7 @@ const {route: banCollectionRoute} = require("./routes/ban-collection");
 const {route: banAccountRoute} = require("./routes/ban-account");
 const {consulHealthRoute} = require("./routes/consul");
 const {getConsulSingleton} = require("./config/consul");
+const {getMongoUrlAlongWithCredentials} = require("./config/get-mongo-url");
 
 module.exports.server = async function (test=true) {
     let app = express();
@@ -50,7 +51,7 @@ module.exports.server = async function (test=true) {
 };
 
 async function connectToMongodb(test){
-    let mongooseUrl = process.env.DATABASE_HOST_URL;
+    let mongooseUrl = await getMongoUrlAlongWithCredentials();
     if (mongooseUrl == null){
         console.log("DATABASE_HOST_URL IS NOT SET");
         mongooseUrl = "mongodb://main-user:391A0777775C663B07E6B5B7E0886D56@localhost:27017/admin-service";
