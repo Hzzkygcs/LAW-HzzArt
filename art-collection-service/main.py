@@ -262,7 +262,7 @@ def get_image(request: Request, image_id: int, db: Session = Depends(get_db)):
     return Response(content=image_decode_bytes, media_type="image/png")
 
 @app.get("/health", status_code = 200)
-def health_consul(request: Request, image_id: int, db: Session = Depends(get_db)):
+def health_consul(request: Request, db: Session = Depends(get_db)):
     return Response(content="ok")
 
 
